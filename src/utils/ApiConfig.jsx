@@ -13,6 +13,15 @@ export const memberShip = async () => {
         return null;
     }
 };
+function formatDate(datestring) {
+    return new Date(datestring).toLocaleDateString("en-ID", {
+      year: "numeric",
+      month: "numeric",
+      day: "numeric",
+    });
+  }
+  export { formatDate };
+  
 
 
 export const loginUser = async (username, password, rememberMe) => {

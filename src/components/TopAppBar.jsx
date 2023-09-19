@@ -82,7 +82,7 @@ function TopAppBar() {
           ) : (
             name ? (
               <div className="user">
-                <span className="hover:text-blue-600">{name}</span>
+                <Link className="hover:text-blue-600" to="/venDashboard">{name}</Link>
                 <span
                   className="border-l border-gray-400 h-3 my-1 mx-2 cursor-pointer hover:text-blue-600"
                   onClick={confirmLogout}
