@@ -13,6 +13,12 @@ import {
   TablePagination,
   TextField,
 } from "@mui/material";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
+
+import { CSVLink } from "react-csv";
+import * as XLSX from "xlsx";
+import { AiTwotoneReconciliation } from "react-icons/ai";
 import { MdOutlineArrowDropDown, MdEdit, MdDelete } from "react-icons/md";
 import { TbFileExport, TbReload } from "react-icons/tb";
 import { FaFileCsv } from "react-icons/fa";
@@ -26,6 +32,7 @@ const OrdersTable = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
+  const [exportData, setExportData] = useState([]);
   const [exportOpen, setexportOpen] = useState(false);
   const [rowToDelete, setRowToDelete] = useState(null); // Store the ID of the row to delete
   const [transactions, setTransactions] = useState([]);
@@ -34,7 +41,7 @@ const OrdersTable = () => {
     const apiUrl =
       "https://kuro.asrofur.me/sober/api/transaction/vendor?limit=30";
     const bearerToken =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjk0NzYzMjQwLCJleHAiOjE2OTQ4NDk2NDB9.685_1ZkUcFetsS1WHcLhsGt9DFIlntloGDURLoXDjdk";
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjk1Mjc4MDQ0LCJleHAiOjE2OTUzNjQ0NDR9.gTdleJdGE7IVNxnBzOvBGZGWg50yAB1pTbfOsLXF_7s";
 
     const fetchData = async () => {
       try {
@@ -43,10 +50,12 @@ const OrdersTable = () => {
             Authorization: `Bearer ${bearerToken}`,
           },
         });
+        setExportData(response?.data.data.rows);
 
         setTransactions(response?.data.data.rows);
-        console.log("ttttttttttttttttttttttttt");
-        console.log(response.data.data.rows);
+        // console.log("ttttttttttttttttttttttttt");
+        // console.log(response.data.data.rows);
+        console.log(paginatedData);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -156,6 +165,109 @@ const OrdersTable = () => {
     setPage(newPage);
   };
 
+  const headers = [
+    {
+      label: "id",
+      key: "id",
+    },
+    {
+      label: "customer",
+      key: "customer",
+    },
+    {
+      label: "amount",
+      key: "amount",
+    },
+    {
+      label: "Shipping Amount",
+      key: "shipping_amount",
+    },
+    {
+      label: "Payment Method",
+      key: "payment_channel",
+    },
+    {
+      label: "Payment Status",
+      key: "payment_status",
+    },
+    {
+      label: "Status",
+      key: "status",
+    },
+    {
+      label: "Created At",
+      key: "created_at",
+    },
+  ];
+
+  const DataSet = [
+    {
+      data: paginatedData.map((data) => ({
+        id: data?.id,
+        customer: data?.order_addresses?.name,
+        amount: data?.amount,
+        shipping_amount: data?.shipping_amount,
+        payment_channel: data?.payment_order?.payment_channel,
+        payment_status: data?.payment_order?.status,
+        status: data?.status,
+        created_at: data?.payment_order?.created_at,
+      })),
+    },
+  ];
+
+  const csvLinkProps = {
+    filename: "Orders.csv",
+    headers: headers,
+    data: DataSet[0].data, // Access the data property from DataSet
+  };
+
+  const handleExportToExcel = () => {
+    const ws = XLSX.utils.json_to_sheet(DataSet[0].data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+    XLSX.writeFile(wb, "Orders.xlsx");
+  };
+
+  const handleExportToPDF = () => {
+    const doc = new jsPDF();
+
+    // Define columns for the table
+    const columns = [
+      { title: "ID", dataKey: "id" },
+      { title: "Customer", dataKey: "customer" },
+      { title: "Amount", dataKey: "amount" },
+      { title: "Shipping Amount", dataKey: "shipping_amount" },
+      { title: "Payment Method", dataKey: "payment_channel" },
+      { title: "Payment Status", dataKey: "payment_status" },
+      { title: "Status", dataKey: "status" },
+      { title: "Created At", dataKey: "created_at" },
+    ];
+
+    // Define rows for the table
+    const rows = paginatedData.map((transaction) => ({
+      id: transaction?.id,
+      customer: transaction?.order_addresses?.name,
+      amount: transaction?.amount,
+      shipping_amount: transaction?.shipping_amount,
+      payment_channel: transaction?.payment_order?.payment_channel,
+      payment_status: transaction?.payment_order?.status,
+      status: transaction?.status,
+      created_at: formatDate(transaction?.payment_order?.created_at),
+    }));
+
+    // Convert rows into a format compatible with autoTable
+    const tableRows = rows.map((row) => Object.values(row));
+
+    doc.autoTable({
+      head: [columns.map((column) => column.title)],
+      body: tableRows,
+      startY: 20, // Start the table 20 units from the top
+    });
+
+    // Save the PDF with a specific filename
+    doc.save("Orders.pdf");
+  };
+
   const confirmDelete = async () => {
     if (rowToDelete !== null) {
       await deleteData(rowToDelete);
@@ -167,7 +279,7 @@ const OrdersTable = () => {
     try {
       const apiUrl = `https://kuro.asrofur.me/sober/api/transaction/vendor/${rowId}`;
       const bearerToken =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjk0NzYzMjQwLCJleHAiOjE2OTQ4NDk2NDB9.685_1ZkUcFetsS1WHcLhsGt9DFIlntloGDURLoXDjdk";
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjk1Mjc4MDQ0LCJleHAiOjE2OTUzNjQ0NDR9.gTdleJdGE7IVNxnBzOvBGZGWg50yAB1pTbfOsLXF_7s";
 
       const response = await axios.delete(apiUrl, {
         headers: {
@@ -215,10 +327,10 @@ const OrdersTable = () => {
             endAdornment: <Search />,
           }}
         />
-        <div className="action flex flex-col sm:w-[100%] md:flex-row space-x-0 md:space-x-3 font-semibold text-[12px] ">
+        <div className="action text-white flex flex-col sm:w-[100%] md:flex-row space-x-0 md:space-x-3 font-semibold text-[12px] ">
           <div className="relative">
             <button
-              className="flex px-4 py-2 bg-[#36C6D3] rounded-lg"
+              className="flex gap-2 px-4 py-2 bg-[#36C6D3] rounded-lg"
               onClick={toggleExport}
             >
               <TbFileExport className="mr-1 mt-[2px] bg-[#36C6D3]" />
@@ -227,23 +339,36 @@ const OrdersTable = () => {
             {exportOpen && (
               <div className="absolute w-[100px] text-black p-2 right-0 mt-2 border border-gray-300 rounded-lg">
                 <ul className="p">
-                  <li className="flex p-1 font-medium items-center border-b border-gray-400 mb-2 hover:bg-[#36C6D3] rounded-lg">
+                  <li className=" p-1 font-medium items-center hover:bg-[#36C6D3] rounded-lg ">
                     {" "}
-                    <FaFileCsv className="mr-1" /> Csv
+                    <CSVLink className="flex" {...csvLinkProps}>
+                      <FaFileCsv className="mr-1" />
+                      <p className="mt-[-2px]">Csv</p>
+                    </CSVLink>
                   </li>
-                  <li className="flex p-1 font-medium items-center hover:bg-[#36C6D3] rounded-lg ">
-                    {" "}
-                    <FaFileCsv className="mr-1" /> Csv
+                  <li className="flex cursor-pointer p-1 font-medium items-center hover:bg-[#36C6D3] rounded-lg ">
+                    <FaFileCsv className="mr-1" />
+                    <p onClick={handleExportToExcel}>Excel</p>
                   </li>
                 </ul>
               </div>
             )}
           </div>
-          <button className="bg-[#36C6D3] h-[2.5rem] w-full md:w-[4.5rem] rounded-lg mt-2 md:mt-0">
-            <a className="flex  p-2" href="">
+          <button className="bg-[#36C6D3] h-[2.5rem]  rounded-lg mt-2 md:mt-0">
+            <a className="flex gap-2 p-2" href="">
               {" "}
-              <TbReload className="  text-lg" />
+              <TbReload className=" mt-[2px] text-lg" />
               Reload
+            </a>
+          </button>
+          <button
+            className="bg-[#36C6D3] h-[2.5rem]  rounded-lg mt-2 md:mt-0"
+            onClick={handleExportToPDF}
+          >
+            <a className="flex gap-2 p-2 " href="#">
+              {" "}
+              <AiTwotoneReconciliation className=" mt-[2px]  text-lg" />
+              Rekap Pesanan
             </a>
           </button>
         </div>

@@ -13,6 +13,8 @@ import {
   TablePagination,
   TextField,
 } from "@mui/material";
+import { CSVLink } from "react-csv";
+import * as XLSX from "xlsx";
 import { Link } from "react-router-dom";
 import { MdOutlineArrowDropDown, MdEdit, MdDelete } from "react-icons/md";
 import { TbFileExport, TbReload } from "react-icons/tb";
@@ -36,7 +38,7 @@ const ProductsTable = () => {
     const apiUrl =
       "https://kuro.asrofur.me/sober/api/product/vendor/list?name&limit=5&search";
     const bearerToken =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjk0NzYzMjQwLCJleHAiOjE2OTQ4NDk2NDB9.685_1ZkUcFetsS1WHcLhsGt9DFIlntloGDURLoXDjdk";
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjk1Mjc4MDQ0LCJleHAiOjE2OTUzNjQ0NDR9.gTdleJdGE7IVNxnBzOvBGZGWg50yAB1pTbfOsLXF_7s";
 
     const fetchData = async () => {
       try {
@@ -141,7 +143,7 @@ const ProductsTable = () => {
     try {
       const apiUrl = `https://kuro.asrofur.me/sober/api/product/${rowId}`;
       const bearerToken =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjk0NzYzMjQwLCJleHAiOjE2OTQ4NDk2NDB9.685_1ZkUcFetsS1WHcLhsGt9DFIlntloGDURLoXDjdk";
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjk1Mjc4MDQ0LCJleHAiOjE2OTUzNjQ0NDR9.gTdleJdGE7IVNxnBzOvBGZGWg50yAB1pTbfOsLXF_7s";
 
       const response = await axios.delete(apiUrl, {
         headers: {
@@ -175,6 +177,73 @@ const ProductsTable = () => {
     setRowToDelete(rowId); // Set ID baris yang akan dihapus saat tombol "Delete" pada baris diklik
   };
 
+  const headers = [
+    {
+      label: "id",
+      key: "id",
+    },
+    {
+      label: "Thumbnail",
+      key: "thumbnail",
+    },
+    {
+      label: "Name",
+      key: "name",
+    },
+    {
+      label: "Price",
+      key: "price",
+    },
+    {
+      label: "Quantity",
+      key: "quantity",
+    },
+    {
+      label: "SKU",
+      key: "SKU",
+    },
+    {
+      label: "Order",
+      key: "order",
+    },
+    {
+      label: "Created At",
+      key: "created_at",
+    },
+    {
+      label: "Status",
+      key: "status",
+    },
+  ];
+
+  const DataSet = [
+    {
+      data: paginatedData.map((data) => ({
+        id: data?.id,
+        thumbnail: "https://kuro.asrofur.me/sober/" + data.images,
+        name: data?.name,
+        price: data?.price,
+        quantity: data?.quantity,
+        sku: data?.sku,
+        order: data?.order,
+        created_at: data?.created_at,
+        status: data?.status,
+      })),
+    },
+  ];
+
+  const csvLinkProps = {
+    filename: "Products.csv",
+    headers: headers,
+    data: DataSet[0].data, // Access the data property from DataSet
+  };
+  const handleExportToExcel = () => {
+    const ws = XLSX.utils.json_to_sheet(DataSet[0].data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+    XLSX.writeFile(wb, "Products.xlsx");
+  };
+
   return (
     <Card className="mt-5 w-full">
       <div className="p-2 flex flex-col md:flex-row justify-between">
@@ -189,7 +258,7 @@ const ProductsTable = () => {
             endAdornment: <Search />,
           }}
         />
-        <div className="action flex flex-col sm:w-[100%] text-white md:flex-row space-x-0 md:space-x-3 font-semibold text-[12px] ">
+        <div className="action flex text-white flex-col sm:w-[100%] text-white md:flex-row space-x-0 md:space-x-3 font-semibold text-[12px] ">
           <div className="relative">
             <button
               className="flex px-4 py-2 bg-[#36C6D3] rounded-lg"
@@ -201,13 +270,16 @@ const ProductsTable = () => {
             {exportOpen && (
               <div className="absolute w-[100px] text-black p-2 right-0 mt-2 border border-gray-300 rounded-lg">
                 <ul className="p">
-                  <li className="flex p-1 font-medium items-center border-b border-gray-400 mb-2 hover:bg-[#36C6D3] rounded-lg">
+                  <li className=" p-1 font-medium items-center hover:bg-[#36C6D3] rounded-lg ">
                     {" "}
-                    <FaFileCsv className="mr-1" /> Csv
+                    <CSVLink className="flex" {...csvLinkProps}>
+                      <FaFileCsv className="mr-1" />
+                      <p className="mt-[-2px]">Csv</p>
+                    </CSVLink>
                   </li>
-                  <li className="flex p-1 font-medium items-center hover:bg-[#36C6D3] rounded-md ">
-                    {" "}
-                    <FaFileCsv className="mr-1" /> Csv
+                  <li className="flex cursor-pointer p-1 font-medium items-center hover:bg-[#36C6D3] rounded-lg ">
+                    <FaFileCsv className="mr-1" />
+                    <p onClick={handleExportToExcel}>Excel</p>
                   </li>
                 </ul>
               </div>

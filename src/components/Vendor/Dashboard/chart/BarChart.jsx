@@ -1,49 +1,89 @@
-import React from 'react'
 import { dataBar } from '../../../../utils/data';
+import React, { PureComponent } from 'react';
+import { Link } from 'react-router-dom';
 import {
-  BarChart,
-  Bar,
+  LineChart,
+  Line,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   Legend,
+  Brush,
+  AreaChart,
+  Area,
   ResponsiveContainer,
-} from "recharts";
+} from 'recharts';
+import {TbPlayerTrackNextFilled} from "react-icons/tb"
+
+const data = [
+  {
+    name: '18 Aug',
+    uv: 2500000,
+  },
+  {
+    name: '22 Aug',
+    uv: 3000,
+  },
+  {
+    name: '26 Aug',
+    uv: 2000,
+    pv: 9800,
+    amt: 2290,
+  },
+  {
+    name: '30 Aug',
+    uv: 2780,
+    pv: 3908,
+    amt: 2000,
+  },
+  {
+    name: '03 Sep',
+    uv: 1890,
+  },
+  {
+    name: '07 Sep',
+    uv: 2390,
+  },
+  {
+    name: '11 Sep',
+    uv: 3490,
+  },
+];
 import { MdNavigateNext } from "react-icons/md";
 
 function Barchart() {
     const data= dataBar();
   return (
-  <div className="card p-4">
-  <div className="header ml-10">
+  <div className="card p-4 w-[40%]">
+  <div className="header ml-10 mb-7">
     <h2 className="font-bold">Sales Reports</h2>
     <p className=" flex text-[12px] font-medium text-blue-400">
-      Revenues in Last 30 days{" "}
-      <MdNavigateNext className="mt-1 text-blue-400" />
-      <MdNavigateNext className="mt-1 ml-[-8px] text-blue-400" />
+      <Link className='flex gap-1' to={"/historyRevenue"}>Pendapatan dalam Last 30 days <TbPlayerTrackNextFilled className='mt-1'/>
+      </Link>
     </p>
   </div>
   <div className="flex ">
-      <BarChart
-        width={400}
-        height={300}
-        data={data}
-        margin={{
-          top: 5,
-          right: 30,
-          left: 20,
-          bottom: 5,
-        }}
-      >
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="name" />
-        <YAxis />
-        <Tooltip />
-        <Legend />
-        <Bar dataKey="pv" fill="#8884d8" background={{ fill: "#eee" }} />
-        <Bar dataKey="uv" fill="#82ca9d" />
-      </BarChart>
+  <ResponsiveContainer  width="100%" height={300}>
+          <LineChart
+            width={600}
+            height={400}
+            data={data}
+            syncId="anyId"
+            margin={{
+              top: 10,
+              right: 30,
+              left: 0,
+              bottom: 0,
+            }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Tooltip />
+            <Line type="monotone" dataKey="uv" stroke="#8884d8" fill="#8884d8" />
+          </LineChart>
+        </ResponsiveContainer>
     </div>
   </div>
   )

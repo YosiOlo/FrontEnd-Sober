@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { formatDate } from "../../../utils/ApiConfig";
+import { formatDate } from "../../../../utils/ApiConfig";
 import {
   Card,
   CardContent,
@@ -22,10 +22,8 @@ import { TbFileExport, TbReload } from "react-icons/tb";
 import { FaFileCsv } from "react-icons/fa";
 import { ArrowUpward, ArrowDownward, Search } from "@mui/icons-material";
 
-const RevenueTable = (props) => {
-  const [revenue, setRevenue] = useState([]);
-  const { DataRevenue } = props;
-  const [tableData, setTableData] = useState(DataRevenue);
+const HistoryTable = () => {
+  const [history, setHistory] = useState([]);
   const [orderBy, setOrderBy] = useState("");
   const [order, setOrder] = useState("asc");
   const [page, setPage] = useState(0);
@@ -36,7 +34,7 @@ const RevenueTable = (props) => {
 
   useEffect(() => {
     const apiUrl =
-      "https://kuro.asrofur.me/sober/api/transaction/vendor/revenue";
+      "https://kuro.asrofur.me/sober/api/transaction/vendor/history";
     const bearerToken =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjk1Mjc4MDQ0LCJleHAiOjE2OTUzNjQ0NDR9.gTdleJdGE7IVNxnBzOvBGZGWg50yAB1pTbfOsLXF_7s";
 
@@ -47,7 +45,7 @@ const RevenueTable = (props) => {
             Authorization: `Bearer ${bearerToken}`,
           },
         });
-        setRevenue(response.data.data); // Fixed variable name here
+        setHistory(response.data.data); // Fixed variable name here
 
         console.log("ttttttttttttttttttttttttt");
         console.log(response.data);
@@ -79,7 +77,7 @@ const RevenueTable = (props) => {
   };
 
   const sortedData = orderBy
-    ? [...revenue].sort((a, b) =>
+    ? [...history].sort((a, b) =>
         order === "asc"
           ? a[orderBy] < b[orderBy]
             ? -1
@@ -88,7 +86,7 @@ const RevenueTable = (props) => {
           ? -1
           : 1
       )
-    : revenue;
+    : history;
 
   const filteredData = sortedData.filter((row) =>
     Object.values(row).some((value) =>
@@ -107,25 +105,33 @@ const RevenueTable = (props) => {
 
   const headers = [
     {
-      label: "id",
+      label: "Id",
       key: "id",
     },
     {
-      label: "Customer",
-      key: "customer",
+      label: "Order",
+      key: "order_id",
     },
     ,
+    {
+      label: "Sub Amount",
+      key: "sub_amount",
+    },
+    {
+      label: "Fee",
+      key: "fee",
+    },
     {
       label: "Amount",
       key: "amount",
     },
     {
-      label: "Shipping Amount",
-      key: "shipping_amount",
+      label: "Currency",
+      key: "currency",
     },
     {
-      label: "Payment Method",
-      key: "payment_method",
+      label: "Current Balance",
+      key: "current_balance",
     },
     {
       label: "Created At",
@@ -136,17 +142,19 @@ const RevenueTable = (props) => {
     {
       data: paginatedData.map((data) => ({
         id: data?.id,
-        customer: data?.customer_order.name,
+        order_id: data?.order_id,
+        sub_amount: data?.sub_amount,
+        fee: data?.fee,
         amount: data?.amount,
-        shipping_amount: data?.shipping_amount,
-        payment_method: data?.payment_order?.payment_channel,
-        created_at: data?.customer_order.created_at,
+        currency: data?.currency,
+        current_balance: data?.current_balance,
+        created_at: data?.created_at,
       })),
     },
   ];
 
   const csvLinkProps = {
-    filename: "Revenue.csv",
+    filename: "Hisory Revenue.csv",
     headers: headers,
     data: DataSet[0].data, // Access the data property from DataSet
   };
@@ -154,7 +162,7 @@ const RevenueTable = (props) => {
     const ws = XLSX.utils.json_to_sheet(DataSet[0].data);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-    XLSX.writeFile(wb, "Revenue.xlsx");
+    XLSX.writeFile(wb, "History Revenue.xlsx");
   };
   return (
     <Card className="mt-5 flex-wrap text-[12px]">
@@ -229,9 +237,9 @@ const RevenueTable = (props) => {
                   </TableCell>
 
                   <TableCell>
-                    <Button onClick={() => handleSort("customer")}>
-                      Customer
-                      {orderBy === "customer" ? (
+                    <Button onClick={() => handleSort("order")}>
+                      Order
+                      {orderBy === "order" ? (
                         <span>
                           {order === "desc" ? (
                             <ArrowDownward />
@@ -243,9 +251,9 @@ const RevenueTable = (props) => {
                     </Button>
                   </TableCell>
                   <TableCell>
-                    <Button onClick={() => handleSort("Amount")}>
-                      Amount
-                      {orderBy === "Amount" ? (
+                    <Button onClick={() => handleSort("SubuAmount")}>
+                      Sub Amount
+                      {orderBy === "subAmount" ? (
                         <span>
                           {order === "desc" ? (
                             <ArrowDownward />
@@ -257,9 +265,9 @@ const RevenueTable = (props) => {
                     </Button>
                   </TableCell>
                   <TableCell>
-                    <Button onClick={() => handleSort("ShippingAmount")}>
-                      Shipping Amount
-                      {orderBy === "ShippingAmount" ? (
+                    <Button onClick={() => handleSort("fee")}>
+                      Fee
+                      {orderBy === "fee" ? (
                         <span>
                           {order === "desc" ? (
                             <ArrowDownward />
@@ -271,9 +279,37 @@ const RevenueTable = (props) => {
                     </Button>
                   </TableCell>
                   <TableCell>
-                    <Button onClick={() => handleSort("PaymentMethod")}>
-                      Payment Method
-                      {orderBy === "PaymentMethod" ? (
+                    <Button onClick={() => handleSort("amount")}>
+                      Amout
+                      {orderBy === "amount" ? (
+                        <span>
+                          {order === "desc" ? (
+                            <ArrowDownward />
+                          ) : (
+                            <ArrowUpward />
+                          )}
+                        </span>
+                      ) : null}
+                    </Button>
+                  </TableCell>
+                  <TableCell>
+                    <Button onClick={() => handleSort("currency")}>
+                    Currency
+                      {orderBy === "currency" ? (
+                        <span>
+                          {order === "desc" ? (
+                            <ArrowDownward />
+                          ) : (
+                            <ArrowUpward />
+                          )}
+                        </span>
+                      ) : null}
+                    </Button>
+                  </TableCell>
+                  <TableCell>
+                    <Button onClick={() => handleSort("currentBalance")}>
+                    Current Balance
+                      {orderBy === "currentBalance" ? (
                         <span>
                           {order === "desc" ? (
                             <ArrowDownward />
@@ -301,21 +337,23 @@ const RevenueTable = (props) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {paginatedData.map((revenue) => (
-                  <TableRow key={revenue.id}>
+                {paginatedData.map((history) => (
+                  <TableRow key={history.id}>
                     <TableCell className="whitespace-nowrap">
-                      {revenue.id}
+                      {history.id}
                     </TableCell>
-                    <TableCell>{revenue.customer_order.name}</TableCell>
-                    <TableCell>{revenue.amount}</TableCell>
-                    <TableCell>{revenue.shipping_amount}</TableCell>
-                    <TableCell>
-                      {getPaymentMethod(
-                        revenue?.payment_order?.payment_channel
-                      )}
+                    <TableCell>{history.order_id}</TableCell>
+                    <TableCell>{history.sub_amount}</TableCell>
+                    <TableCell>{history.fee}</TableCell>
+                    <TableCell>{history.amount}</TableCell>
+                    <TableCell>{
+                        history?.currency}
+                    </TableCell>
+                    <TableCell>{
+                        history?.current_balance}
                     </TableCell>
                     <TableCell>
-                      {formatDate(revenue.customer_order.created_at)}
+                      {history?.created_at}
                     </TableCell>
                   </TableRow>
                 ))}
@@ -340,4 +378,4 @@ const RevenueTable = (props) => {
   );
 };
 
-export default RevenueTable;
+export default HistoryTable;

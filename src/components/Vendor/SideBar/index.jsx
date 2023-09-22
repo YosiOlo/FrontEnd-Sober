@@ -72,7 +72,7 @@ const Sidebar = () => {
       };
 
   return (
-    <div className="sidebar-container flex text-base-300  no-underline">
+    <div className="sidebar-container flex no-underline text-black">
       <div
         onClick={() => setOpen(false)}
         className={`md:hidden fixed inset-0  z-[998] bg-black/50 ${
@@ -85,7 +85,7 @@ const Sidebar = () => {
         initial={{ x: isTabletMid ? -250 : 0 }}
         animate={open ? "open" : "closed"}
         className={` bg-white text-gray shadow-xl z-[999] max-w-[16rem]  w-[16rem] 
-        overflow-hidden md:relative fixed 
+        overflow-hidden md:relative fixed no-underline
         `}
       >
         <div className="flex items-center gap-2.5 font-medium  py-3  mx-3">
@@ -116,10 +116,10 @@ const Sidebar = () => {
         </div>
 
         <div className="flex flex-col  no-underline text-[12px]">
-          <ul className="whitespace-pre px-2.5 ml-1 flex flex-col gap-1  font-medium overflow-x-hidden scrollbar-thin scrollbar-track-white scrollbar-thumb-slate-100   md:h-[68%] h-[70%]">
+          <ul className=" no-underline whitespace-pre px-2.5 ml-1 flex flex-col gap-1  font-medium overflow-x-hidden scrollbar-thin scrollbar-track-white scrollbar-thumb-slate-100   md:h-[68%] h-[70%]">
             <li>
               <NavLink to={"/VenDashboard"} className="link">
-                <BiHome size={18} className="min-w-max" />
+                <BiHome size={18} className="no-underline min-w-max" />
                 Dashboard
               </NavLink>
             </li>

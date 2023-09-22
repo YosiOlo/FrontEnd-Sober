@@ -19,7 +19,7 @@ import { TbFileExport, TbReload } from "react-icons/tb";
 import { FaFileCsv } from "react-icons/fa";
 import { ArrowUpward, ArrowDownward, Search } from "@mui/icons-material";
 
-const DashboardTable = (props) => {
+const TableDashboard = (props) => {
   const { DataDashboard } = props;
   const [tableData, setTableData] = useState(DataDashboard);
   const [orderBy, setOrderBy] = useState("");
@@ -368,4 +368,4 @@ const DashboardTable = (props) => {
   );
 };
 
-export default DashboardTable;
+export default TableDashboard;

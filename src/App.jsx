@@ -13,38 +13,45 @@ import DashboardPage from "./pages/Vendor/DashboardPage";
 import OrdersPage from "./pages/Vendor/OrderPage";
 import OrderReturnsPage from "./pages/Vendor/OrderReturnsPage";
 import RevenuePage from "./pages/Vendor/RevenuePage";
-import ProductsPage from "./pages/Vendor/ProductsPage";
+import ProductsPage from "./pages/Vendor/ProductsPage"
+import HistoryIndex from "./components/Vendor/revenue/HistoryChart/HistoryIndex";
+import EtalasePage from "./pages/Vendor/EtalasePage";
+import WithdrawalsPage from "./pages/Vendor/WithdrawalsPage";
+import ReviewsPage from "./pages/Vendor/ReviewPage";
+import SettingsPage from "./pages/Vendor/SettingsPage";
+import AddProductIndex from "./components/Vendor/products/AddProducts/AddProductIndex";
+import AddCouponsIndex from "./components/Vendor/Coupons/AddCoupons/AddCouponsIndex";
+import CouponsPage from "./pages/Vendor/CouponsPage";
+import ChatsPage from "./pages/Vendor/ChatsPage";
 
 function App() {
   return (
     <div>
       <Routes>
-        <Route element={<MainLayout />}>
           <Route index element={<PageDashboard />} />
           <Route path="/about" element={<PageAbout />} />
           <Route path="/login" element={<PageLogin />} />
           <Route path="/register" element={<PageRegister />} />
           <Route path="/contact" element={<PageContact />} />
           <Route path="/product" element={<PageProduct />} />
-        </Route>
         {/* Vendor Routes */}
         <Route element={<RootLayout />}>
-          <Route path="/venDashboard" element={<DashboardPage />} />
-          <Route path="/VenOrders" element={<OrdersPage />} />
-          <Route path="/VenProducts" element={<ProductsPage />} />
-          <Route path="/VenOrderReturns" element={<OrderReturnsPage />} />
-          <Route path="/VenRevenue" element={<RevenuePage />} />
+        <Route path="/VenDashboard" element={<DashboardPage />} />
+        <Route path="/VenProducts" element={<ProductsPage />} />
+        <Route path="/VenOrders" element={<OrdersPage />} />
+        <Route path="/VenOrderReturns" element={<OrderReturnsPage />} />
+        <Route path="/VenRevenue" element={<RevenuePage />} />
+        <Route path="/VenEtalase" element={<EtalasePage />} />
+        <Route path="/VenWithdrawals" element={<WithdrawalsPage />} />
+        <Route path="/VenReviews" element={<ReviewsPage />} />
+        <Route path="/VenSettings" element={<SettingsPage />} />
+        <Route path="/VenCreateProduct" element={<AddProductIndex />} />
+        <Route path="/VenCreateCoupons" element={<AddCouponsIndex />} />
+        <Route path="/historyRevenue" element={<HistoryIndex/>}/>
+        <Route path="/venCoupons" element={<CouponsPage/>}/>
+        <Route path="/venChats" element={<ChatsPage/>}/>
         </Route>
-      </Routes>
-    </div>
-  );
-}
-
-function MainLayout() {
-  return (
-    <div>
-      {/* Put your main layout components here */}
-      <Outlet />
+        </Routes>
     </div>
   );
 }

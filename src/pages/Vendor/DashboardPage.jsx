@@ -3,8 +3,8 @@ import TopBar from "../../components/Vendor/TopBar/Topbar";
 import Barchart from "../../components/Vendor/Dashboard/chart/BarChart";
 import PieChart from "../../components/Vendor/Dashboard/chart/PieChart";
 import Statistic from "../../components/Vendor/Dashboard/Statistic";
-import DashboardTable from "../../components/Vendor/Dashboard/DashboardTable";
 import { recentOrders } from "../../utils/data";
+import NewOrders from "../../components/Vendor/Dashboard/NewOrders";
 
 
 function DashboardPage() {
@@ -18,7 +18,7 @@ function DashboardPage() {
       <Statistic/>
       </div>
       <div className="card p-4 text-[12px]">
-          <DashboardTable  DataDashboard ={data}/>
+          <NewOrders/>
           
         </div>
     </div>

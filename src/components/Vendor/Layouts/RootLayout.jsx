@@ -1,10 +1,13 @@
+import { Outlet } from "react-router-dom";
 import Sidebar from "../SideBar";
 
-function RootLayout({ children }) {
+function RootLayout() {
   return (
-    <div className="flex">
+    <div className="flex ">
       <Sidebar />
-      <main className="flex-1 py-4">{children}</main>
+      <div className="flex-1">
+      <Outlet/>
+      </div>
     </div>
   );
 }
