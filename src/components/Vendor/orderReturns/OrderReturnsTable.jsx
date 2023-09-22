@@ -20,7 +20,7 @@ import { MdOutlineArrowDropDown, MdEdit, MdDelete } from "react-icons/md";
 import { TbFileExport, TbReload } from "react-icons/tb";
 import { FaFileCsv } from "react-icons/fa";
 import { ArrowUpward, ArrowDownward, Search } from "@mui/icons-material";
-import { formatDate } from "../../../utils/ApiConfig";
+import { formatDate, getOrderReturns } from "../../../utils/ApiConfig";
 
 const OrderReturnsTable = (props) => {
   const [orderReturns, setOrderReturns] = useState([]);
@@ -33,27 +33,17 @@ const OrderReturnsTable = (props) => {
   const [rowToDelete, setRowToDelete] = useState(null); // Store the ID of the row to delete
 
   useEffect(() => {
-    const apiUrl =
-      "https://kuro.asrofur.me/sober/api/transaction/vendor/returns?page&limit";
-    const bearerToken =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjk1Mjc4MDQ0LCJleHAiOjE2OTUzNjQ0NDR9.gTdleJdGE7IVNxnBzOvBGZGWg50yAB1pTbfOsLXF_7s";
-
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(apiUrl, {
-          headers: {
-            Authorization: `Bearer ${bearerToken}`,
-          },
-        });
-        setOrderReturns(response.data.data.rows); // Fixed variable name here
-        setLoading(false); // Data is loaded
-        console.log("ttttttttttttttttttttttttt");
-        console.log(response.data.data.rows);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    fetchData();
+    // Panggil getOrders untuk mengambil data dari API saat komponen dimuat
+    getOrderReturns()
+      .then((data) => {
+        
+        // Gunakan data yang dikembalikan dari getOrders di sini
+        console.log(data);
+        setOrderReturns(data)
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   }, []);
 
   const toggleExport = () => {

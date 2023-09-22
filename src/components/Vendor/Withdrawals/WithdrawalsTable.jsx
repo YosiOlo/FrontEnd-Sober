@@ -18,7 +18,7 @@ import { MdOutlineArrowDropDown, MdEdit, MdDelete } from "react-icons/md";
 import { TbFileExport, TbReload } from "react-icons/tb";
 import { FaFileCsv } from "react-icons/fa";
 import { ArrowUpward, ArrowDownward, Search } from "@mui/icons-material";
-import { formatDate } from "../../../utils/ApiConfig";
+import { formatDate, getWithdrawals } from "../../../utils/ApiConfig";
 import { CSVLink } from "react-csv";
 import * as XLSX from "xlsx";
 
@@ -32,28 +32,11 @@ const WithdrawalsTable = () => {
   const [exportOpen, setexportOpen] = useState(false);
   const [rowToDelete, setRowToDelete] = useState(null); // Store the ID of the row to delete
 
-  useEffect(() => {
-    const apiUrl =
-      "https://kuro.asrofur.me/sober/api/transaction/vendor/withdrawal";
-    const bearerToken =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjk1MzUyODAzLCJleHAiOjE2OTU0MzkyMDN9.mkQ0JhNbVPLzLE9c0QINLuMEUgkzjBhwPF1jlVPzWc4";
-
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(apiUrl, {
-          headers: {
-            Authorization: `Bearer ${bearerToken}`,
-          },
-        });
-        setWithdrawals(response.data.data.rows); // Fixed variable name here
-        console.log("ttttttttttttttttttttttttt");
-        console.log(response.data.data.rows);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    fetchData();
-  }, []);
+ useEffect(()=>{
+  getWithdrawals().then((data)=>{
+    setWithdrawals(data)
+  })
+ })
 
   const toggleExport = () => {
     setexportOpen(!exportOpen);

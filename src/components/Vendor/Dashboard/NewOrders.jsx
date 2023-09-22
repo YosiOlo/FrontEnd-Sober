@@ -13,8 +13,7 @@ import {
   TablePagination,
   TextField,
 } from "@mui/material";
-import axios from "axios";
-import { formatDate } from "../../../utils/ApiConfig";
+import { formatDate, getOrders } from "../../../utils/ApiConfig";
 import { Link } from "react-router-dom";
 
 const NewOrders = () => {
@@ -24,30 +23,11 @@ const NewOrders = () => {
   const [orderByCreatedAt, setOrderByCreatedAt] = useState("desc"); // Tambah state ini
   // ...
 
-  useEffect(() => {
-    const apiUrl =
-      "https://kuro.asrofur.me/sober/api/transaction/vendor?limit=30";
-    const bearerToken =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjk1MzUyODAzLCJleHAiOjE2OTU0MzkyMDN9.mkQ0JhNbVPLzLE9c0QINLuMEUgkzjBhwPF1jlVPzWc4";
-
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(apiUrl, {
-          headers: {
-            Authorization: `Bearer ${bearerToken}`,
-          },
-        });
-
-        setTransactions(response?.data.data.rows);
-        // console.log("ttttttttttttttttttttttttt");
-        // console.log(response.data.data.rows);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
+useEffect(()=>{
+  getOrders().then((data)=>{
+    setTransactions(data)
+  })
+})
 
   const sortedData = [...transactions].sort((a, b) => {
     if (orderBy === "created_at") {

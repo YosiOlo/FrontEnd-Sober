@@ -24,7 +24,7 @@ import { TbFileExport, TbReload } from "react-icons/tb";
 import { FaFileCsv } from "react-icons/fa";
 import { ArrowUpward, ArrowDownward, Search } from "@mui/icons-material";
 import axios from "axios";
-import { formatDate } from "../../../utils/ApiConfig";
+import { deletOrders, formatDate, getOrders } from "../../../utils/ApiConfig";
 
 const OrdersTable = () => {
   const [orderBy, setOrderBy] = useState("id");
@@ -38,30 +38,18 @@ const OrdersTable = () => {
   const [transactions, setTransactions] = useState([]);
 
   useEffect(() => {
-    const apiUrl =
-      "https://kuro.asrofur.me/sober/api/transaction/vendor?limit=30";
-    const bearerToken =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjk1Mjc4MDQ0LCJleHAiOjE2OTUzNjQ0NDR9.gTdleJdGE7IVNxnBzOvBGZGWg50yAB1pTbfOsLXF_7s";
-
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(apiUrl, {
-          headers: {
-            Authorization: `Bearer ${bearerToken}`,
-          },
-        });
-        setExportData(response?.data.data.rows);
-
-        setTransactions(response?.data.data.rows);
-        // console.log("ttttttttttttttttttttttttt");
-        // console.log(response.data.data.rows);
-        console.log(paginatedData);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
+    // Panggil getOrders untuk mengambil data dari API saat komponen dimuat
+    getOrders()
+      .then((data) => {
+        
+        // Gunakan data yang dikembalikan dari getOrders di sini
+        console.log(data);
+        setExportData(data)
+        setTransactions(data)
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   }, []);
 
   const getPaymentStatus = (PaymentStatus) => {
@@ -268,50 +256,56 @@ const OrdersTable = () => {
     doc.save("Orders.pdf");
   };
 
-  const confirmDelete = async () => {
-    if (rowToDelete !== null) {
-      await deleteData(rowToDelete);
-    }
-    setRowToDelete(null); // Clear the rowToDelete
-  };
 
-  const deleteData = async (rowId) => {
-    try {
-      const apiUrl = `https://kuro.asrofur.me/sober/api/transaction/vendor/${rowId}`;
-      const bearerToken =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjk1Mjc4MDQ0LCJleHAiOjE2OTUzNjQ0NDR9.gTdleJdGE7IVNxnBzOvBGZGWg50yAB1pTbfOsLXF_7s";
+  // const deleteData = async (rowId) => {
+  //   try {
+  //     const apiUrl = `https://kuro.asrofur.me/sober/api/transaction/vendor/${rowId}`;
+  //     const bearerToken =
+  //       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjk1Mjc4MDQ0LCJleHAiOjE2OTUzNjQ0NDR9.gTdleJdGE7IVNxnBzOvBGZGWg50yAB1pTbfOsLXF_7s";
 
-      const response = await axios.delete(apiUrl, {
-        headers: {
-          Authorization: `Bearer ${bearerToken}`,
-        },
+  //     const response = await axios.delete(apiUrl, {
+  //       headers: {
+  //         Authorization: `Bearer ${bearerToken}`,
+  //       },
+  //     });
+
+  //     if (response.status === 200) {
+  //       console.log("Success! Data deleted from API.");
+  //       console.log("Response data:", response.data); // Cetak respons data
+  //       // Data berhasil dihapus dari API, sekarang update state
+  //       const updatedData = transactions.filter((row) => row.id !== rowId);
+  //       setTransactions(updatedData);
+  //       setRowToDelete(null); // Reset rowToDelete setelah berhasil dihapus
+  //     } else {
+  //       console.error(
+  //         "Failed to delete data from API. Status:",
+  //         response.status
+  //       );
+  //     }
+  //   } catch (error) {
+  //     console.error("Error deleting data:", error);
+
+  //     if (error.response) {
+  //       console.error("Response data:", error.response.data);
+  //     }
+  //   }
+  // };
+  const handleDelete = (rowId) => {
+    deletOrders(rowId)
+      .then(() => {
+        getOrders()
+          .then((data) => {
+            setOrder(data);
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      })
+      .catch((error) => {
+        console.error("Error:", error);
       });
-
-      if (response.status === 200) {
-        console.log("Success! Data deleted from API.");
-        console.log("Response data:", response.data); // Cetak respons data
-        // Data berhasil dihapus dari API, sekarang update state
-        const updatedData = transactions.filter((row) => row.id !== rowId);
-        setTransactions(updatedData);
-        setRowToDelete(null); // Reset rowToDelete setelah berhasil dihapus
-      } else {
-        console.error(
-          "Failed to delete data from API. Status:",
-          response.status
-        );
-      }
-    } catch (error) {
-      console.error("Error deleting data:", error);
-
-      if (error.response) {
-        console.error("Response data:", error.response.data);
-      }
-    }
   };
 
-  const handleDeleteClick = (rowId) => {
-    setRowToDelete(rowId); // Set ID baris yang akan dihapus saat tombol "Delete" pada baris diklik
-  };
 
   return (
     <Card className="mt-5 w-full">
@@ -527,7 +521,7 @@ const OrdersTable = () => {
                         </button>
                         <button
                           className="bg-red-500 text-white px-2 py-1 rounded-md"
-                          onClick={() => handleDeleteClick(transaction.id)} // Implement the handleDelete function
+                          onClick={() => handleDelete(transaction.id)} // Implement the handleDelete function
                         >
                           <MdDelete />
                         </button>

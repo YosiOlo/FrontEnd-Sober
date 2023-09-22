@@ -6,7 +6,7 @@ function SettingsPage() {
   return (
     <div>
       <TopBar title="Settings"/>
-      <div className="p-4">
+      <div className="p-7 ">
       <Settings/>
 
       </div>

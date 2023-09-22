@@ -1,8 +1,21 @@
 // ApiConfig.jsx
+import { Try } from '@mui/icons-material';
 import axios from 'axios';
 
 export const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL_API;
 // https://kuro.asrofur.me/sober/api/membership
+
+// Fungsi untuk menyimpan token ke localStorage
+export const setAuthToken = (token) => {
+    localStorage.setItem('authToken', token);
+  };
+  
+  // Fungsi untuk mendapatkan token dari localStorage
+  export const getAuthToken = () => {
+    return localStorage.getItem('authToken');
+  };    
+ 
+  const authToken = getAuthToken();
 export const memberShip = async () => {
     try {
         const response = await axios.get(`${BASE_URL}/membership`);
@@ -34,7 +47,8 @@ export const loginUser = async (username, password, rememberMe) => {
     try {
         const response = await axios.post(`${BASE_URL}/auth/signin`, data);
         const { token } = response.data;
-        localStorage.setItem('authToken', token);
+        // localStorage.setItem('authToken', token);
+        setAuthToken(token);
         console.log('Respon API:', response.data);
         return true; // Berhasil login
     } catch (error) {
@@ -42,6 +56,160 @@ export const loginUser = async (username, password, rememberMe) => {
         return false; // Gagal login
     }
 };
+
+
+export const getOrders = async () => {
+    const authToken = getAuthToken();
+    try {
+      const response = await axios.get(`${BASE_URL}/transaction/vendor/?limit=30`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+  
+      // Mengembalikan data respons untuk digunakan di komponen lain
+      return response?.data.data.rows;
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      throw error; // Melempar kembali kesalahan untuk penanganan lebih lanjut jika diperlukan
+    }
+  };
+
+  export const getCoupons = async () => {
+    const authToken = getAuthToken();
+    try {
+      const response = await axios.get(`${BASE_URL}/discount/vendor/list/`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+  
+      // Mengembalikan data respons untuk digunakan di komponen lain
+      return response?.data.data;
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      throw error; // Melempar kembali kesalahan untuk penanganan lebih lanjut jika diperlukan
+    }
+  };
+  
+  export const deletCoupons = async (rowId) => {
+    try {
+        const response = await axios.delete(`${BASE_URL}/discount/vendor/${rowId}`, {
+            headers : {
+                Authorization:`Bearer ${authToken}`,
+            },
+        });
+        if (response.status === 200) {
+            console.log("Response Data: ", response.data);
+        }
+    } catch (error) {
+        console.error ("Error deleting data:", error);
+    }
+  };
+
+  export const deletOrders = async (rowId) => {
+    try {
+        const response = await axios.delete(`${BASE_URL}/transaction/vendor/${rowId}`, {
+            headers : {
+                Authorization:`Bearer ${authToken}`,
+            },
+        });
+        if (response.status === 200) {
+            console.log("Response Data: ", response.data);
+        }
+    } catch (error) {
+        console.error ("Error deleting data:", error);
+    }
+  };
+
+export const getOrderReturns = async () => {
+    const authToken = getAuthToken();
+    try {
+      const response = await axios.get(`${BASE_URL}/transaction/vendor/returns?page&limit`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+  
+      // Mengembalikan data respons untuk digunakan di komponen lain
+      return response?.data.data.rows;
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      throw error; // Melempar kembali kesalahan untuk penanganan lebih lanjut jika diperlukan
+    }
+  };
+  
+
+export const getProducts = async () => {
+    const authToken = getAuthToken();
+    try {
+      const response = await axios.get(`${BASE_URL}/product/vendor/list?name&limit=5&search`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+  
+      // Mengembalikan data respons untuk digunakan di komponen lain
+      return response?.data.data.rows;
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      throw error; // Melempar kembali kesalahan untuk penanganan lebih lanjut jika diperlukan
+    }
+  };
+  
+export const getRevenue = async () => {
+    const authToken = getAuthToken();
+    try {
+      const response = await axios.get(`${BASE_URL}/transaction/vendor/revenue`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+  
+      // Mengembalikan data respons untuk digunakan di komponen lain
+      return response?.data.data;
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      throw error; // Melempar kembali kesalahan untuk penanganan lebih lanjut jika diperlukan
+    }
+  };
+  
+export const getReview = async () => {
+    const authToken = getAuthToken();
+    try {
+      const response = await axios.get(`${BASE_URL}/review/vendor/list`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+  
+      // Mengembalikan data respons untuk digunakan di komponen lain
+      return response?.data.data;
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      throw error; // Melempar kembali kesalahan untuk penanganan lebih lanjut jika diperlukan
+    }
+  };
+  
+  
+export const getWithdrawals = async () => {
+    const authToken = getAuthToken();
+    try {
+      const response = await axios.get(`${BASE_URL}/transaction/vendor/withdrawal`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+  
+      // Mengembalikan data respons untuk digunakan di komponen lain
+      return response?.data.data.rows;
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      throw error; // Melempar kembali kesalahan untuk penanganan lebih lanjut jika diperlukan
+    }
+  };
+  
+
 export const logoutUser = () => {
     localStorage.removeItem('authToken');
     // Tambahkan logika lain yang diperlukan saat logout

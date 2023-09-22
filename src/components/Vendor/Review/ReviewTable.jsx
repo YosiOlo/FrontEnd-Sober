@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { formatDate } from "../../../utils/ApiConfig";
+import { formatDate, getReview } from "../../../utils/ApiConfig";
 import {
   Card,
   CardContent,
@@ -29,29 +29,12 @@ const ReviewTable = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [exportOpen, setexportOpen] = useState(false);
 
+
   useEffect(() => {
-    const apiUrl = "https://kuro.asrofur.me/sober/api/review/vendor/list";
-    const bearerToken =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjk1MzUyODAzLCJleHAiOjE2OTU0MzkyMDN9.mkQ0JhNbVPLzLE9c0QINLuMEUgkzjBhwPF1jlVPzWc4";
-
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(apiUrl, {
-          headers: {
-            Authorization: `Bearer ${bearerToken}`,
-          },
-        });
-        setReview(response.data.data); // Fixed variable name here
-
-        console.log("ttttttttttttttttttttttttt");
-        console.log(response.data.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    fetchData();
-  }, []);
-
+    getReview().then((data) => {
+      setReview(data);
+    })
+  },[])
   const getPaymentMethod = (method) => {
     if (method === "bank_transfer")
       return <p className="text-[12px]">Bank Transfer</p>;

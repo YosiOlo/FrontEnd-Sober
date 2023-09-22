@@ -21,7 +21,7 @@ import { TbFileExport, TbReload } from "react-icons/tb";
 import { FaFileCsv } from "react-icons/fa";
 import { ArrowUpward, ArrowDownward, Search } from "@mui/icons-material";
 import axios from "axios";
-import { formatDate } from "../../../utils/ApiConfig";
+import { formatDate, getProducts } from "../../../utils/ApiConfig";
 
 const ProductsTable = () => {
   const [orderBy, setOrderBy] = useState("id");
@@ -34,32 +34,12 @@ const ProductsTable = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const apiUrl =
-      "https://kuro.asrofur.me/sober/api/product/vendor/list?name&limit=5&search";
-    const bearerToken =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjk1Mjc4MDQ0LCJleHAiOjE2OTUzNjQ0NDR9.gTdleJdGE7IVNxnBzOvBGZGWg50yAB1pTbfOsLXF_7s";
-
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(apiUrl, {
-          headers: {
-            Authorization: `Bearer ${bearerToken}`,
-          },
-        });
-
-        setProducts(response?.data.data.rows);
-        setLoading(false); // Data is loaded
-        console.log("ttttttttttttttttttttttttt");
-        console.log(response.data.data.rows);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        setLoading(false); // Error occurred, set loading to false
-      }
-    };
-
-    fetchData();
-  }, []);
+useEffect(()=>{
+getProducts()
+.then((data) => {
+  setProducts(data);
+})
+},[])
 
   const toggleExport = () => {
     setexportOpen(!exportOpen);
