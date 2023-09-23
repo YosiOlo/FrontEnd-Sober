@@ -11,6 +11,10 @@ import SwiperBrands from '../components/dashboard/swiper/SwiperBrands';
 import SwiperSoap from '../components/dashboard/swiper/SwiperSoap';
 import SwiperNodles from '../components/dashboard/swiper/SwiperNodles';
 import BottomBlog from '../components/dashboard/BottomBlog';
+import TopAppBar from '../components/TopAppBar';
+import MidleBar from '../components/MidleBar';
+import HeaderWrapaper from '../components/HeaderWrapaper';
+import Footer from '../components/Footer';
 
 function PageDashboard() {
     const slideData = [
@@ -25,6 +29,10 @@ function PageDashboard() {
             <HeaderWrapaper />
 
         <div className="main-content">
+        <TopAppBar />
+        <MidleBar />
+        <HeaderWrapaper />
+
             <Hero />
             <SwiperCategories />
             <SwiperIngredients
@@ -36,14 +44,7 @@ function PageDashboard() {
             <SwiperSoap/>
             <SwiperNodles/>
             <BottomBlog />
-            
-            
-
-            
-
-
-        </div>
-        <Footer />
+      <Footer />
         </div>
     );
 }
