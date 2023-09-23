@@ -10,6 +10,7 @@ function TopAppBar() {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    console.log('token',authToken)
     if (authToken) {
       setIsLoading(true);
       fetchUserData(authToken)
@@ -26,6 +27,7 @@ function TopAppBar() {
         .finally(() => setIsLoading(false));
     }
   }, [authToken]);
+
   useEffect(() => {
     const fetchData = async () => {
       const data = await memberShip();
@@ -33,6 +35,9 @@ function TopAppBar() {
     };
     fetchData();
   }, []);
+
+
+
 
 
   const confirmLogout = () => {

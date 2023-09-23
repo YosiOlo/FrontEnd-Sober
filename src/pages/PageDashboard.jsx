@@ -1,4 +1,8 @@
 import React from 'react';
+import TopAppBar from '../components/TopAppBar';
+import MidleBar from '../components/MidleBar';
+import HeaderWrapaper from '../components/HeaderWrapaper';
+import Footer from '../components/Footer';
 import Hero from '../components/dashboard/Hero'
 import SwiperCategories from '../components/dashboard/swiper/SwiperCategories';
 import SwiperIngredients from '../components/dashboard/swiper/SwiperIngredients';
@@ -15,6 +19,11 @@ function PageDashboard() {
     ];
 
     return (
+        <div>
+            <TopAppBar />
+            <MidleBar />
+            <HeaderWrapaper />
+
         <div className="main-content">
             <Hero />
             <SwiperCategories />
@@ -28,10 +37,13 @@ function PageDashboard() {
             <SwiperNodles/>
             <BottomBlog />
             
+            
 
             
 
 
+        </div>
+        <Footer />
         </div>
     );
 }

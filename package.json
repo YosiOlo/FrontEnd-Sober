@@ -10,13 +10,17 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.17",
+    "@heroicons/react": "^2.0.18",
     "@react-leaflet/core": "^2.1.0",
+    "animate.css": "^4.1.1",
     "axios": "^1.5.0",
     "leaflet": "^1.9.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.10.1",
     "react-leaflet": "^4.2.1",
+    "react-loading-skeleton": "^3.3.1",
     "react-router-dom": "^6.15.0",
     "sweetalert2": "^11.7.27",
     "swiper": "^10.2.0"
