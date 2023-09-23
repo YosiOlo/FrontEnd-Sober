@@ -2,7 +2,6 @@ import React from 'react';
 import TopAppBar from '../components/TopAppBar';
 import MidleBar from '../components/MidleBar';
 import HeaderWrapaper from '../components/HeaderWrapaper';
-import Footer from '../components/Footer';
 import Hero from '../components/dashboard/Hero'
 import SwiperCategories from '../components/dashboard/swiper/SwiperCategories';
 import SwiperIngredients from '../components/dashboard/swiper/SwiperIngredients';
@@ -11,9 +10,6 @@ import SwiperBrands from '../components/dashboard/swiper/SwiperBrands';
 import SwiperSoap from '../components/dashboard/swiper/SwiperSoap';
 import SwiperNodles from '../components/dashboard/swiper/SwiperNodles';
 import BottomBlog from '../components/dashboard/BottomBlog';
-import TopAppBar from '../components/TopAppBar';
-import MidleBar from '../components/MidleBar';
-import HeaderWrapaper from '../components/HeaderWrapaper';
 import Footer from '../components/Footer';
 
 function PageDashboard() {
@@ -23,29 +19,24 @@ function PageDashboard() {
     ];
 
     return (
-        <div>
-            <TopAppBar />
-            <MidleBar />
-            <HeaderWrapaper />
+            <div className="main-content">
+                <TopAppBar />
+                <MidleBar />
+                <HeaderWrapaper />
 
-        <div className="main-content">
-        <TopAppBar />
-        <MidleBar />
-        <HeaderWrapaper />
-
-            <Hero />
-            <SwiperCategories />
-            <SwiperIngredients
-                listData={slideData}
-                title="Bumbu dan Bahan Makanan"
-            />
-            <SwiperBrands />
-            <SwiperOil/>
-            <SwiperSoap/>
-            <SwiperNodles/>
-            <BottomBlog />
-      <Footer />
-        </div>
+                <Hero />
+                <SwiperCategories />
+                <SwiperIngredients
+                    listData={slideData}
+                    title="Bumbu dan Bahan Makanan"
+                />
+                <SwiperBrands />
+                <SwiperOil />
+                <SwiperSoap />
+                <SwiperNodles />
+                <BottomBlog />
+                <Footer />
+            </div>
     );
 }
 
