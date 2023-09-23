@@ -3,6 +3,7 @@ import { FaShoppingCart } from "react-icons/fa";
 import { RxExit } from "react-icons/rx";
 import { VscSignOut } from "react-icons/vsc";
 import { MdOutlineArrowDropDown } from "react-icons/md";
+import { Link } from "react-router-dom";
 
 const TopBar = ({ title }) => {
   const [cartOpen, setCartOpen] = useState(false);
@@ -23,7 +24,7 @@ const TopBar = ({ title }) => {
             <button><VscSignOut className="hover:text-yellow-400" size={25} /></button>
         </div>
     <div className="sm:flex items-center justify-between p-3 hidden sm:block flex text-base-300">
-      <h1 className="text-xl font-bold text-black">{title}</h1>
+      <h1 className="text-[20px] font-bold text-black">{title}</h1>
       <div className="flex items-center space-x-4 text-black">
         <div className="relative">
           <button className="flex  px-4 py-2 hover:text-yellow-400" onClick={toggleCart}  >
@@ -45,9 +46,7 @@ const TopBar = ({ title }) => {
             </select>
           </div>
         </div>
-        <button className=" flex justify-between text-[14px] font-semibold px-4 py-2 rounded-lg hover:text-yellow-400">
-          View Your Store <RxExit className="mt-1 ml-2"/>
-        </button>
+          <Link className="flex justify-between text-[14px] font-semibold px-4 py-2 rounded-lg hover:text-yellow-400" to={"/"}>View Your Store <RxExit className="mt-1 ml-2"/></Link>
       </div>
     </div>
     </div>

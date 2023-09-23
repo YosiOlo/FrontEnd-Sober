@@ -25,6 +25,7 @@ import { FaFileCsv } from "react-icons/fa";
 import { ArrowUpward, ArrowDownward, Search } from "@mui/icons-material";
 import axios from "axios";
 import { deletOrders, formatDate, getOrders } from "../../../utils/ApiConfig";
+import Swal from "sweetalert2";
 
 const OrdersTable = () => {
   const [orderBy, setOrderBy] = useState("id");
@@ -306,6 +307,24 @@ const OrdersTable = () => {
       });
   };
 
+  const confirmDelete =() =>{
+    Swal.fire({
+      title: "Are You sure, want to delete?",
+      text: "Row will be deleted",
+      icon: "Warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+      cancelButtonText: "No",
+      cancelButtonColor: "#FFC107",
+      confirmButtonColor: "#0DCAF0",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        
+      handleDelete();
+      }
+    });
+  }
+
 
   return (
     <Card className="mt-5 w-full">
@@ -521,7 +540,7 @@ const OrdersTable = () => {
                         </button>
                         <button
                           className="bg-red-500 text-white px-2 py-1 rounded-md"
-                          onClick={() => handleDelete(transaction.id)} // Implement the handleDelete function
+                          onClick={() => confirmDelete(transaction.id)} // Implement the handleDelete function
                         >
                           <MdDelete />
                         </button>
@@ -546,27 +565,6 @@ const OrdersTable = () => {
           />
         </div>
       </CardContent>
-      {rowToDelete && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 text-[14]">
-          <div className="bg-white p-6 rounded-lg">
-            <p>Are you sure, you want to delete this row??</p>
-            <div className="mt-4 flex justify-end gap-3">
-              <button
-                className="bg-red-600 text-white px-3 py-1 rounded-md"
-                onClick={confirmDelete}
-              >
-                delete
-              </button>
-              <button
-                className="bg-gray-300 text-black px-3 py-1 rounded-md"
-                onClick={() => setRowToDelete(null)}
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </Card>
   );
 };

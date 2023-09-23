@@ -98,6 +98,7 @@ useEffect(()=>{
 
   return (
     <div>
+      <h1 className="text-[20px] font-bold px-8">Recent Orders</h1>
       <Card className="mt-5 w-full">
         <CardContent className="sm:w-auto">
           <div className="overflow-x-auto">

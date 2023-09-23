@@ -92,6 +92,7 @@ export const getOrders = async () => {
     }
   };
   
+  
   export const deletCoupons = async (rowId) => {
     try {
         const response = await axios.delete(`${BASE_URL}/discount/vendor/${rowId}`, {
@@ -209,6 +210,52 @@ export const getWithdrawals = async () => {
     }
   };
   
+  
+export const checkToken = async () => {
+    const authToken = getAuthToken();
+    try {
+      const response = await axios.get(`${BASE_URL}/auth/check`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+  
+      // Mengembalikan data respons untuk digunakan di komponen lain
+      return response?.data.datas;
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      throw error; // Melempar kembali kesalahan untuk penanganan lebih lanjut jika diperlukan
+    }
+  };
+
+  export const getVendorInfo= async () => {
+    const authToken = getAuthToken();
+    try {
+      const response = await axios.get(`${BASE_URL}/users/vendor`,{
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        }
+      });
+      return response.data.data;
+    } catch (error) {
+      
+    }
+  };
+  export const getVendorHistory= async () => {
+    const authToken = getAuthToken();
+    try {
+      const response = await axios.get(`${BASE_URL}/transaction/vendor/history`,{
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        }
+      });
+      return response.data.data;
+    } catch (error) {
+      
+    }
+  };
+  
+  
 
 export const logoutUser = () => {
     localStorage.removeItem('authToken');
@@ -233,6 +280,7 @@ export const registerUser = async (username, useremail, password, repassword, re
         return false; // Gagal registrasi
     }
 };
+
 
 export const fetchUserData = async (authToken) => {
     try {

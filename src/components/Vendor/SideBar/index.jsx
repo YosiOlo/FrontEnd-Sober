@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useRef } from "react";
 import { motion } from "framer-motion";
-
+import Swal from "sweetalert2";
 // * React icons
 import { IoIosArrowBack } from "react-icons/io";
 import { SlSettings } from "react-icons/sl";
@@ -19,11 +19,15 @@ import { BsChatDots, BsHandbag, BsBagX, BsBagPlus } from "react-icons/bs";
 import { useMediaQuery } from "react-responsive";
 import { MdMenu } from "react-icons/md";
 import { NavLink, useLocation, useRoutes } from "react-router-dom";
+import { checkToken, fetchUserData, getVendorInfo, logoutUser } from "../../../utils/ApiConfig";
 
 const Sidebar = () => {
   let isTabletMid = useMediaQuery({ query: "(max-width: 768px)" });
   const [open, setOpen] = useState(isTabletMid ? false : true);
   const sidebarRef = useRef();
+  const [userName,setUserName] = useState("");
+  const [balance,setBalance] = useState("");
+  const [join,setJoin] = useState("");
   const { pathname } = useLocation();
 
   useEffect(() => {
@@ -37,6 +41,20 @@ const Sidebar = () => {
   useEffect(() => {
     isTabletMid && setOpen(false);
   }, [pathname]);
+
+
+  useEffect(()=>{
+    checkToken().then((data)=>{
+      setUserName(data.name);
+    })
+  })
+
+  useEffect(()=>{
+    getVendorInfo().then((data)=>{
+      setBalance(data.vendor_info.balance);
+      setJoin(data.vendor_info.created_at);
+    })
+  })
 
   const Nav_animation = isTabletMid
     ? {
@@ -70,7 +88,26 @@ const Sidebar = () => {
           },
         },
       };
-
+  const confirmLogout = () => {
+    Swal.fire({
+      title: "Anda yakin ingin keluar?",
+      text: "Anda akan keluar dari akun Anda.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Keluar",
+      cancelButtonText: "Tidak",
+      cancelButtonColor: "#FFC107",
+      confirmButtonColor: "#0DCAF0",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Panggil fungsi logoutUser di sini jika pengguna menekan "Ya, Keluar"
+        logoutUser();
+        // Kemudian, arahkan pengguna ke halaman login atau tindakan logout lainnya
+        // Misalnya:
+        window.location.href = "/login";
+      }
+    });
+  };
   return (
     <div className="sidebar-container flex no-underline text-black">
       <div
@@ -84,8 +121,8 @@ const Sidebar = () => {
         variants={Nav_animation}
         initial={{ x: isTabletMid ? -250 : 0 }}
         animate={open ? "open" : "closed"}
-        className={` bg-white text-gray shadow-xl z-[999] max-w-[16rem]  w-[16rem] 
-        overflow-hidden md:relative fixed no-underline
+        className={` bg-white text-gray shadow-xl z-[999] max-w-[20rem]  w-[16rem] 
+        overflow-hidden md:relative fixed no-underline 
         `}
       >
         <div className="flex items-center gap-2.5 font-medium  py-3  mx-3">
@@ -103,82 +140,141 @@ const Sidebar = () => {
           />
           <div className="identitas ml-3">
             <p className="text-[14px] text-[#666666]">
-              Hello, Sobermart Official
+              {`Hello, ${userName}`}
             </p>
-            <p className="text-[12px] text-[#333333]">Joined on Mei 22, 2023</p>
+            <p className="text-[12px] text-[#333333]">{`Joined on ${join}`}</p>
           </div>
-          <VscSignOut size={25} />
+          <VscSignOut
+            className="cursor-pointer hover:text-[#FFC107]"
+            size={25}
+            onClick={confirmLogout}
+          />
         </div>
 
         <div className="earnings border-b border-slate-300 mb-5 p-3">
-          <p className="font-semibold text-[#666666]">Earnings</p>
-          <p className="font-bold">Rp.0</p>
+          <p className="font-semibold text-[#666666] text-[16px]">Earnings</p>
+          <p className="font-bold text-[15px]">{`Rp.${balance}`}</p>
         </div>
 
-        <div className="flex flex-col  no-underline text-[12px]">
-          <ul className=" no-underline whitespace-pre px-2.5 ml-1 flex flex-col gap-1  font-medium overflow-x-hidden scrollbar-thin scrollbar-track-white scrollbar-thumb-slate-100   md:h-[68%] h-[70%]">
+        <div className="flex flex-col text-[16px]">
+          <ul className="whitespace-pre px-2.5 ml-1 flex flex-col gap-1  font-medium overflow-x-hidden scrollbar-thin scrollbar-track-white scrollbar-thumb-slate-100   md:h-[68%] h-[70%]">
             <li>
-              <NavLink to={"/VenDashboard"} className="link">
+              <NavLink
+                to={"/VenDashboard"}
+                className={`link flex gap-4 p-4 hover:text-[#FFC107] no-underline ${
+                  pathname === "/VenDashboard" ? "text-[#F0B608] border-r-[2px] border-[#F0B608]" : ""
+                }`}
+              >
                 <BiHome size={18} className="no-underline min-w-max" />
                 Dashboard
               </NavLink>
             </li>
             <li>
-              <NavLink to={"/VenProducts"} className="link">
+              <NavLink
+                to={"/VenProducts"}
+                className={`link flex gap-4 p-4 hover:text-[#FFC107] no-underline ${
+                  pathname === "/VenProducts" ? "text-[#F0B608] border-r-[2px] border-[#F0B608]" : ""
+                }`}
+              >
                 <RiProductHuntLine size={18} className="min-w-max" />
                 Products
               </NavLink>
             </li>
             <li>
-              <NavLink to={"/VenChats"} className="link">
+              <NavLink
+                to={"/VenChats"}
+                className={`link flex gap-4 p-4 hover:text-[#FFC107] no-underline ${
+                  pathname === "/VenChats" ? "text-[#F0B608] border-r-[2px] border-[#F0B608]" : ""
+                }`}
+              >
                 <BsChatDots size={18} className="min-w-max" />
                 Chats
               </NavLink>
             </li>
             <li>
-              <NavLink to={"/VenOrders"} className="link">
+              <NavLink
+                to={"/VenOrders"}
+                className={`link flex gap-4 p-4 hover:text-[#FFC107] no-underline ${
+                  pathname === "/VenOrders" ? "text-[#F0B608] border-r-[2px] border-[#F0B608]" : ""
+                }`}
+              >
                 <BsBagPlus size={18} className="min-w-max" />
                 Orders
               </NavLink>
             </li>
             <li>
-              <NavLink to={"/VenOrderReturns"} className="link">
+              <NavLink
+                to={"/VenOrderReturns"}
+                className={`link flex gap-4 p-4 hover:text-[#FFC107] no-underline ${
+                  pathname === "/VenOrderReturns" ? "text-[#F0B608] border-r-[2px] border-[#F0B608]" : ""
+                }`}
+              >
                 <BsBagX size={18} className="min-w-max" />
                 Order Returns
               </NavLink>
             </li>
             <li>
-              <NavLink to={"/VenRevenue"} className="link">
+              <NavLink
+                to={"/VenRevenue"}
+                className={`link flex gap-4 p-4 hover:text-[#FFC107] no-underline ${
+                  pathname === "/VenRevenue" ? "text-[#F0B608] border-r-[2px] border-[#F0B608]" : ""
+                }`}
+              >
                 <BiDollarCircle size={18} className="min-w-max" />
                 Revenue
               </NavLink>
             </li>
             <li>
-              <NavLink to={"/VenEtalase"} className="link">
+              <NavLink
+                to={"/VenEtalase"}
+                className={`link flex gap-4 p-4 hover:text-[#FFC107] no-underline ${
+                  pathname === "/VenEtalase" ? "text-[#F0B608] border-r-[2px] border-[#F0B608]" : ""
+                }`}
+              >
                 <MdStorefront size={18} className="min-w-max" />
                 Etalase
               </NavLink>
             </li>
             <li>
-              <NavLink to={"/VenCoupons"} className="link">
+              <NavLink
+                to={"/VenCoupons"}
+                className={`link flex gap-4 p-4 hover:text-[#FFC107] no-underline ${
+                  pathname === "/VenCoupons" ? "text-[#F0B608] border-r-[2px] border-[#F0B608]" : ""
+                }`}
+              >
                 <RiCoupon2Fill size={18} className="min-w-max" />
                 Coupons
               </NavLink>
             </li>
             <li>
-              <NavLink to={"/VenWithdrawals"} className="link">
+              <NavLink
+                to={"/VenWithdrawals"}
+                className={`link flex gap-4 p-4 hover:text-[#FFC107] no-underline ${
+                  pathname === "/VenWithdrawals" ? "text-[#F0B608] border-r-[2px] border-[#F0B608]" : ""
+                }`}
+              >
                 <BiMoneyWithdraw size={18} className="min-w-max" />
                 Withdrawals
               </NavLink>
             </li>
             <li>
-              <NavLink to={"/VenReviews"} className="link">
+              <NavLink
+                to={"/VenReviews"}
+                className={`link flex gap-4 p-4 hover:text-[#FFC107] no-underline ${
+                  pathname === "/VenReviews" ? "text-[#F0B608] border-r-[2px] border-[#F0B608]" : ""
+                }`}
+              >
                 <BiStar size={18} className="min-w-max" />
                 Reviews
               </NavLink>
             </li>
             <li>
-              <NavLink to={"/VenSettings"} className="link">
+              <NavLink
+                to={"/VenSettings"}
+                className={`link flex gap-4 p-4 hover:text-[#FFC107] no-underline ${
+                  pathname === "/VenSettings" ? "text-[#F0B608] border-r-[2px] border-[#F0B608]" : ""
+                }`}
+              >
                 <SlSettings size={18} className="min-w-max" />
                 Settings
               </NavLink>
