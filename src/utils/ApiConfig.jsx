@@ -18,9 +18,30 @@ export const setAuthToken = (token) => {
   const authToken = getAuthToken();
 export const memberShip = async () => {
     try {
-        const response = await axios.get(`${BASE_URL}/membership`);
+        const response = await axios.get(`${BASE_URL}/api/membership`);
         console.log('Respon API:', response.data); // Pindahkan ini ke atas return
         return response.data.datas;
+    } catch (error) {
+        console.error('Kesalahan Permintaan API:', error.response.data.message);
+        return null;
+    }
+};
+// ?page&limit&search=&orderby=etalase
+// export const product = async (page, limit, search, orderby) => {
+//     try {
+//         const response = await axios.get(`${BASE_URL}/product?page=${page}&limit=${limit}&search=${search}&orderby=${orderby}`);
+//         console.log('Respon API Product:', response.data); // Pindahkan ini ke atas return
+//         return response.data.datas;
+//     } catch (error) {
+//         console.error('Kesalahan Permintaan API:', error.response.data.message);
+//         return null;
+//     }
+// };
+export const product_data = async () => {
+    try {
+        const response = await axios.get(`${BASE_URL}/api/product?page=1&limit=72&search=&orderby=`);
+        console.log('Respon API Product:', response.data); // Pindahkan ini ke atas return
+        return response.data.data;
     } catch (error) {
         console.error('Kesalahan Permintaan API:', error.response.data.message);
         return null;
@@ -45,7 +66,7 @@ export const loginUser = async (username, password, rememberMe) => {
     };
 
     try {
-        const response = await axios.post(`${BASE_URL}/auth/signin`, data);
+        const response = await axios.post(`${BASE_URL}/api/auth/signin`, data);
         const { token } = response.data;
         // localStorage.setItem('authToken', token);
         setAuthToken(token);
@@ -225,7 +246,7 @@ export const registerUser = async (username, useremail, password, repassword, re
     };
 
     try {
-        const response = await axios.post(`${BASE_URL}/auth/signup`, data);
+        const response = await axios.post(`${BASE_URL}/api/auth/signup`, data);
         console.log('Respon API:', response.data);
         return true; // Berhasil registrasi
     } catch (error) {
@@ -237,7 +258,7 @@ export const registerUser = async (username, useremail, password, repassword, re
 export const fetchUserData = async (authToken) => {
     try {
         if (authToken) {
-            const response = await axios.get(`${BASE_URL}/auth/check`, {
+            const response = await axios.get(`${BASE_URL}/api/auth/check`, {
                 headers: {
                     Authorization: `Bearer ${authToken}`,
                 },

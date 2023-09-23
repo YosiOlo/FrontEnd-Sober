@@ -28,7 +28,8 @@ const LoginForm = () => {
     const isSuccess = await loginUser(username, password, rememberMe);
 
     if (isSuccess) {
-      navigate('/');
+      // navigate('/');
+      window.location.href = '/';
     }
   };
 

@@ -11,9 +11,11 @@ const RegisterForm = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [referralCode, setReferralCode] = useState('');
     const [isValidReferral, setIsValidReferral] = useState(false);
-    const [selectedPackage, setSelectedPackage] = useState(''); // State untuk menyimpan pilihan paket pelanggan
+    const [selectedPackage, setSelectedPackage] = useState('');
+    const [passwordMatchError, setPasswordMatchError] = useState(false);
 
     const navigate = useNavigate();
+
     const handleUsernameChange = (event) => {
         setUsername(event.target.value);
     };
@@ -24,20 +26,30 @@ const RegisterForm = () => {
 
     const handlePasswordChange = (event) => {
         setPassword(event.target.value);
+        // Memeriksa kesesuaian kata sandi dan ulangi kata sandi
+        if (repassword && event.target.value !== repassword) {
+            setPasswordMatchError(true);
+        } else {
+            setPasswordMatchError(false);
+        }
     };
 
     const handleRepasswordChange = (event) => {
         setRepassword(event.target.value);
+        // Memeriksa kesesuaian kata sandi dan ulangi kata sandi
+        if (password && event.target.value !== password) {
+            setPasswordMatchError(true);
+        } else {
+            setPasswordMatchError(false);
+        }
     };
 
     const handleReferralCodeChange = (event) => {
         setReferralCode(event.target.value);
-        setIsValidReferral(false); // Set ulang status validasi saat kode referral diubah
+        setIsValidReferral(false);
     };
 
     const checkReferralValidity = () => {
-        // Di sini Anda bisa menambahkan logika untuk memeriksa kevalidan Kode Referral
-        // Contoh sederhana: kode referral 'dummy123' dianggap valid
         if (referralCode === 'dummy123') {
             setIsValidReferral(true);
         } else {
@@ -49,17 +61,24 @@ const RegisterForm = () => {
         setSelectedPackage(event.target.value);
     };
 
+    
+
     const handleRegister = () => {
+
+        if (password !== repassword) {
+            setPasswordMatchError(true);
+            return;
+        }
+
         const isSuccess = registerUser(username, useremail, password, repassword, referralCode, selectedPackage);
 
         if (isSuccess) {
             navigate('/login');
         }
-
     };
 
     return (
-        <div className="h-screen flex justify-center items-center bg-gray-100">
+        <div className="flex justify-center items-center bg-gray-100 mb-4">
             <div className="bg-white p-8 rounded shadow-md w-96">
                 <div className="text-2xl font-semibold mb-8 justify-center text-center border-b-2">
                     <h6 className='text-xl font-semibold mb-1'>Daftar Akun Baru</h6>
@@ -108,7 +127,7 @@ const RegisterForm = () => {
                         <div className="relative">
                             <input
                                 type={showPassword ? 'text' : 'password'}
-                                className="mt-1 p-2 w-full border rounded"
+                                className={`mt-1 p-2 w-full border rounded ${passwordMatchError ? 'border-red-500' : ''}`}
                                 value={repassword}
                                 onChange={handleRepasswordChange}
                                 placeholder='Masukkan Ulang Kata Sandi'
@@ -119,8 +138,8 @@ const RegisterForm = () => {
                             >
                                 {showPassword ? <BsFillEyeFill /> : <BsFillEyeSlashFill />}
                             </button>
-
                         </div>
+                        {passwordMatchError && <p className="text-red-500 mt-1">Kata Sandi tidak cocok.</p>}
                     </div>
                     <div className="mb-4">
                         <label className="block text-sm font-medium text-gray-700">Kode Referral (opsional)</label>
@@ -145,55 +164,66 @@ const RegisterForm = () => {
                     </div>
                     <div className="mb-4">
                         <label className="block text-sm font-medium text-gray-700">Paket Pelanggan</label>
-                        <div className="flex items-center">
-                            <input
-                                type="radio"
-                                id="packageA"
-                                name="package"
-                                value="1"
-                                checked={selectedPackage === '1'}
-                                onChange={handlePackageChange}
-                            />
-                            <label htmlFor="packageA" className="ml-2">Warrior</label>
-                        </div>
-                        <div className="flex items-center">
-                            <input
-                                type="radio"
-                                id="packageB"
-                                name="package"
-                                value="2"
-                                checked={selectedPackage === '2'}
-                                onChange={handlePackageChange}
-                            />
-                            <label htmlFor="packageB" className="ml-2">Royal Warior</label>
-                        </div>
-                        <div className="flex items-center">
-                            <input
-                                type="radio"
-                                id="packageC"
-                                name="package"
-                                value="11"
-                                checked={selectedPackage === '11'}
-                                onChange={handlePackageChange}
-                            />
-                            <label htmlFor="packageC" className="ml-2">Commander</label>
-                        </div>
-                        <div className="flex items-center">
-                            <input
-                                type="radio"
-                                id="packageD"
-                                name="package"
-                                value="12"
-                                checked={selectedPackage === '12'}
-                                onChange={handlePackageChange}
-                            />
-                            <label htmlFor="packageD" className="ml-2">Princess</label>
+                        <div className="grid grid-cols-1 lg:grid-cols-2">
+                            <div className="flex items-center">
+                                <input
+                                    type="radio"
+                                    id="packageA"
+                                    name="package"
+                                    value="1"
+                                    checked={selectedPackage === '1'}
+                                    onChange={handlePackageChange}
+                                    className="mr-2 cursor-pointer"
+                                />
+                                <label htmlFor="packageA" className="ml-1 hover:text-blue-600 cursor-pointer">Warrior</label>
+                            </div>
+
+                            <div className="flex items-center">
+                                <input
+                                    type="radio"
+                                    id="packageB"
+                                    name="package"
+                                    value="2"
+                                    checked={selectedPackage === '2'}
+                                    onChange={handlePackageChange}
+                                    className="mr-2 cursor-pointer"
+                                />
+                                <label htmlFor="packageB" className="ml-1 hover:text-blue-600 cursor-pointer">Royal Warrior</label>
+                            </div>
+
+                            <div className="flex items-center">
+                                <input
+                                    type="radio"
+                                    id="packageC"
+                                    name="package"
+                                    value="11"
+                                    checked={selectedPackage === '11'}
+                                    onChange={handlePackageChange}
+                                    className="mr-2 cursor-pointer"
+                                />
+                                <label htmlFor="packageC" className="ml-1 hover:text-blue-600 cursor-pointer">Commander</label>
+                            </div>
+
+                            <div className="flex items-center">
+                                <input
+                                    type="radio"
+                                    id="packageD"
+                                    name="package"
+                                    value="12"
+                                    checked={selectedPackage === '12'}
+                                    onChange={handlePackageChange}
+                                    className="mr-2 cursor-pointer"
+                                />
+                                <label htmlFor="packageD" className="ml-1 hover:text-blue-600 cursor-pointer">Princess</label>
+                            </div>
                         </div>
                     </div>
+
+
                     <button
-                        className={`bg-blue-500 text-white p-2 rounded w-full mt-4 ${isValidReferral ? '' : 'opacity-50 cursor-not-allowed'}`}
+                        className={`bg-blue-500 text-white p-2 rounded w-full mt-4 ${isValidReferral && !passwordMatchError ? '' : 'opacity-50 cursor-not-allowed'}`}
                         onClick={handleRegister}
-                        disabled={!isValidReferral}
+                        disabled={!isValidReferral || passwordMatchError}
                     >
                         Daftar
                     </button>
