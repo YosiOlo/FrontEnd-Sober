@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { formatDate } from "../../../../utils/ApiConfig";
+import { formatDate, getRevenue, getVendorHistory } from "../../../../utils/ApiConfig";
 import {
   Card,
   CardContent,
@@ -32,29 +32,13 @@ const HistoryTable = () => {
   const [exportOpen, setexportOpen] = useState(false);
   const [rowToDelete, setRowToDelete] = useState(null); // Store the ID of the row to delete
 
-  useEffect(() => {
-    const apiUrl =
-      "https://kuro.asrofur.me/sober/api/transaction/vendor/history";
-    const bearerToken =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjk1Mjc4MDQ0LCJleHAiOjE2OTUzNjQ0NDR9.gTdleJdGE7IVNxnBzOvBGZGWg50yAB1pTbfOsLXF_7s";
 
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(apiUrl, {
-          headers: {
-            Authorization: `Bearer ${bearerToken}`,
-          },
-        });
-        setHistory(response.data.data); // Fixed variable name here
-
-        console.log("ttttttttttttttttttttttttt");
-        console.log(response.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    fetchData();
-  }, []);
+  useEffect(() =>{
+    getVendorHistory().then((data)=>{
+      setHistory(data);
+      console.log(data);
+    })
+  },[])
 
   const getPaymentMethod = (method) => {
     if (method === "bank_transfer")

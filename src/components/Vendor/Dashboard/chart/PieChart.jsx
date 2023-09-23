@@ -43,9 +43,9 @@ function ChartTwo() {
   return (
     <div className="card p-4">
       <div className="header ml-10 mb-7">
-        <h2 className="font-bold">Earnings</h2>
-        <p className=" flex gap-1 text-[12px] font-medium text-blue-400">
-          Revenues in Last 30 days{" "}<TbPlayerTrackNextFilled className='mt-1'/>
+        <h2 className="font-bold text-[20px]">Earnings</h2>
+        <p className=" flex gap-1 text-[12px] font-medium text-blue-400 hover:text-[#FFC107] cursor-default">
+          Revenues in Last 30 days
         </p>
       </div>
       <div className="">
