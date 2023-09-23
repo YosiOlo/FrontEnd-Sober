@@ -82,7 +82,7 @@ export const loginUser = async (username, password, rememberMe) => {
 export const getOrders = async () => {
     const authToken = getAuthToken();
     try {
-      const response = await axios.get(`${BASE_URL}/transaction/vendor/?limit=30`, {
+      const response = await axios.get(`${BASE_URL}/api/transaction/vendor/?limit=30`, {
         headers: {
           Authorization: `Bearer ${authToken}`,
         },
@@ -99,7 +99,7 @@ export const getOrders = async () => {
   export const getCoupons = async () => {
     const authToken = getAuthToken();
     try {
-      const response = await axios.get(`${BASE_URL}/discount/vendor/list/`, {
+      const response = await axios.get(`${BASE_URL}/api/discount/vendor/list/`, {
         headers: {
           Authorization: `Bearer ${authToken}`,
         },
@@ -116,7 +116,7 @@ export const getOrders = async () => {
   
   export const deletCoupons = async (rowId) => {
     try {
-        const response = await axios.delete(`${BASE_URL}/discount/vendor/${rowId}`, {
+        const response = await axios.delete(`${BASE_URL}/api/discount/vendor/${rowId}`, {
             headers : {
                 Authorization:`Bearer ${authToken}`,
             },
@@ -131,7 +131,7 @@ export const getOrders = async () => {
 
   export const deletOrders = async (rowId) => {
     try {
-        const response = await axios.delete(`${BASE_URL}/transaction/vendor/${rowId}`, {
+        const response = await axios.delete(`${BASE_URL}/api/transaction/vendor/${rowId}`, {
             headers : {
                 Authorization:`Bearer ${authToken}`,
             },
@@ -147,7 +147,7 @@ export const getOrders = async () => {
 export const getOrderReturns = async () => {
     const authToken = getAuthToken();
     try {
-      const response = await axios.get(`${BASE_URL}/transaction/vendor/returns?page&limit`, {
+      const response = await axios.get(`${BASE_URL}/api/transaction/vendor/returns?page&limit`, {
         headers: {
           Authorization: `Bearer ${authToken}`,
         },
@@ -165,7 +165,7 @@ export const getOrderReturns = async () => {
 export const getProducts = async () => {
     const authToken = getAuthToken();
     try {
-      const response = await axios.get(`${BASE_URL}/product/vendor/list?name&limit=5&search`, {
+      const response = await axios.get(`${BASE_URL}/api/product/vendor/list?name&limit=5&search`, {
         headers: {
           Authorization: `Bearer ${authToken}`,
         },
@@ -182,7 +182,7 @@ export const getProducts = async () => {
 export const getRevenue = async () => {
     const authToken = getAuthToken();
     try {
-      const response = await axios.get(`${BASE_URL}/transaction/vendor/revenue`, {
+      const response = await axios.get(`${BASE_URL}/api/transaction/vendor/revenue`, {
         headers: {
           Authorization: `Bearer ${authToken}`,
         },
@@ -199,7 +199,7 @@ export const getRevenue = async () => {
 export const getReview = async () => {
     const authToken = getAuthToken();
     try {
-      const response = await axios.get(`${BASE_URL}/review/vendor/list`, {
+      const response = await axios.get(`${BASE_URL}/api/review/vendor/list`, {
         headers: {
           Authorization: `Bearer ${authToken}`,
         },
@@ -217,7 +217,7 @@ export const getReview = async () => {
 export const getWithdrawals = async () => {
     const authToken = getAuthToken();
     try {
-      const response = await axios.get(`${BASE_URL}/transaction/vendor/withdrawal`, {
+      const response = await axios.get(`${BASE_URL}/api/transaction/vendor/withdrawal`, {
         headers: {
           Authorization: `Bearer ${authToken}`,
         },
@@ -235,7 +235,7 @@ export const getWithdrawals = async () => {
 export const checkToken = async () => {
     const authToken = getAuthToken();
     try {
-      const response = await axios.get(`${BASE_URL}/auth/check`, {
+      const response = await axios.get(`${BASE_URL}/api/auth/check`, {
         headers: {
           Authorization: `Bearer ${authToken}`,
         },
@@ -252,7 +252,7 @@ export const checkToken = async () => {
   export const getVendorInfo= async () => {
     const authToken = getAuthToken();
     try {
-      const response = await axios.get(`${BASE_URL}/users/vendor`,{
+      const response = await axios.get(`${BASE_URL}/api/users/vendor`,{
         headers: {
           Authorization: `Bearer ${authToken}`,
         }
@@ -265,7 +265,7 @@ export const checkToken = async () => {
   export const getVendorHistory= async () => {
     const authToken = getAuthToken();
     try {
-      const response = await axios.get(`${BASE_URL}/transaction/vendor/history`,{
+      const response = await axios.get(`${BASE_URL}/api/transaction/vendor/history`,{
         headers: {
           Authorization: `Bearer ${authToken}`,
         }
