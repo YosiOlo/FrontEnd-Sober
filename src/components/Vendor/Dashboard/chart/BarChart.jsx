@@ -50,16 +50,15 @@ const data = [
     uv: 3490,
   },
 ];
-import { MdNavigateNext } from "react-icons/md";
 
 function Barchart() {
     const data= dataBar();
   return (
   <div className="card p-4 w-[40%]">
   <div className="header ml-10 mb-7">
-    <h2 className="font-bold">Sales Reports</h2>
-    <p className=" flex text-[12px] font-medium text-blue-400">
-      <Link className='flex gap-1' to={"/historyRevenue"}>Pendapatan dalam Last 30 days <TbPlayerTrackNextFilled className='mt-1'/>
+    <h2 className="font-bold text-[20px]">Sales Reports</h2>
+    <p className=" flex text-[12px] font-medium text-blue-400 ">
+      <Link className='flex gap-1 hover:text-[#FFC107]' to={"/historyRevenue"}>Pendapatan dalam Last 30 days <TbPlayerTrackNextFilled className='mt-1'/>
       </Link>
     </p>
   </div>

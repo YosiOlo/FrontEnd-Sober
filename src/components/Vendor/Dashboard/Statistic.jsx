@@ -31,10 +31,8 @@ const Statistic = () => {
   return (
     <div>
       <div className="header ml-10 mb-7">
-    <h2 className="font-bold">Sales Reports</h2>
-    <p className=" flex text-[12px] font-medium text-blue-400">
-      <Link className='flex gap-1' to={"/historyRevenue"}>Pendapatan dalam Last 30 days <TbPlayerTrackNextFilled className='mt-1'/>
-      </Link>
+    <h2 className="font-bold text-[20px]">Statictic</h2>
+    <p className=" flex text-[12px] font-medium text-blue-400 hover:text-[#FFC107] cursor-default">Statistics in Last 30 days 
     </p>
   </div>
       <div className="w-[300px] border-l-[1px] border-sky-800">
@@ -46,7 +44,7 @@ const Statistic = () => {
           <div className="shadow-lg bg-[#f0f5e7] rounded overflow-hidden flex p-5">
           <div className="icon mr-5 bg-[#f9f9f9] rounded-md p-2">{card.icon}</div>
             <div className="px-2 py-2">
-              <div className="font-normal text-xs mb-2 text-green-500">{card.title}</div>
+              <div className="font-semibold text-[16px] mb-2 text-green-500">{card.title}</div>
               <p className="text-gray-700 text-xl font-semibold">{card.description}</p>
                {/* Menampilkan ikon di sini */}
             </div>

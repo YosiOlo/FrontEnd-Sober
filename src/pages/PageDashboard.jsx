@@ -13,10 +13,18 @@ import BottomBlog from '../components/dashboard/BottomBlog';
 import Footer from '../components/Footer';
 
 function PageDashboard() {
-    const slideData = [
-        'bumbu 1', 'bumbu 2', 'bumbu 3', 'bumbu 4', 'bumbu 5',
-        'bahan 6', 'bahan 7', 'bahan 8', 'bahan 9', 'bahan 10'
-    ];
+  const slideData = [
+    "bumbu 1",
+    "bumbu 2",
+    "bumbu 3",
+    "bumbu 4",
+    "bumbu 5",
+    "bahan 6",
+    "bahan 7",
+    "bahan 8",
+    "bahan 9",
+    "bahan 10",
+  ];
 
     return (
             <div className="main-content">
