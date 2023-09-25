@@ -24,7 +24,7 @@ import { TbFileExport, TbReload } from "react-icons/tb";
 import { FaFileCsv } from "react-icons/fa";
 import { ArrowUpward, ArrowDownward, Search } from "@mui/icons-material";
 import axios from "axios";
-import { deletOrders, formatDate, getOrders } from "../../../utils/ApiConfig";
+import { deleteOrders, formatDate, getOrders } from "../../../utils/ApiConfig";
 import Swal from "sweetalert2";
 
 const OrdersTable = () => {
@@ -292,11 +292,11 @@ const OrdersTable = () => {
   //   }
   // };
   const handleDelete = (rowId) => {
-    deletOrders(rowId)
+    deleteOrders(rowId)
       .then(() => {
         getOrders()
           .then((data) => {
-            setOrder(data);
+            setTransactions(data);
           })
           .catch((error) => {
             console.error("Error:", error);
@@ -306,12 +306,12 @@ const OrdersTable = () => {
         console.error("Error:", error);
       });
   };
-
-  const confirmDelete =() =>{
+  
+  const confirmDelete = (rowId) => { // Tambahkan parameter rowId
     Swal.fire({
       title: "Are You sure, want to delete?",
       text: "Row will be deleted",
-      icon: "Warning",
+      icon: "warning", // Ganti "Warning" dengan "warning" (case sensitive)
       showCancelButton: true,
       confirmButtonText: "Yes",
       cancelButtonText: "No",
@@ -319,11 +319,10 @@ const OrdersTable = () => {
       confirmButtonColor: "#0DCAF0",
     }).then((result) => {
       if (result.isConfirmed) {
-        
-      handleDelete();
+        handleDelete(rowId); // Berikan parameter rowId ke handleDelete
       }
     });
-  }
+  };
 
 
   return (
