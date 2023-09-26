@@ -26,7 +26,7 @@ const Sidebar = () => {
   const [open, setOpen] = useState(isTabletMid ? false : true);
   const sidebarRef = useRef();
   const [userName,setUserName] = useState("");
-  const [balance,setBalance] = useState("");
+  const [earnings,setEarnings] = useState("");
   const [join,setJoin] = useState("");
   const { pathname } = useLocation();
 
@@ -51,7 +51,7 @@ const Sidebar = () => {
 
   useEffect(()=>{
     getVendorInfo().then((data)=>{
-      setBalance(data.vendor_info.balance);
+      setEarnings(data.vendor_info.total_revenue);
       setJoin(data.vendor_info.created_at);
     })
   })
@@ -153,7 +153,7 @@ const Sidebar = () => {
 
         <div className="earnings border-b border-slate-300 mb-5 p-3">
           <p className="font-semibold text-[#666666] text-[16px]">Earnings</p>
-          <p className="font-bold text-[15px]">{`Rp.${balance}`}</p>
+          <p className="font-bold text-[15px]">{`Rp.${earnings}`}</p>
         </div>
 
         <div className="flex flex-col text-[16px]">

@@ -130,6 +130,64 @@ export const fetchUserData = async (authToken) => {
 
 // ===================================Vendor================================
 
+export const getOrderDashboard = async () => {
+  const authToken = getAuthToken();
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/api/transaction/vendor/?limit=30`,
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      }
+    );
+
+    // Mengembalikan data respons untuk digunakan di komponen lain
+    return response?.data.data.count;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error; // Melempar kembali kesalahan untuk penanganan lebih lanjut jika diperlukan
+  }
+};
+export const getRevenueDashboard = async () => {
+  const authToken = getAuthToken();
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/api/transaction/vendor/revenue`,
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      }
+    );
+
+    // Mengembalikan data respons untuk digunakan di komponen lain
+    return response?.data.data.count;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error; // Melempar kembali kesalahan untuk penanganan lebih lanjut jika diperlukan
+  }
+};
+export const getProductDashboard = async () => {
+  const authToken = getAuthToken();
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/api/product/vendor/list?name&limit=5&search`,
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      }
+    );
+
+    // Mengembalikan data respons untuk digunakan di komponen lain
+    return response?.data.data.count;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error; // Melempar kembali kesalahan untuk penanganan lebih lanjut jika diperlukan
+  }
+};
+
 export const getOrders = async () => {
   const authToken = getAuthToken();
   try {
@@ -388,7 +446,7 @@ export const getVendorHistory = async () => {
         },
       }
     );
-    return response.data.data;
+    return response.data.data.rows;
   } catch (error) {}
 };
 

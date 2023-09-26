@@ -227,7 +227,7 @@ getProducts()
             endAdornment: <Search />,
           }}
         />
-        <div className="action flex text-white flex-col sm:w-[100%] text-white md:flex-row space-x-0 md:space-x-3 font-semibold text-[12px] ">
+        <div className="action flex flex-col sm:w-[100%] text-white md:flex-row space-x-0 md:space-x-3 font-semibold text-[12px] ">
           <div className="relative">
             <button
               className="flex px-4 py-2 bg-[#36C6D3] rounded-lg"
