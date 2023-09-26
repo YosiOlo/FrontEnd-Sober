@@ -19,7 +19,7 @@ import { BsChatDots, BsHandbag, BsBagX, BsBagPlus } from "react-icons/bs";
 import { useMediaQuery } from "react-responsive";
 import { MdMenu } from "react-icons/md";
 import { NavLink, useLocation, useRoutes } from "react-router-dom";
-import { checkToken, fetchUserData, getVendorInfo, logoutUser } from "../../../utils/ApiConfig";
+import { checkToken, fetchUserData, formatDate, getVendorInfo, logoutUser } from "../../../utils/ApiConfig";
 
 const Sidebar = () => {
   let isTabletMid = useMediaQuery({ query: "(max-width: 768px)" });
@@ -100,10 +100,7 @@ const Sidebar = () => {
       confirmButtonColor: "#0DCAF0",
     }).then((result) => {
       if (result.isConfirmed) {
-        // Panggil fungsi logoutUser di sini jika pengguna menekan "Ya, Keluar"
         logoutUser();
-        // Kemudian, arahkan pengguna ke halaman login atau tindakan logout lainnya
-        // Misalnya:
         window.location.href = "/login";
       }
     });
@@ -142,7 +139,7 @@ const Sidebar = () => {
             <p className="text-[14px] text-[#666666]">
               {`Hello, ${userName}`}
             </p>
-            <p className="text-[12px] text-[#333333]">{`Joined on ${join}`}</p>
+            <p className="text-[12px] text-[#333333]">{`Joined on ${formatDate(join)}`}</p>
           </div>
           <VscSignOut
             className="cursor-pointer hover:text-[#FFC107]"

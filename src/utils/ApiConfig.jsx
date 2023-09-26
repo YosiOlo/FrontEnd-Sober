@@ -359,7 +359,7 @@ export const getRevenue = async () => {
     );
 
     // Mengembalikan data respons untuk digunakan di komponen lain
-    return response?.data.data;
+    return response?.data.data.rows;
   } catch (error) {
     console.error("Error fetching data:", error);
     throw error; // Melempar kembali kesalahan untuk penanganan lebih lanjut jika diperlukan
