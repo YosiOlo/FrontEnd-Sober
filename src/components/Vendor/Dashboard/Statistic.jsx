@@ -3,7 +3,7 @@ import { BiShoppingBag } from 'react-icons/bi';
 import { AiOutlineDollarCircle } from 'react-icons/ai';
 import { HiOutlineDatabase } from 'react-icons/hi';
 import { Link } from 'react-router-dom';
-import { getOrderDashboard, getProductDashboard, getRevenueDashboard } from '../../../utils/ApiConfig';
+import { getOrderDashboard, getProductDashboard, getVendorInfo} from '../../../utils/ApiConfig';
 
 const Statistic = () => {
   const [order, setOrder] = useState("");
@@ -15,8 +15,8 @@ const Statistic = () => {
       setOrder(data);
     });
 
-    getRevenueDashboard().then((data) => {
-      setRevenue(data);
+    getVendorInfo().then((data) => {
+      setRevenue(`Rp. ${parseInt(data.vendor_info.total_revenue)}`);
     });
 
     getProductDashboard().then((count) => {

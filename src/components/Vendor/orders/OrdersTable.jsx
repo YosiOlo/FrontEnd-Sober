@@ -39,12 +39,9 @@ const OrdersTable = () => {
   const [transactions, setTransactions] = useState([]);
 
   useEffect(() => {
-    // Panggil getOrders untuk mengambil data dari API saat komponen dimuat
     getOrders()
       .then((data) => {
         
-        // Gunakan data yang dikembalikan dari getOrders di sini
-        console.log(data);
         setExportData(data)
         setTransactions(data)
       })
@@ -256,41 +253,7 @@ const OrdersTable = () => {
     // Save the PDF with a specific filename
     doc.save("Orders.pdf");
   };
-
-
-  // const deleteData = async (rowId) => {
-  //   try {
-  //     const apiUrl = `https://kuro.asrofur.me/sober/api/transaction/vendor/${rowId}`;
-  //     const bearerToken =
-  //       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjk1Mjc4MDQ0LCJleHAiOjE2OTUzNjQ0NDR9.gTdleJdGE7IVNxnBzOvBGZGWg50yAB1pTbfOsLXF_7s";
-
-  //     const response = await axios.delete(apiUrl, {
-  //       headers: {
-  //         Authorization: `Bearer ${bearerToken}`,
-  //       },
-  //     });
-
-  //     if (response.status === 200) {
-  //       console.log("Success! Data deleted from API.");
-  //       console.log("Response data:", response.data); // Cetak respons data
-  //       // Data berhasil dihapus dari API, sekarang update state
-  //       const updatedData = transactions.filter((row) => row.id !== rowId);
-  //       setTransactions(updatedData);
-  //       setRowToDelete(null); // Reset rowToDelete setelah berhasil dihapus
-  //     } else {
-  //       console.error(
-  //         "Failed to delete data from API. Status:",
-  //         response.status
-  //       );
-  //     }
-  //   } catch (error) {
-  //     console.error("Error deleting data:", error);
-
-  //     if (error.response) {
-  //       console.error("Response data:", error.response.data);
-  //     }
-  //   }
-  // };
+  
   const handleDelete = (rowId) => {
     deleteOrders(rowId)
       .then(() => {

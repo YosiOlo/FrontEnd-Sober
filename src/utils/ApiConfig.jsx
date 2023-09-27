@@ -50,7 +50,7 @@ export const product_data = async () => {
   }
 };
 function formatDate(datestring) {
-  return new Date(datestring).toLocaleDateString("en-ID", {
+  return new Date(datestring).toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
@@ -149,25 +149,7 @@ export const getOrderDashboard = async () => {
     throw error; // Melempar kembali kesalahan untuk penanganan lebih lanjut jika diperlukan
   }
 };
-export const getRevenueDashboard = async () => {
-  const authToken = getAuthToken();
-  try {
-    const response = await axios.get(
-      `${BASE_URL}/api/transaction/vendor/revenue`,
-      {
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
-      }
-    );
 
-    // Mengembalikan data respons untuk digunakan di komponen lain
-    return response?.data.data.count;
-  } catch (error) {
-    console.error("Error fetching data:", error);
-    throw error; // Melempar kembali kesalahan untuk penanganan lebih lanjut jika diperlukan
-  }
-};
 export const getProductDashboard = async () => {
   const authToken = getAuthToken();
   try {
@@ -435,6 +417,7 @@ export const getVendorInfo = async () => {
     return response.data.data;
   } catch (error) {}
 };
+
 export const getVendorHistory = async () => {
   const authToken = getAuthToken();
   try {
@@ -447,6 +430,41 @@ export const getVendorHistory = async () => {
       }
     );
     return response.data.data.rows;
+  } catch (error) {}
+};
+
+
+const dataGeneral = {
+  name: shopName,
+  email: email,
+  telepon: phoneNumber,
+  address: alamat,
+  country: country,
+  state: provinsi,
+  city: kota,
+  postal_code: zipCode,
+  description: description,
+  content: content,
+  company_name: companyName,
+  kelurahan: kelurahan,
+  kecamatan: kecamatan,
+  idktp: noKtp,
+  ktp: ktp,
+  logo: logo,
+  covers: covers,
+};
+export const putGeneralInformation = async () => {
+  const authToken = getAuthToken();
+  try {
+    const response = await axios.put(
+      `${BASE_URL}/api/users/vendor/profile`,dataGeneral,
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
   } catch (error) {}
 };
 
