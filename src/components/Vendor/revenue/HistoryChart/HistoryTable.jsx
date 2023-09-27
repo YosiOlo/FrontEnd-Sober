@@ -36,14 +36,9 @@ const HistoryTable = () => {
   useEffect(() =>{
     getVendorHistory().then((data)=>{
       setHistory(data);
-      console.log(data);
     })
   },[])
 
-  const getPaymentMethod = (method) => {
-    if (method === "bank_transfer")
-      return <p className="text-[12px]">Bank Transfer</p>;
-  };
 
   const toggleExport = () => {
     setexportOpen(!exportOpen);

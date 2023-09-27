@@ -97,20 +97,20 @@ getProducts()
       formatDate(row.created_at), // Assuming formatDate returns a string
     ];
 
-    // Check if any value contains the search term
-    return valuesToSearch.some(
-      (value) => value && value.toLowerCase().includes(searchTerm.toLowerCase())
+        // Check if any value contains the search term
+        return valuesToSearch.some((value) =>
+        value.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    });
+  
+    const paginatedData = filteredData.slice(
+      page * rowsPerPage,
+      page * rowsPerPage + rowsPerPage
     );
-  });
-
-  const paginatedData = filteredData.slice(
-    page * rowsPerPage,
-    page * rowsPerPage + rowsPerPage
-  );
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
+  
+    const handleChangePage = (event, newPage) => {
+      setPage(newPage);
+    };
 
   const handleDelete = (rowId) => {
     deleteProducts(rowId)

@@ -47,9 +47,9 @@ function ChartTwo() {
         const { vendor_info } = response;
         setBalance(vendor_info.balance);
         setData([
-          { name: "Pendapatan", value: parseInt(vendor_info.total_revenue) },
-          { name: "Biaya", value: parseInt(vendor_info.total_fee) },
-          { name: "Penarikan", value: parseInt(vendor_info.balance) },
+          { name: "Revenue", value: parseInt(vendor_info.total_revenue) },
+          { name: "Fees", value: parseInt(vendor_info.total_fee) },
+          { name: "Withdrawals", value: parseInt(vendor_info.balance) },
         ]);
       })
       .catch((error) => {
@@ -59,12 +59,6 @@ function ChartTwo() {
         setLoading(false);
       });
   }, []);
-
-  // Log data for debugging
-  useEffect(() => {
-    console.log("Data:", data);
-    console.log("Balance:", balance);
-  }, [data, balance]);
 
   // Add a condition to render the chart only when data is available
   if (loading || data.some((item) => isNaN(item.value))) {
