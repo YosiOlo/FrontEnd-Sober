@@ -18,9 +18,10 @@ import { MdOutlineArrowDropDown, MdEdit, MdDelete } from "react-icons/md";
 import { TbFileExport, TbReload } from "react-icons/tb";
 import { FaFileCsv } from "react-icons/fa";
 import { ArrowUpward, ArrowDownward, Search } from "@mui/icons-material";
-import { formatDate, getWithdrawals } from "../../../utils/ApiConfig";
+import { deleteWithdrawals, formatDate, getWithdrawals } from "../../../utils/ApiConfig";
 import { CSVLink } from "react-csv";
 import * as XLSX from "xlsx";
+import Swal from "sweetalert2";
 
 const WithdrawalsTable = () => {
   const [withdrawals, setWithdrawals] = useState([]);
@@ -113,50 +114,41 @@ const WithdrawalsTable = () => {
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
-  const confirmDelete = async () => {
-    if (rowToDelete !== null) {
-      await deleteData(rowToDelete);
-    }
-    setRowToDelete(null); // Clear the rowToDelete
-  };
 
-  const deleteData = async (rowId) => {
-    try {
-      const apiUrl = `https://kuro.asrofur.me/sober/api/transaction/vendor/withdrawal/${rowId}`;
-      const bearerToken =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjk0NzYzMjQwLCJleHAiOjE2OTQ4NDk2NDB9.685_1ZkUcFetsS1WHcLhsGt9DFIlntloGDURLoXDjdk";
-
-      const response = await axios.delete(apiUrl, {
-        headers: {
-          Authorization: `Bearer ${bearerToken}`,
-        },
+  const handleDelete = (rowId) => {
+    deleteWithdrawals(rowId)
+      .then(() => {
+        getWithdrawals()
+          .then((data) => {
+            setWithdrawals(data);
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      })
+      .catch((error) => {
+        console.error("Error:", error);
       });
-
-      if (response.status === 200) {
-        console.log("Success! Data deleted from API.");
-        console.log("Response data:", response.data); // Cetak respons data
-        // Data berhasil dihapus dari API, sekarang update state
-        const updatedData = withdrawals.filter((row) => row.id !== rowId);
-        setTransactions(updatedData);
-        setRowToDelete(null); // Reset rowToDelete setelah berhasil dihapus
-      } else {
-        console.error(
-          "Failed to delete data from API. Status:",
-          response.status
-        );
+  };
+  
+  const confirmDelete = (rowId) => { // Tambahkan parameter rowId
+    Swal.fire({
+      title: "Are You sure, want to delete?",
+      text: "Row will be deleted",
+      icon: "warning", 
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+      cancelButtonText: "No",
+      cancelButtonColor: "#FFC107",
+      confirmButtonColor: "#0DCAF0",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        handleDelete(rowId); // Berikan parameter rowId ke handleDelete
       }
-    } catch (error) {
-      console.error("Error deleting data:", error);
-
-      if (error.response) {
-        console.error("Response data:", error.response.data);
-      }
-    }
+    });
   };
 
-  const handleDeleteClick = (rowId) => {
-    setRowToDelete(rowId); // Set ID baris yang akan dihapus saat tombol "Delete" pada baris diklik
-  };
+
   const headers = [
     {
       label: "id",
@@ -353,7 +345,7 @@ const WithdrawalsTable = () => {
 
                         <button
                           className="bg-red-500 text-white px-2 py-1 rounded-md"
-                          onClick={() => handleDeleteClick(withdrawal.id)}
+                          onClick={() => confirmDelete(withdrawal.id)}
                         >
                           <MdDelete />
                         </button>

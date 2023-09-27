@@ -19,14 +19,14 @@ import { BsChatDots, BsHandbag, BsBagX, BsBagPlus } from "react-icons/bs";
 import { useMediaQuery } from "react-responsive";
 import { MdMenu } from "react-icons/md";
 import { NavLink, useLocation, useRoutes } from "react-router-dom";
-import { checkToken, fetchUserData, getVendorInfo, logoutUser } from "../../../utils/ApiConfig";
+import { checkToken, fetchUserData, formatDate, getVendorInfo, logoutUser } from "../../../utils/ApiConfig";
 
 const Sidebar = () => {
   let isTabletMid = useMediaQuery({ query: "(max-width: 768px)" });
   const [open, setOpen] = useState(isTabletMid ? false : true);
   const sidebarRef = useRef();
   const [userName,setUserName] = useState("");
-  const [balance,setBalance] = useState("");
+  const [earnings,setEarnings] = useState("");
   const [join,setJoin] = useState("");
   const { pathname } = useLocation();
 
@@ -51,7 +51,7 @@ const Sidebar = () => {
 
   useEffect(()=>{
     getVendorInfo().then((data)=>{
-      setBalance(data.vendor_info.balance);
+      setEarnings(data.vendor_info.total_revenue);
       setJoin(data.vendor_info.created_at);
     })
   })
@@ -100,10 +100,7 @@ const Sidebar = () => {
       confirmButtonColor: "#0DCAF0",
     }).then((result) => {
       if (result.isConfirmed) {
-        // Panggil fungsi logoutUser di sini jika pengguna menekan "Ya, Keluar"
         logoutUser();
-        // Kemudian, arahkan pengguna ke halaman login atau tindakan logout lainnya
-        // Misalnya:
         window.location.href = "/login";
       }
     });
@@ -142,7 +139,7 @@ const Sidebar = () => {
             <p className="text-[14px] text-[#666666]">
               {`Hello, ${userName}`}
             </p>
-            <p className="text-[12px] text-[#333333]">{`Joined on ${join}`}</p>
+            <p className="text-[12px] text-[#333333]">{`Joined on ${formatDate(join)}`}</p>
           </div>
           <VscSignOut
             className="cursor-pointer hover:text-[#FFC107]"
@@ -153,7 +150,7 @@ const Sidebar = () => {
 
         <div className="earnings border-b border-slate-300 mb-5 p-3">
           <p className="font-semibold text-[#666666] text-[16px]">Earnings</p>
-          <p className="font-bold text-[15px]">{`Rp.${balance}`}</p>
+          <p className="font-bold text-[15px]">{`Rp.${earnings}`}</p>
         </div>
 
         <div className="flex flex-col text-[16px]">
