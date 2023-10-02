@@ -8,14 +8,17 @@ import 'react-loading-skeleton/dist/skeleton.css';
 import 'animate.css';
 import axios from 'axios';
 import { authToken } from '../../utils/ApiConfig';
+import { useWishlist } from '../context/WishlistContext';
 
 const MainProduct = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [products, setProducts] = useState([]);
     const [isHovered, setIsHovered] = useState(false);
     const [favoriteProducts, setFavoriteProducts] = useState([]);
+    const { addToWishlist, setWishlist } = useWishlist();
 
     const token = `Bearer ${authToken}`;
+    const isLoggedIn = !!authToken; // Menentukan apakah pengguna sudah login berdasarkan token
 
     // Header dengan token bearer
     const headers = {
@@ -24,9 +27,16 @@ const MainProduct = () => {
     };
 
     useEffect(() => {
-        axios.get('https://kuro.asrofur.me/sober/api/users/wishlist/', { headers })
-            .then((response) => setFavoriteProducts(response.data.data))
-            .catch(err => console.log('Error fetching wishlist'));
+        // Jika pengguna sudah login, maka ambil data favorit dari API
+        if (isLoggedIn) {
+            axios.get('https://kuro.asrofur.me/sober/api/users/wishlist/', { headers })
+                .then((response) => setFavoriteProducts(response.data.data))
+                .catch(err => console.log('Error fetching wishlist'));
+        } else {
+            // Jika pengguna belum login, ambil data favorit dari local storage
+            const localFavorites = JSON.parse(localStorage.getItem('favorites')) || [];
+            setFavoriteProducts(localFavorites);
+        }
 
         const fetchData = async () => {
             const data = await product_data();
@@ -39,55 +49,76 @@ const MainProduct = () => {
 
     }, []);
 
-
     const toggleFavorite = (product) => {
-        if (favoriteProducts.some(item => item.product_id === product.id)) {
-            //delete
-            axios.delete(`https://kuro.asrofur.me/sober/api/users/wishlist/${product.id}`, { headers })
-                .then((response) => {
-                    // Tangani respons dari API jika berhasil
-                    console.log('Menghapus favorit', response.data);
-                })
-                .catch((error) => {
-                    // Tangani kesalahan jika permintaan gagal
-                    console.error('Gagal :', error.response.data.message);
-                });
+        if (isProductFavorite(product.id)) {
+            if (isLoggedIn) {
+                axios.delete(`https://kuro.asrofur.me/sober/api/users/wishlist/${product.id}`, { headers })
+                    .then((response) => {
+                        console.log('Menghapus favorit');
+                        setFavoriteProducts(favoriteProducts.filter(item => item.product_id !== product.id));
+                    })
+                    .catch((error) => {
+                        console.error('Gagal menghapus favorit:', error.response.data.message);
+                    });
+            } else {
+                // Jika pengguna belum login, simpan perubahan di local storage
+                const updatedFavorites = favoriteProducts.filter(item => item.product_id !== product.id);
+                setFavoriteProducts(updatedFavorites);
+                localStorage.setItem('favorites', JSON.stringify(updatedFavorites));
+                console.log('Menghapus favorit', product.id);
+                
+            }
         } else {
-            axios.post(`https://kuro.asrofur.me/sober/api/users/wishlist/${product.id}`, {}, {headers})
-                .then((response) => {
-                    console.log('Tambahkan favorit', response.data);
-                })
-                .catch((error) => {
-                    console.error('Gagal :', error.response.data.message);
-                });
-        }
+            if (isLoggedIn) {
+                axios.post(`https://kuro.asrofur.me/sober/api/users/wishlist/${product.id}`, {}, { headers })
+                    .then((response) => {
+                        console.log('Menambahkan favorit');
+                        setFavoriteProducts([...favoriteProducts, { product_id: product.id }]);
+                        
+                    })
+                    .catch((error) => {
+                        console.error('Gagal menambahkan favorit:'?? error.response.data.message);
+                    });
+            } else {
+                // Jika pengguna belum login, simpan perubahan di local storage
+                const updatedFavorites = [...favoriteProducts, { product_id: product.id }];
+                setFavoriteProducts(updatedFavorites);
+                localStorage.setItem('favorites', JSON.stringify(updatedFavorites));
+                console.log('Menambahkan favorit', product.id);
+                
+            }
+        } 
     };
 
     const isProductFavorite = (productId) => {
-        if (favoriteProducts.length !== 0) return favoriteProducts.some(item => item.product_id === productId);
+        return favoriteProducts.some(item => item.product_id === productId);
     };
 
-    const sendFavoriteDataToApi = (idProduct) => {
-        // Kirim data ID produk favorit ke API dengan header yang sesuai
-        console.log(headers)
-        axios.post(`https://kuro.asrofur.me/sober/api/users/wishlist/${idProduct}`, { headers })
-            .then((response) => {
-                // Tangani respons dari API jika berhasil
-                console.log('Favorit berhasil', response.data);
-            })
-            .catch((error) => {
-                // Tangani kesalahan jika permintaan gagal
-                console.error('Gagal mengirim data favorit ke API', error);
-            });
-    };
+
+    // const sendFavoriteDataToApi = (idProduct) => {
+    //     // Kirim data ID produk favorit ke API dengan header yang sesuai
+    //     console.log(headers)
+    //     axios.post(`https://kuro.asrofur.me/sober/api/users/wishlist/${idProduct}`, { headers })
+    //         .then((response) => {
+    //             // Tangani respons dari API jika berhasil
+    //             console.log('Favorit berhasil', response.data);
+    //         })
+    //         .catch((error) => {
+    //             // Tangani kesalahan jika permintaan gagal
+    //             console.error('Gagal mengirim data favorit ke API', error);
+    //         });
+    // };
+
+    useEffect(() => setWishlist(favoriteProducts), [favoriteProducts])
 
     return (
         <div className="main-product flex flex-col">
-            <div className="top bg-slate-400 flex h-1/4">
-                <div className="top-left  h-full w-1/2">Title</div>
-                <div className="top-right flex bg-slate-500 h-full w-1/2">
+            <div className="top flex h-1/4">
+                <div className="top-left  h-full w-1/2 text-5xl font-semibold ml-4">Toko</div>
+                <div className="top-right flex h-full w-1/2">
                     <div className="top-right-top w-1/2 flex justify-end">
-                        <p>Sort By</p>
+                    <p className="hidden md:block mt-4">Sort By</p>
+                        
                         <div className="sort-by">
                             <div className="dropdown">
                                 <label tabIndex={0} className="btn m-1">
@@ -101,7 +132,8 @@ const MainProduct = () => {
                         </div>
                     </div>
                     <div className="top-right-bottom w-1/2 flex justify-end">
-                        <p>View</p>
+                    <p className="hidden md:block mt-4">View</p>
+                        
                         <div className="view flex mr-10">
                             <div className="grid ml-6">
                                 <AiOutlineAppstore size={40} /> {/* Ikon grid */}

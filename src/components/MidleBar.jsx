@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { FiBell, FiHeart, FiShoppingCart, FiSearch, FiMenu } from 'react-icons/fi'; // Impor ikon pencarian
 import { Link } from 'react-router-dom';
+import { WishlistProvider, useWishlist } from './context/WishlistContext';
 
 
 import SobermartLogo from '../../public/soblogo.png';
 
 function MidleBar() {
+    const { wishlist } = useWishlist();
+
     return (
         <div className="bg-white text-black text-sm border-b border-gray-300 ">
             <div className="responsif-notif lg:hidden">
@@ -84,7 +87,12 @@ function MidleBar() {
                             <div className="icon group relative">
                                 <button className="hover:text-blue-600 relative">
                                     <FiHeart className='w-7 h-7 mx-2' />
-                                    <span className="ml-auto bg-blue-600 text-white px-2 py-0.5 rounded-sm absolute -top-2 -right-2">5</span>
+                                    {/* Tampilkan jumlah wishlist */}
+                                    {wishlist.length > 0 && (
+                                        <span className="ml-auto bg-blue-600 text-white px-2 py-0.5 rounded-sm absolute -top-2 -right-2">
+                                            {wishlist.length}
+                                        </span>
+                                    )}
                                 </button>
                                 <div className="hidden group-hover:block absolute right-0 mt-1.5 bg-white border border-gray-300 rounded p-2 w-72 shadow-md z-10">
                                     <div className="flex flex-col">

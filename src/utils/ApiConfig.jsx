@@ -319,3 +319,19 @@ export const fetchUserData = async (authToken) => {
     return null;
   }
 };
+
+//https://kuro.asrofur.me/sober/api/users/wishlist
+export const getWishlist = async () => {
+  const authToken = getAuthToken();
+  try {
+    const response = await axios.get(`${BASE_URL}/api/users/wishlist`, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      }
+    });
+    return response.data.data;
+  } catch (error) {
+    console.log('Kesalahan Permintan API:', error.response.data.message);
+
+  }
+};
