@@ -48,9 +48,9 @@ export const product_data = async () => {
   }
 };
 function formatDate(datestring) {
-  return new Date(datestring).toLocaleDateString("en-ID", {
+  return new Date(datestring).toLocaleDateString("en-US", {
     year: "numeric",
-    month: "numeric",
+    month: "long",
     day: "numeric",
   });
 }
