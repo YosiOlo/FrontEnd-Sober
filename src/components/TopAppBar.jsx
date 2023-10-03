@@ -10,7 +10,7 @@ function TopAppBar() {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    console.log('token',authToken)
+    // console.log('token',authToken)
     if (authToken) {
       setIsLoading(true);
       fetchUserData(authToken)
