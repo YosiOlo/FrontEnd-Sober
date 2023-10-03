@@ -141,11 +141,10 @@ export const getOrderDashboard = async () => {
       }
     );
 
-    // Mengembalikan data respons untuk digunakan di komponen lain
     return response?.data.data.count;
   } catch (error) {
     console.error("Error fetching data:", error);
-    throw error; // Melempar kembali kesalahan untuk penanganan lebih lanjut jika diperlukan
+    throw error; 
   }
 };
 
@@ -161,11 +160,10 @@ export const getProductDashboard = async () => {
       }
     );
 
-    // Mengembalikan data respons untuk digunakan di komponen lain
     return response?.data.data.count;
   } catch (error) {
     console.error("Error fetching data:", error);
-    throw error; // Melempar kembali kesalahan untuk penanganan lebih lanjut jika diperlukan
+    throw error; 
   }
 };
 
@@ -181,11 +179,10 @@ export const getOrders = async () => {
       }
     );
 
-    // Mengembalikan data respons untuk digunakan di komponen lain
     return response?.data.data.rows;
   } catch (error) {
     console.error("Error fetching data:", error);
-    throw error; // Melempar kembali kesalahan untuk penanganan lebih lanjut jika diperlukan
+    throw error; 
   }
 };
 
@@ -219,11 +216,10 @@ export const getCoupons = async () => {
       },
     });
 
-    // Mengembalikan data respons untuk digunakan di komponen lain
     return response?.data.data;
   } catch (error) {
     console.error("Error fetching data:", error);
-    throw error; // Melempar kembali kesalahan untuk penanganan lebih lanjut jika diperlukan
+    throw error; 
   }
 };
 
@@ -260,11 +256,10 @@ export const getOrderReturns = async () => {
       }
     );
 
-    // Mengembalikan data respons untuk digunakan di komponen lain
     return response?.data.data.rows;
   } catch (error) {
     console.error("Error fetching data:", error);
-    throw error; // Melempar kembali kesalahan untuk penanganan lebih lanjut jika diperlukan
+    throw error; 
   }
 };
 
@@ -301,11 +296,10 @@ export const getProducts = async () => {
       }
     );
 
-    // Mengembalikan data respons untuk digunakan di komponen lain
     return response?.data.data.rows;
   } catch (error) {
     console.error("Error fetching data:", error);
-    throw error; // Melempar kembali kesalahan untuk penanganan lebih lanjut jika diperlukan
+    throw error; 
   }
 };
 
@@ -339,11 +333,10 @@ export const getRevenue = async () => {
       }
     );
 
-    // Mengembalikan data respons untuk digunakan di komponen lain
     return response?.data.data.rows;
   } catch (error) {
     console.error("Error fetching data:", error);
-    throw error; // Melempar kembali kesalahan untuk penanganan lebih lanjut jika diperlukan
+    throw error; 
   }
 };
 
@@ -356,11 +349,10 @@ export const getReview = async () => {
       },
     });
 
-    // Mengembalikan data respons untuk digunakan di komponen lain
     return response?.data.data;
   } catch (error) {
     console.error("Error fetching data:", error);
-    throw error; // Melempar kembali kesalahan untuk penanganan lebih lanjut jika diperlukan
+    throw error;
   }
 };
 
@@ -376,11 +368,10 @@ export const getWithdrawals = async () => {
       }
     );
 
-    // Mengembalikan data respons untuk digunakan di komponen lain
     return response?.data.data.rows;
   } catch (error) {
     console.error("Error fetching data:", error);
-    throw error; // Melempar kembali kesalahan untuk penanganan lebih lanjut jika diperlukan
+    throw error; 
   }
 };
 
@@ -447,11 +438,10 @@ export const putTax = async (updatedData) => {
       }
     );
 
-    // Handle response if needed
-    return response.data; // Return response data if necessary
+    return response.data;
   } catch (error) {
     console.error("Error during API request:", error);
-    throw error; // Re-throw the error to be caught by the caller
+    throw error;
   }
 };
 
@@ -470,11 +460,10 @@ export const putPayout = async (updatedData) => {
       }
     );
 
-    // Handle response if needed
-    return response.data; // Return response data if necessary
+    return response.data; 
   } catch (error) {
     console.error("Error during API request:", error);
-    throw error; // Re-throw the error to be caught by the caller
+    throw error; 
   }
 };
 // shopName,
@@ -537,10 +526,9 @@ export const checkToken = async () => {
       },
     });
 
-    // Mengembalikan data respons untuk digunakan di komponen lain
     return response?.data.datas;
   } catch (error) {
     console.error("Error fetching data:", error);
-    throw error; // Melempar kembali kesalahan untuk penanganan lebih lanjut jika diperlukan
+    throw error; 
   }
 };

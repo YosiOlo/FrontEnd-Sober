@@ -16,7 +16,6 @@ function Tax() {
         setAddress(data?.vendor_info?.tax_info.address || "");
       })
       .catch((error) => {
-        // Handle errors here
         console.error("Error fetching vendor data:", error);
       });
   }, [dataSaved]);
@@ -30,7 +29,6 @@ function Tax() {
 
     putTax(updatedData)
       .then((response) => {
-        // Handle successful response
         console.log("Tax info updated successfully:", response);
         Swal.fire({
             position: 'center',

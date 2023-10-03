@@ -29,7 +29,6 @@ function Generalinformation() {
  useEffect(() => {
     getVendorInfo()
       .then((data) => {
-        // Assuming that the data data has the necessary fields
         setShopName(data?.store_info?.name || "");
         setCompanyName(data.store_info?.company || "");
         setPhoneNumber(data.store_info?.phone || "");
@@ -46,9 +45,9 @@ function Generalinformation() {
         setLogo(data.store_info?.logo || "");
         setCovers(data.store_info?.covers || "");
         setKtp(data.store_info?.ktp || "");
+        setContent(data.store_info?.content || "");
       })
       .catch((error) => {
-        // Handle errors here
         console.error("Error fetching vendor data:", error);
       });
   }, []);
@@ -60,35 +59,30 @@ function Generalinformation() {
     console.log(image)
     setSelectedImage(image);
   };
+  const handleEditorChange = (event, editor) => {
+    const data = editor.getData();
+    setContent(data);
+  };
 
   const handleSaveData = () => {
     const formData = new FormData();
-
+    formData.append("name", shopName);
+    formData.append("email", email);
+    formData.append("telepon", phoneNumber);
+    formData.append("address", alamat);
+    formData.append("country", country);
+    formData.append("state", provinsi);
+    formData.append("city", kota);
+    formData.append("postal_code", zipCode);
+    formData.append("description", description);
+    formData.append("content", content);
+    formData.append("company_name", companyName);
+    formData.append("kelurahan", kelurahan);
+    formData.append("kecamatan", kecamatan);
+    formData.append("idktp", noKtp);
     formData.append("ktp", selectedImage);
     formData.append("cover", selectedImage);
     formData.append("logo", selectedImage);
-    formData.append("description", description);
-
-    formData.forEach(data => {
-      console.log(data)
-    })
-// shopName,
-// email,
-// phoneNumber,
-// alamat,
-// country,
-// provinsi,
-// kota,
-// zipCode,
-// description,
-// content,
-// companyName,
-// kelurahan,
-// kecamatan,
-// noKtp,
-// ktp,
-// logo,
-// covers
     putGeneralInformation(formData)
       .then((response) => {
         console.log(response);
@@ -272,13 +266,14 @@ function Generalinformation() {
           </div>
           <div>
             <label className="block font-medium">Content</label>
-
             <CKEditor
-              className="h-[100px]"
               editor={ClassicEditor}
+              data={content}
               value={content}
-              onChange={(e) => setContent(e.target.value)}
-              onInit={(editor) => {}}
+              onReady={(editor) => {
+                // You can set the initial data here if needed
+              }}
+              onChange={handleEditorChange}
             />
           </div>
         </div>

@@ -26,7 +26,6 @@ function PayoutInfo() {
         );
       })
       .catch((error) => {
-        // Handle errors here
         console.error("Error fetching vendor data:", error);
       });
   }, []);
@@ -44,7 +43,6 @@ function PayoutInfo() {
 
     putPayout(updatedData)
       .then((response) => {
-        // Handle successful response
         console.log("Tax info updated successfully:", response);
         Swal.fire({
           position: "center",
