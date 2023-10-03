@@ -12,7 +12,7 @@ const PageProduct = () => {
         <TopAppBar />
         <MidleBar />
         <HeaderWrapaper />
-        {/* <HeroProduct/> */}
+        <HeroProduct/>
         <MainProduct/>
         <Footer />
         </div>
