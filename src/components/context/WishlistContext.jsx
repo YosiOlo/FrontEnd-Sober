@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { getWishlist } from '../../utils/ApiConfig';
+import { getWishlist, authToken } from '../../utils/ApiConfig'; // Perbaiki impor authToken
 
 // Buat konteks
 const WishlistContext = createContext();
@@ -26,14 +26,20 @@ export const WishlistProvider = ({ children }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const wishlistData = await fetchWishlistData();
-        // Ambil jumlah wishlist dari data yang diterima dari API
-        const count = wishlistData.length;
-        setWishlist(wishlistData);
-        setWishlistCount(count);
-      } catch (error) {
-        console.error(error);
+      // Cek keberadaan token di sini sebelum mengambil data wishlist
+      const token = `Bearer ${authToken}`; // Perbaiki pengecekan token
+      const isLoggedIn = !!authToken; // Perbaiki pengecekan token
+
+      if (isLoggedIn) {
+        try {
+          const wishlistData = await fetchWishlistData();
+          // Ambil jumlah wishlist dari data yang diterima dari API
+          const count = wishlistData.length;
+          setWishlist(wishlistData);
+          setWishlistCount(count);
+        } catch (error) {
+          console.error(error);
+        }
       }
     };
     fetchData();
