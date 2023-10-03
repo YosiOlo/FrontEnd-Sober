@@ -1,8 +1,8 @@
-import React,{useEffect,useState} from 'react'
+import React,{useEffect, useRef,useState} from 'react'
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import { getVendorInfo } from '../../../utils/ApiConfig';
-
+import { getVendorInfo, putGeneralInformation } from "../../../utils/ApiConfig";
+import Swal from "sweetalert2";
 function Generalinformation() {
     const [general, setGeneral] = useState ("");
     const [shopName, setShopName] = useState("");
@@ -20,34 +20,48 @@ function Generalinformation() {
     const [description, setDescription] = useState("");
 
 
-    useEffect(() => {
-        getVendorInfo()
-        .then((data) => {  
-          // Assuming that the data data has the necessary fields
-          setShopName(data?.store_info?.name || "");
-          setCompanyName(data.store_info?.company || "");
-          setPhoneNumber(data.store_info?.phone || "");
-          setEmail(data?.store_info?.email || "");
-          setLinkToko(data.linkToko || "");
-          setAlamat(data.store_info?.address || "");
-          setzipCode(data?.store_info?.zip_code || "");
-          setKelurahan(data?.store_info?.kelurahan || "");
-          setKecamatan(data?.store_info?.kecamatan || "");
-          setKota(data.store_info?.city || "");
-          setProvinsi(data.store_info?.state || "");
-          setNoKtp(data.store_info.idktp || "");
-          setDescription(data.store_info?.description || "");
-        })
-        .catch((error) => {
-          // Handle errors here
-          console.error('Error fetching vendor data:', error);
-        });
-    }, []);
-  
-      
+  useEffect(() => {
+    getVendorInfo()
+      .then((data) => {
+        // Assuming that the data data has the necessary fields
+        setShopName(data?.store_info?.name || "");
+        setCompanyName(data.store_info?.company || "");
+        setPhoneNumber(data.store_info?.phone || "");
+        setEmail(data?.store_info?.email || "");
+        setCountry(data.country || "");
+        setAlamat(data.store_info?.address || "");
+        setzipCode(data?.store_info?.zip_code || "");
+        setKelurahan(data?.store_info?.kelurahan || "");
+        setKecamatan(data?.store_info?.kecamatan || "");
+        setKota(data.store_info?.city || "");
+        setProvinsi(data.store_info?.state || "");
+        setNoKtp(data.store_info.idktp || "");
+        setDescription(data.store_info?.description || "");
+        setLogo(data.store_info?.logo || "");
+        setCovers(data.store_info?.covers || "");
+        setKtp(data.store_info?.ktp || "");
+      })
+      .catch((error) => {
+        // Handle errors here
+        console.error("Error fetching vendor data:", error);
+      });
+  }, []);
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setSelectedImage(file);
+  };
 
-
+  const handleSaveData = () => {
+    
+    putGeneralInformation()
+      .then((response) => {
+        console.log("Data saved successfully", response.data);
+      })
+      .catch((error) => {
+        console.error("Data save failed", error);
+      });
+  };
   return (
     <div>
         <div className="mt-4">
@@ -172,26 +186,59 @@ function Generalinformation() {
               />
             </div>
             <div>
-              <label className="block font-medium">Description</label>
+              <label className="block font-medium">Foto KTP</label>
               <input
-                className="border rounded h-[100px] px-3 py-2 w-full bg-white"
-                type="text"
-                value={description}
-                placeholder="Description"
-                onChange={(e) => setDescription(e.target.value)}
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
               />
             </div>
             <div>
-              <label className="block font-medium">Content</label>
-
-              <CKEditor
-                className="h-[100px]"
-                editor={ClassicEditor}
-                onInit={(editor) => {}}
+              <label className="block font-medium">Logo</label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+              />
+            </div>
+            <div>
+              <label className="block font-medium">Cover Image</label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
               />
             </div>
           </div>
+
+          <div>
+            <label className="block font-medium">Description</label>
+            <input
+              className="border rounded h-[100px] px-3 py-2 w-full bg-white"
+              type="text"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+          </div>
+          <div>
+            <label className="block font-medium">Content</label>
+
+            <CKEditor
+              className="h-[100px]"
+              editor={ClassicEditor}
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              onInit={(editor) => {}}
+            />
+          </div>
         </div>
+      </div>
+      <button
+        className="bg-[#80bc00] text-white px-4 py-2 rounded mt-9"
+        onClick={handleSaveData}
+      >
+        Save Settings
+      </button>
     </div>
   )
 }
