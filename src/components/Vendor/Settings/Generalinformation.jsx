@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { getVendorInfo, putGeneralInformation } from "../../../utils/ApiConfig";
-import axios from "axios";
+import Swal from "sweetalert2";
 function Generalinformation() {
   const [general, setGeneral] = useState("");
   const [shopName, setShopName] = useState("");
@@ -24,7 +24,9 @@ function Generalinformation() {
   const [covers, setCovers] = useState("");
   const [selectedImage, setSelectedImage] = useState(null);
 
-  useEffect(() => {
+  const fileRef = useRef()
+
+ useEffect(() => {
     getVendorInfo()
       .then((data) => {
         // Assuming that the data data has the necessary fields
@@ -52,17 +54,59 @@ function Generalinformation() {
   }, []);
 
   const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    setSelectedImage(file);
+    // const file = e.target.files[0];
+    
+    const image = fileRef.current.files[0]
+    console.log(image)
+    setSelectedImage(image);
   };
 
   const handleSaveData = () => {
-    
-    putGeneralInformation()
+    const formData = new FormData();
+
+    formData.append("ktp", selectedImage);
+    formData.append("cover", selectedImage);
+    formData.append("logo", selectedImage);
+    formData.append("description", description);
+
+    formData.forEach(data => {
+      console.log(data)
+    })
+// shopName,
+// email,
+// phoneNumber,
+// alamat,
+// country,
+// provinsi,
+// kota,
+// zipCode,
+// description,
+// content,
+// companyName,
+// kelurahan,
+// kecamatan,
+// noKtp,
+// ktp,
+// logo,
+// covers
+    putGeneralInformation(formData)
       .then((response) => {
-        console.log("Data saved successfully", response.data);
+        console.log(response);
+        Swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: 'Your work has been saved',
+          showConfirmButton: false,
+          timer: 1500,
+        })
+        console.log("Data saved successfully", response);
       })
       .catch((error) => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Something went wrong!',error,
+        })
         console.error("Data save failed", error);
       });
   };
@@ -195,6 +239,7 @@ function Generalinformation() {
               <input
                 type="file"
                 accept="image/*"
+                ref={fileRef}
                 onChange={handleImageChange}
               />
             </div>

@@ -3,6 +3,7 @@ import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import Generalinformation from "./Generalinformation";
 import PayoutInfo from "./PayoutInfo";
+import Tax from "./tax";
 
 function Settings() {
   const [activeTab, setActiveTab] = useState("general");
@@ -66,40 +67,7 @@ function Settings() {
       )}
 
       {activeTab === "tax" && (
-        <div>
-          <div className="space-y-2">
-            <div className="mt-4">
-              <label className="block font-medium">Business Name</label>
-              <input
-                className="border rounded px-3 py-2 w-full bg-white"
-                type="text"
-                value={businessName}
-                placeholder="Business Name"
-                onChange={(e) => setBusinessName(e.target.value)}
-              />
-            </div>
-            <div>
-              <label className="block font-medium">Tax ID</label>
-              <input
-                className="border rounded px-3 py-2 w-full bg-white"
-                type="text"
-                value={taxId}
-                placeholder="Tax ID"
-                onChange={(e) => setTaxId(e.target.value)}
-              />
-            </div>
-            <div>
-              <label className="block font-medium">Address</label>
-              <input
-                className="border rounded px-3 py-2 w-full bg-white"
-                type="text"
-                value={address}
-                placeholder="Address"
-                onChange={(e) => setAddress(e.target.value)}
-              />
-            </div>
-          </div>
-        </div>
+        <Tax/>
       )}
 
       {activeTab === "payout" && (

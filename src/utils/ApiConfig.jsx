@@ -59,7 +59,6 @@ function formatDate(datestring) {
 
 export { formatDate };
 
-
 export const loginUser = async (username, password, rememberMe) => {
   const data = {
     email: username,
@@ -433,31 +432,92 @@ export const getVendorHistory = async () => {
   } catch (error) {}
 };
 
-
-const dataGeneral = {
-  name: shopName,
-  email: email,
-  telepon: phoneNumber,
-  address: alamat,
-  country: country,
-  state: provinsi,
-  city: kota,
-  postal_code: zipCode,
-  description: description,
-  content: content,
-  company_name: companyName,
-  kelurahan: kelurahan,
-  kecamatan: kecamatan,
-  idktp: noKtp,
-  ktp: ktp,
-  logo: logo,
-  covers: covers,
-};
-export const putGeneralInformation = async () => {
+export const putTax = async (updatedData) => {
   const authToken = getAuthToken();
+  console.log('hi',updatedData)
   try {
     const response = await axios.put(
-      `${BASE_URL}/api/users/vendor/profile`,dataGeneral,
+      `${BASE_URL}/api/users/vendor/tax`,
+      updatedData,
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    // Handle response if needed
+    return response.data; // Return response data if necessary
+  } catch (error) {
+    console.error("Error during API request:", error);
+    throw error; // Re-throw the error to be caught by the caller
+  }
+};
+
+export const putPayout = async (updatedData) => {
+  const authToken = getAuthToken();
+  console.log('hi',updatedData)
+  try {
+    const response = await axios.put(
+      `${BASE_URL}/api/users/vendor/payment`,
+      updatedData,
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    // Handle response if needed
+    return response.data; // Return response data if necessary
+  } catch (error) {
+    console.error("Error during API request:", error);
+    throw error; // Re-throw the error to be caught by the caller
+  }
+};
+// shopName,
+//   email,
+//   phoneNumber,
+//   alamat,
+//   country,
+//   provinsi,
+//   kota,
+//   zipCode,
+//   description,
+//   content,
+//   companyName,
+//   kelurahan,
+//   kecamatan,
+//   noKtp,
+//   ktp,logo,cover
+export const putGeneralInformation = async (body) => {
+  const authToken = getAuthToken();
+  // const dataGeneral = {
+  //   name: shopName,
+  //   email: email,
+  //   telepon: phoneNumber,
+  //   address: alamat,
+  //   country: country,
+  //   state: provinsi,
+  //   city: kota,
+  //   postal_code: zipCode,
+  //   description: description,
+  //   content: content,
+  //   company_name: companyName,
+  //   kelurahan: kelurahan,
+  //   kecamatan: kecamatan,
+  //   idktp: noKtp,
+  //   ktp: ktp,
+  //   logo: logo,
+  //   cover: cover,
+  // };
+  try {
+    console.log("cek", body);
+    const response = await axios.put(
+      `${BASE_URL}/api/users/vendor/profile`,
+      body,
       {
         headers: {
           Authorization: `Bearer ${authToken}`,
