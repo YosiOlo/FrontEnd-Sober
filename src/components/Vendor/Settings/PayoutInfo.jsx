@@ -1,40 +1,68 @@
-import React,{useState,useEffect} from 'react'
-import { CKEditor } from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import axios from 'axios';
-import { getVendorInfo } from '../../../utils/ApiConfig';
+import React, { useState, useEffect } from "react";
+import { getVendorInfo, putPayout } from "../../../utils/ApiConfig";
+import Swal from "sweetalert2";
 
 function PayoutInfo() {
-    const [paymentMethod, setPaymentMethod] = useState("Bank Transfer");
-    const [bankName, setBankName] = useState("");
-    const [bankCode, setBankCode] = useState("");
-    const [accountNumber, setAccountNumber] = useState("");
-    const [accountHolder, setAccountHolder] = useState("");
-    const [upiId, setUpiId] = useState("");
-    const [paypalId, setPaypalId] = useState("");
-    const [descriptionPayout, setDescriptionPayout] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("Bank Transfer", "Paypal");
+  const [bankName, setBankName] = useState("");
+  const [bankCode, setBankCode] = useState("");
+  const [accountNumber, setAccountNumber] = useState("");
+  const [accountHolder, setAccountHolder] = useState("");
+  const [upiId, setUpiId] = useState("");
+  const [paypalId, setPaypalId] = useState("");
+  const [descriptionPayout, setDescriptionPayout] = useState("");
 
-    useEffect(() => {
-        getVendorInfo()
-          .then((response) => {
-            // Handle the response data here
-            console.log(response);
-    
-            // Assuming that the response data has the necessary fields
-            setBankName(response?.store_info?.name || "");
-            setBankCode(response.store_info?.company || "");
-            setAccountNumber(response.store_info?.phone || "");
-            setAccountHolder(response?.store_info?.email || "");
-            setUpiId(response.linkToko || "");
-            setDescriptionPayout(response.store_info?.address || "");
-            setPaypalId(response?.store_info?.zip_code || "");
-            setPaymentMethod(response?.vendor_info?.payout_payment_method || "");
-          })
-          .catch((error) => {
-            // Handle errors here
-            console.error('Error fetching vendor data:', error);
-          });
-      }, []);
+  useEffect(() => {
+    getVendorInfo()
+      .then((data) => {
+        setBankName(data?.vendor_info?.bank_info.name || "");
+        setBankCode(data?.vendor_info?.bank_info.code || "");
+        setAccountNumber(data?.vendor_info?.bank_info?.number || "");
+        setUpiId(data?.vendor_info?.bank_info.upi_id || "");
+        setDescriptionPayout(data?.vendor_info.description || "");
+        setPaypalId(data?.vendor_info?.bank_info.paypal_id || "");
+        setPaymentMethod(
+          data?.vendor_info?.payout_payment_method || ""
+        );
+      })
+      .catch((error) => {
+        console.error("Error fetching vendor data:", error);
+      });
+  }, []);
+
+  const handleSaveData = () => {
+    const updatedData = {
+      name: bankName,
+      code: bankCode,
+      number: accountNumber,
+      upi_id: upiId,
+      description: descriptionPayout,
+      paypal_id: paypalId,
+      method: paymentMethod,
+    };
+
+    putPayout(updatedData)
+      .then((response) => {
+        console.log("Tax info updated successfully:", response);
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Your work has been saved",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        console.log("Data saved successfully", response);
+      })
+      .catch((error) => {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Something went wrong!",
+          error,
+        });
+        console.error("Data save failed", error);
+      });
+  };
 
   return (
     <div>
@@ -114,14 +142,6 @@ function PayoutInfo() {
                   onChange={(e) => setDescriptionPayout(e.target.value)}
                 />
               </div>
-          <div>
-            <label className="block font-medium">Content</label>
-            <CKEditor
-              className="h-[100px]"
-              editor={ClassicEditor}
-              onInit={(editor) => {}}
-            />
-          </div>
             </>
           )}
 
@@ -138,11 +158,16 @@ function PayoutInfo() {
               </div>
             </>
           )}
-
+          <button
+            className="bg-[#80bc00] text-white px-4 py-2 rounded mt-9"
+            onClick={handleSaveData}
+          >
+            Save Settings
+          </button>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default PayoutInfo
+export default PayoutInfo;

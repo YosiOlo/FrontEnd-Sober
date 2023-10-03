@@ -59,7 +59,6 @@ function formatDate(datestring) {
 
 export { formatDate };
 
-
 export const loginUser = async (username, password, rememberMe) => {
   const data = {
     email: username,
@@ -142,11 +141,10 @@ export const getOrderDashboard = async () => {
       }
     );
 
-    // Mengembalikan data respons untuk digunakan di komponen lain
     return response?.data.data.count;
   } catch (error) {
     console.error("Error fetching data:", error);
-    throw error; // Melempar kembali kesalahan untuk penanganan lebih lanjut jika diperlukan
+    throw error; 
   }
 };
 
@@ -162,11 +160,10 @@ export const getProductDashboard = async () => {
       }
     );
 
-    // Mengembalikan data respons untuk digunakan di komponen lain
     return response?.data.data.count;
   } catch (error) {
     console.error("Error fetching data:", error);
-    throw error; // Melempar kembali kesalahan untuk penanganan lebih lanjut jika diperlukan
+    throw error; 
   }
 };
 
@@ -182,11 +179,10 @@ export const getOrders = async () => {
       }
     );
 
-    // Mengembalikan data respons untuk digunakan di komponen lain
     return response?.data.data.rows;
   } catch (error) {
     console.error("Error fetching data:", error);
-    throw error; // Melempar kembali kesalahan untuk penanganan lebih lanjut jika diperlukan
+    throw error; 
   }
 };
 
@@ -220,11 +216,10 @@ export const getCoupons = async () => {
       },
     });
 
-    // Mengembalikan data respons untuk digunakan di komponen lain
     return response?.data.data;
   } catch (error) {
     console.error("Error fetching data:", error);
-    throw error; // Melempar kembali kesalahan untuk penanganan lebih lanjut jika diperlukan
+    throw error; 
   }
 };
 
@@ -261,11 +256,10 @@ export const getOrderReturns = async () => {
       }
     );
 
-    // Mengembalikan data respons untuk digunakan di komponen lain
     return response?.data.data.rows;
   } catch (error) {
     console.error("Error fetching data:", error);
-    throw error; // Melempar kembali kesalahan untuk penanganan lebih lanjut jika diperlukan
+    throw error; 
   }
 };
 
@@ -302,11 +296,10 @@ export const getProducts = async () => {
       }
     );
 
-    // Mengembalikan data respons untuk digunakan di komponen lain
     return response?.data.data.rows;
   } catch (error) {
     console.error("Error fetching data:", error);
-    throw error; // Melempar kembali kesalahan untuk penanganan lebih lanjut jika diperlukan
+    throw error; 
   }
 };
 
@@ -340,11 +333,10 @@ export const getRevenue = async () => {
       }
     );
 
-    // Mengembalikan data respons untuk digunakan di komponen lain
     return response?.data.data.rows;
   } catch (error) {
     console.error("Error fetching data:", error);
-    throw error; // Melempar kembali kesalahan untuk penanganan lebih lanjut jika diperlukan
+    throw error; 
   }
 };
 
@@ -357,11 +349,10 @@ export const getReview = async () => {
       },
     });
 
-    // Mengembalikan data respons untuk digunakan di komponen lain
     return response?.data.data;
   } catch (error) {
     console.error("Error fetching data:", error);
-    throw error; // Melempar kembali kesalahan untuk penanganan lebih lanjut jika diperlukan
+    throw error;
   }
 };
 
@@ -377,11 +368,10 @@ export const getWithdrawals = async () => {
       }
     );
 
-    // Mengembalikan data respons untuk digunakan di komponen lain
     return response?.data.data.rows;
   } catch (error) {
     console.error("Error fetching data:", error);
-    throw error; // Melempar kembali kesalahan untuk penanganan lebih lanjut jika diperlukan
+    throw error; 
   }
 };
 
@@ -433,31 +423,90 @@ export const getVendorHistory = async () => {
   } catch (error) {}
 };
 
-
-const dataGeneral = {
-  name: shopName,
-  email: email,
-  telepon: phoneNumber,
-  address: alamat,
-  country: country,
-  state: provinsi,
-  city: kota,
-  postal_code: zipCode,
-  description: description,
-  content: content,
-  company_name: companyName,
-  kelurahan: kelurahan,
-  kecamatan: kecamatan,
-  idktp: noKtp,
-  ktp: ktp,
-  logo: logo,
-  covers: covers,
-};
-export const putGeneralInformation = async () => {
+export const putTax = async (updatedData) => {
   const authToken = getAuthToken();
+  console.log('hi',updatedData)
   try {
     const response = await axios.put(
-      `${BASE_URL}/api/users/vendor/profile`,dataGeneral,
+      `${BASE_URL}/api/users/vendor/tax`,
+      updatedData,
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Error during API request:", error);
+    throw error;
+  }
+};
+
+export const putPayout = async (updatedData) => {
+  const authToken = getAuthToken();
+  console.log('hi',updatedData)
+  try {
+    const response = await axios.put(
+      `${BASE_URL}/api/users/vendor/payment`,
+      updatedData,
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return response.data; 
+  } catch (error) {
+    console.error("Error during API request:", error);
+    throw error; 
+  }
+};
+// shopName,
+//   email,
+//   phoneNumber,
+//   alamat,
+//   country,
+//   provinsi,
+//   kota,
+//   zipCode,
+//   description,
+//   content,
+//   companyName,
+//   kelurahan,
+//   kecamatan,
+//   noKtp,
+//   ktp,logo,cover
+export const putGeneralInformation = async (body) => {
+  const authToken = getAuthToken();
+  // const dataGeneral = {
+  //   name: shopName,
+  //   email: email,
+  //   telepon: phoneNumber,
+  //   address: alamat,
+  //   country: country,
+  //   state: provinsi,
+  //   city: kota,
+  //   postal_code: zipCode,
+  //   description: description,
+  //   content: content,
+  //   company_name: companyName,
+  //   kelurahan: kelurahan,
+  //   kecamatan: kecamatan,
+  //   idktp: noKtp,
+  //   ktp: ktp,
+  //   logo: logo,
+  //   cover: cover,
+  // };
+  try {
+    console.log("cek", body);
+    const response = await axios.put(
+      `${BASE_URL}/api/users/vendor/profile`,
+      body,
       {
         headers: {
           Authorization: `Bearer ${authToken}`,
@@ -477,10 +526,9 @@ export const checkToken = async () => {
       },
     });
 
-    // Mengembalikan data respons untuk digunakan di komponen lain
     return response?.data.datas;
   } catch (error) {
     console.error("Error fetching data:", error);
-    throw error; // Melempar kembali kesalahan untuk penanganan lebih lanjut jika diperlukan
+    throw error; 
   }
 };
