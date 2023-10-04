@@ -37,6 +37,8 @@ export const WishlistProvider = ({ children }) => {
           const count = wishlistData.length;
           setWishlist(wishlistData);
           setWishlistCount(count);
+          
+          
         } catch (error) {
           console.error(error);
         }
