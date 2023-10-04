@@ -19,8 +19,9 @@ import { MdEdit, MdDelete } from "react-icons/md";
 import { TbReload } from "react-icons/tb";
 import { ArrowUpward, ArrowDownward, Search } from "@mui/icons-material";
 import axios from "axios";
-import { deleteCoupons, formatDate, getCoupons } from "../../../utils/ApiConfig";
+import { deleteCoupons, getCoupons } from "../../../utils/ApiConfig";
 import Swal from "sweetalert2";
+import { formatDate } from "../../../utils/utils";
 
 const TableCoupons = () => {
   const [orderBy, setOrderBy] = useState("id");

@@ -20,8 +20,9 @@ import { MdOutlineArrowDropDown, MdEdit, MdDelete } from "react-icons/md";
 import { TbFileExport, TbReload } from "react-icons/tb";
 import { FaFileCsv } from "react-icons/fa";
 import { ArrowUpward, ArrowDownward, Search } from "@mui/icons-material";
-import { deleteOrderReturns, formatDate, getOrderReturns } from "../../../utils/ApiConfig";
+import { deleteOrderReturns, getOrderReturns } from "../../../utils/ApiConfig";
 import Swal from "sweetalert2";
+import { formatDate, getStatus } from "../../../utils/utils";
 
 const OrderReturnsTable = (props) => {
   const [orderReturns, setOrderReturns] = useState([]);
@@ -51,27 +52,7 @@ const OrderReturnsTable = (props) => {
     setexportOpen(!exportOpen);
   };
 
-  const getStatus = (Status) => {
-    if (Status === "completed")
-      return (
-        <div className="card rounded-md bg-green-400 text-center text-xs font-semibold">
-          Completed
-        </div>
-      );
-    if (Status === "processing")
-      return (
-        <div className="card rounded-md bg-blue-400 text-center text-xs font-semibold">
-          Processing
-        </div>
-      );
-    if (Status === "pending")
-      return (
-        <div className="card rounded-md bg-yellow-400 text-center text-xs font-semibold">
-          Pending
-        </div>
-      );
-    else return <div className="badge badge-ghost">{Status}</div>;
-  };
+
 
   const handleSort = (property) => {
     const isAsc = orderBy === property && order === "asc";

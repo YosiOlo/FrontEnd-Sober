@@ -19,7 +19,8 @@ import { BsChatDots, BsHandbag, BsBagX, BsBagPlus } from "react-icons/bs";
 import { useMediaQuery } from "react-responsive";
 import { MdMenu } from "react-icons/md";
 import { NavLink, useLocation, useRoutes } from "react-router-dom";
-import { checkToken, fetchUserData, formatDate, getVendorInfo, logoutUser } from "../../../utils/ApiConfig";
+import { checkToken, fetchUserData, getVendorInfo, logoutUser } from "../../../utils/ApiConfig";
+import { formatDate } from "../../../utils/utils";
 
 const Sidebar = () => {
   let isTabletMid = useMediaQuery({ query: "(max-width: 768px)" });

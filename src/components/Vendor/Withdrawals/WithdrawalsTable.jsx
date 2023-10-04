@@ -18,10 +18,11 @@ import { MdOutlineArrowDropDown, MdEdit, MdDelete } from "react-icons/md";
 import { TbFileExport, TbReload } from "react-icons/tb";
 import { FaFileCsv } from "react-icons/fa";
 import { ArrowUpward, ArrowDownward, Search } from "@mui/icons-material";
-import { deleteWithdrawals, formatDate, getWithdrawals } from "../../../utils/ApiConfig";
+import { deleteWithdrawals, getWithdrawals } from "../../../utils/ApiConfig";
 import { CSVLink } from "react-csv";
 import * as XLSX from "xlsx";
 import Swal from "sweetalert2";
+import { formatDate, getStatus } from "../../../utils/utils";
 
 const WithdrawalsTable = () => {
   const [withdrawals, setWithdrawals] = useState([]);
@@ -43,26 +44,6 @@ const WithdrawalsTable = () => {
     setexportOpen(!exportOpen);
   };
 
-  const getStatus = (Status) => {
-    if (Status === "completed")
-      return (
-        <div className="card rounded-md bg-green-400 text-center text-xs font-semibold">
-          Completed
-        </div>
-      );
-    if (Status === "processing")
-      return (
-        <div className="card rounded-md bg-blue-400 text-center text-xs font-semibold">
-          Processing
-        </div>
-      );
-    if (Status === "pending")
-      return (
-        <div className="card rounded-md bg-yellow-400 text-center text-xs font-semibold">
-          Pending
-        </div>
-      );
-  };
 
   const handleSort = (property) => {
     const isAsc = orderBy === property && order === "asc";

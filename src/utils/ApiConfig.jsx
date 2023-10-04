@@ -10,6 +10,8 @@ export const setAuthToken = (token) => {
   localStorage.setItem("authToken", token);
 };
 
+
+
 // Fungsi untuk mendapatkan token dari localStorage
 export const getAuthToken = () => {
   return localStorage.getItem("authToken");
@@ -49,15 +51,7 @@ export const product_data = async () => {
     return null;
   }
 };
-function formatDate(datestring) {
-  return new Date(datestring).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-}
 
-export { formatDate };
 
 export const loginUser = async (username, password, rememberMe) => {
   const data = {
@@ -185,6 +179,27 @@ export const getOrders = async () => {
     throw error; 
   }
 };
+
+export const putOrders = async (orderId, updatedData) => {
+
+  try {
+    const response = await axios.put(
+      `${BASE_URL}transaction/vendor/${orderId}`, updatedData,
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      }
+    );
+    console.log("Transaction updated successfully:", response.data);
+    return response?.data;
+  } catch (error) {
+    console.error("Error updating transaction:", error);
+    throw error; 
+  }
+
+};
+
 
 export const deleteOrders = async (rowId) => {
   try {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { formatDate, getReview } from "../../../utils/ApiConfig";
+import { getReview } from "../../../utils/ApiConfig";
 import {
   Card,
   CardContent,
@@ -19,6 +19,7 @@ import { MdOutlineArrowDropDown, MdEdit, MdDelete } from "react-icons/md";
 import { TbFileExport, TbReload } from "react-icons/tb";
 import { FaFileCsv } from "react-icons/fa";
 import { ArrowUpward, ArrowDownward, Search } from "@mui/icons-material";
+import { formatDate } from "../../../utils/utils";
 
 const ReviewTable = () => {
   const [review, setReview] = useState([]);
