@@ -19,35 +19,40 @@ import {TbPlayerTrackNextFilled} from "react-icons/tb"
 const data = [
   {
     name: '18 Aug',
-    IDR: 2500000,
+    uv: 2500000,
   },
   {
     name: '22 Aug',
-    IDR: 3500000,
+    uv: 3000,
   },
   {
     name: '26 Aug',
-    IDR: 8500000,
+    uv: 2000,
+    pv: 9800,
+    amt: 2290,
   },
   {
     name: '30 Aug',
-    IDR: 5800000,
+    uv: 2780,
+    pv: 3908,
+    amt: 2000,
   },
   {
     name: '03 Sep',
-    IDR: 2900000,
+    uv: 1890,
   },
   {
     name: '07 Sep',
-    IDR: 2100000,
+    uv: 2390,
   },
   {
     name: '11 Sep',
-    IDR: 2500000,
+    uv: 3490,
   },
 ];
 
 function Barchart() {
+    const data= dataBar();
   return (
   <div className="card p-4 w-[40%]">
   <div className="header ml-10 mb-7">
@@ -75,7 +80,7 @@ function Barchart() {
             <XAxis dataKey="name" />
             <YAxis />
             <Tooltip />
-            <Line type="monotone" dataKey="IDR" stroke="#F0B608" fill="#F0B608" />
+            <Line type="monotone" dataKey="uv" stroke="#8884d8" fill="#8884d8" />
           </LineChart>
         </ResponsiveContainer>
     </div>

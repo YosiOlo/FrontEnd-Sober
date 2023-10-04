@@ -6,7 +6,7 @@ function CouponsPage() {
   return (
     <div className='p-4'>
       <TopBar title="Coupons"/>
-      <TableCoupons/>
+      {/* <TableCoupons/> */}
     </div>
   )
 }

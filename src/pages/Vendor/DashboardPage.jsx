@@ -10,7 +10,7 @@ import NewOrders from "../../components/Vendor/Dashboard/NewOrders";
 function DashboardPage() {
   const data= recentOrders();
   return (
-    <div className="bg-[#f9f9f9] text-black">
+    <div className="bg-[#f9f9f9]">
       <TopBar title="Dashboard" />
       <div className="flex flex-wrap">
       <Barchart/>
