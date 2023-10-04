@@ -8,6 +8,7 @@ import PageLogin from "./pages/PageLogin";
 import PageRegister from "./pages/PageRegister";
 import PageContact from "./pages/PageContact";
 import PageProduct from "./pages/PageProducts";
+import PageWhislist from "./pages/PageWishList";
 import RootLayout from "./components/Vendor/Layouts/RootLayout";
 import DashboardPage from "./pages/Vendor/DashboardPage";
 import OrdersPage from "./pages/Vendor/OrderPage";
@@ -34,6 +35,7 @@ function App() {
           <Route path="/register" element={<PageRegister />} />
           <Route path="/contact" element={<PageContact />} />
           <Route path="/product" element={<PageProduct />} />
+          <Route path="/wishlist" element={<PageWhislist />} />
         {/* Vendor Routes */}
         <Route element={<RootLayout />}>
         <Route path="/VenDashboard" element={<DashboardPage />} />

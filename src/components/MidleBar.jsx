@@ -86,7 +86,8 @@ function MidleBar() {
 
 
                             <div className="icon group relative">
-                                <button className="hover:text-blue-600 relative">
+                                <Link to="/wishlist"><button className="hover:text-blue-600 relative" >
+
                                     <FiHeart className='w-7 h-7 mx-2' />
                                     {/* Tampilkan jumlah wishlist */}
                                     {wishlist.length > 0 && (
@@ -94,7 +95,8 @@ function MidleBar() {
                                             {wishlist.length}
                                         </span>
                                     )}
-                                </button>
+                                </button></Link>
+
                                 <div className="hidden group-hover:block absolute right-0 mt-1.5 bg-white border border-gray-300 rounded p-2 w-72 shadow-md z-10">
                                     <div className="flex flex-col">
                                         {/* Map data wishlist yang sudah ada */}

@@ -68,7 +68,7 @@ function TopAppBar() {
         <div className="space-x-4 flex items-center">
           <Link to="/about" className="hover:text-blue-600">Tentang Kami</Link>
           <span className="border-l border-gray-400 h-3 my-1 mx-2"></span>
-          <Link to="/favorite-list" className="hover:text-blue-600">Daftar Favorit</Link>
+          <Link to="/wishlist" className="hover:text-blue-600">Daftar Favorit</Link>
         </div>
         <div className="space-x-4 flex items-center">
           <select className="bg-transparent text-black hover:text-blue-600">

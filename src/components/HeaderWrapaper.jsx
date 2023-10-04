@@ -14,7 +14,7 @@ function HeaderWrapaper() {
     };
 
     return (
-        <div className="p-2 bg-white text-black text-sm">
+        <div className="p-2 bg-white text-black text-base">
             <div className="responsif-lg lg:block hidden">
                 <div className="header-wrapper flex justify-between">
                     <div className="header-items-left flex items-center ml-2">
@@ -30,13 +30,11 @@ function HeaderWrapaper() {
                         </div>
 
                         <div className="header-items-middle flex">
-                            <Link to="/specialprice" className="hover:text-blue-600 mx-4 font-semibold">Harga Spesial</Link>
-                            <Link to="/produk" className="hover:text-blue-600 mx-4 font-semibold">Produk</Link>
-                            <Link to="/specialprice" className="hover:text-blue-600 mx-4 font-semibold">Spesial Harga</Link>
+                            <Link to="/specialprice" className="hover:text-blue-600 mx-4 font-semibold text-base lg:text-base xl:text-xl">Spesial Harga</Link>
                             <div className="inline-flex mx-4" onMouseLeave={closeDropdown}>
                                 <a
                                     href="product"
-                                    className="font-semibold hover:text-blue-500 hover:bg-gray-50 rounded-l-md"
+                                    className="font-semibold hover:text-blue-500 hover:bg-gray-50 rounded-l-md text-base lg:text-base xl:text-xl"
                                 >
                                     Product
                                 </a>
@@ -67,19 +65,19 @@ function HeaderWrapaper() {
                                             <div className="p-2">
                                                 <a
                                                     href="#"
-                                                    className="font-semibold block px-4 py-2 hover:text-blue-500 hover:bg-gray-50"
+                                                    className="font-semibold block px-4 py-2 hover:text-blue-500 hover:bg-gray-50 text-base lg:text-base xl:text-xl"
                                                 >
                                                     Semua Product
                                                 </a>
                                                 <a
                                                     href="#"
-                                                    className="font-semibold block px-4 py-2 hover:text-blue-500 hover:bg-gray-50"
+                                                    className="font-semibold block px-4 py-2 hover:text-blue-500 hover:bg-gray-50 text-base lg:text-base xl:text-xl"
                                                 >
                                                     Portofolio Product
                                                 </a>
                                                 <a
                                                     href="#"
-                                                    className="font-semibold block px-4 py-2 hover:text-blue-500 hover:bg-gray-50"
+                                                    className="font-semibold block px-4 py-2 hover:text-blue-500 hover:bg-gray-50 text-base lg:text-base xl:text-xl"
                                                 >
                                                     Rincian Product
                                                 </a>
@@ -88,10 +86,10 @@ function HeaderWrapaper() {
                                     )}
                                 </div>
                             </div>
-                            <Link to="/stores" className="hover:text-blue-600 mx-4 font-semibold">Toko</Link>
-                            <Link to="/faqs" className="hover:text-blue-600 mx-4 font-semibold">FAQs</Link>
-                            <Link to="/contact" className="hover:text-blue-600 mx-4 font-semibold">Kontak</Link>
-                            <Link to="/members" className="hover:text-blue-600 mx-4 font-semibold">Member Paket</Link>
+                            <Link to="/stores" className="hover:text-blue-600 mx-4 font-semibold text-base lg:text-base xl:text-xl">Toko</Link>
+                            <Link to="/faqs" className="hover:text-blue-600 mx-4 font-semibold text-base lg:text-base xl:text-xl">FAQs</Link>
+                            <Link to="/contact" className="hover:text-blue-600 mx-4 font-semibold text-base lg:text-base xl:text-xl">Kontak</Link>
+                            <Link to="/members" className="hover:text-blue-600 mx-4 font-semibold text-base lg:text-base xl:text-xl">Member Paket</Link>
                         </div>
                     </div>
                 </div>
