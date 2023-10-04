@@ -143,7 +143,7 @@ const Sidebar = () => {
             <p className="text-[14px] text-[#666666]">
               {`Hello, ${userName}`}
             </p>
-            <p className="text-[12px] text-[#333333]">{`Joined on ${join}`}</p>
+            <p className="text-[12px] text-[#333333]">{`Joined on ${formatDate(join)}`}</p>
           </div>
           <VscSignOut
             className="cursor-pointer hover:text-[#FFC107]"
@@ -154,7 +154,7 @@ const Sidebar = () => {
 
         <div className="earnings border-b border-slate-300 mb-5 p-3">
           <p className="font-semibold text-[#666666] text-[16px]">Earnings</p>
-          <p className="font-bold text-[15px]">{`Rp.${balance}`}</p>
+          <p className="font-bold text-[15px]">{`Rp.${parseInt(balance)}`}</p>
         </div>
 
         <div className="flex flex-col text-[16px]">
