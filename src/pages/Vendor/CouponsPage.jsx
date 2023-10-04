@@ -1,6 +1,6 @@
 import React from 'react';
 import TopBar from '../../components/Vendor/TopBar/Topbar';
-import TableCoupons from '../../components/Vendor/coupons/CouponsTable';
+import TableCoupons from '../../components/Vendor/Coupons/CouponsTable';
 
 function CouponsPage() {
   return (
