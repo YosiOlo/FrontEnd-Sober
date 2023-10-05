@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { formatDate, getRevenue } from "../../../utils/ApiConfig";
+import { getRevenue } from "../../../utils/ApiConfig";
 import {
   Card,
   CardContent,
@@ -21,6 +21,7 @@ import { MdOutlineArrowDropDown, MdEdit, MdDelete } from "react-icons/md";
 import { TbFileExport, TbReload } from "react-icons/tb";
 import { FaFileCsv } from "react-icons/fa";
 import { ArrowUpward, ArrowDownward, Search } from "@mui/icons-material";
+import { formatDate, getPaymentMethod } from "../../../utils/utils";
 
 const RevenueTable = (props) => {
   const [revenue, setRevenue] = useState([]);
@@ -35,11 +36,6 @@ const RevenueTable = (props) => {
   useEffect(() => {
     getRevenue().then((data) => setRevenue(data));
   }, []);
-
-  const getPaymentMethod = (method) => {
-    if (method === "bank_transfer")
-      return <p className="text-[12px]">Bank Transfer</p>;
-  };
 
   const toggleExport = () => {
     setexportOpen(!exportOpen);

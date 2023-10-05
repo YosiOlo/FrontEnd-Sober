@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { formatDate, getRevenue, getVendorHistory } from "../../../../utils/ApiConfig";
+import { getVendorHistory } from "../../../../utils/ApiConfig";
 import {
   Card,
   CardContent,
@@ -21,6 +20,7 @@ import { MdOutlineArrowDropDown, MdEdit, MdDelete } from "react-icons/md";
 import { TbFileExport, TbReload } from "react-icons/tb";
 import { FaFileCsv } from "react-icons/fa";
 import { ArrowUpward, ArrowDownward, Search } from "@mui/icons-material";
+import { formatDate } from "../../../../utils/utils";
 
 const HistoryTable = () => {
   const [history, setHistory] = useState([]);
@@ -337,7 +337,7 @@ const HistoryTable = () => {
                         history?.current_balance}
                     </TableCell>
                     <TableCell>
-                      {history?.created_at}
+                      {formatDate(history?.created_at)}
                     </TableCell>
                   </TableRow>
                 ))}

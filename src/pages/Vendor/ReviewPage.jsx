@@ -4,7 +4,7 @@ import ReviewTable from '../../components/Vendor/Review/ReviewTable';
 
 function ReviewsPage() {
   return (
-    <div>
+    <div className='text-black'>
       <TopBar title="Reviews"/>
       <div className="p-4">
       <ReviewTable/>

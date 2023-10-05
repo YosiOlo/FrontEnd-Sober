@@ -1,13 +1,13 @@
 import React from 'react';
 import TopBar from '../../components/Vendor/TopBar/Topbar';
-// import Settings from '../../components/Vendor/Settings/Settings';
+import Settings from '../../components/Vendor/Settings/Settings';
 
 function SettingsPage() {
   return (
-    <div>
+    <div className='text-black'>
       <TopBar title="Settings"/>
       <div className="p-7 ">
-      {/* <Settings/> */}
+      <Settings/>
 
       </div>
     </div>

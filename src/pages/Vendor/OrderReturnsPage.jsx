@@ -4,7 +4,7 @@ import OrderReturnsTable from '../../components/Vendor/orderReturns/OrderReturns
 
 function OrderReturnsPage() {
   return (
-    <div className='bg-[#f9f9f9]'>
+    <div className='bg-[#f9f9f9] text-black' >
       <TopBar title="OrderReturns "/>
       <div className="p-5">
         

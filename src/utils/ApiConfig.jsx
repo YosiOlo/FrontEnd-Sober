@@ -10,6 +10,8 @@ export const setAuthToken = (token) => {
   localStorage.setItem('authToken', token);
 };
 
+
+
 // Fungsi untuk mendapatkan token dari localStorage
 export const getAuthToken = () => {
   return localStorage.getItem('authToken');
@@ -47,14 +49,6 @@ export const product_data = async () => {
     return null;
   }
 };
-function formatDate(datestring) {
-  return new Date(datestring).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-}
-export { formatDate };
 
 
 export const loginUser = async (username, password, rememberMe) => {
@@ -181,6 +175,48 @@ export const getOrders = async () => {
   }
 };
 
+export const putOrders = async (orderId, updatedData) => {
+
+  try {
+    const response = await axios.put(
+      `${BASE_URL}transaction/vendor/${orderId}`, updatedData,
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      }
+    );
+    console.log("Transaction updated successfully:", response.data);
+    return response?.data;
+  } catch (error) {
+    console.error("Error updating transaction:", error);
+    throw error; 
+  }
+
+};
+
+
+export const deleteOrders = async (rowId) => {
+  try {
+    const response = await axios.delete(
+      `${BASE_URL}/api/transaction/vendor/${rowId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      }
+    );
+    if (response.status === 200) {
+      console.log("Success! Data deleted from API.");
+      console.log("Response data:", response.data);
+    } else {
+      console.error("Failed to delete data from API. Status:", response.status);
+    }
+  } catch (error) {
+    console.error("Error deleting data:", error);
+  }
+};
+
 export const getCoupons = async () => {
   const authToken = getAuthToken();
   try {
@@ -198,7 +234,7 @@ export const getCoupons = async () => {
 };
 
 
-export const deletCoupons = async (rowId) => {
+export const deleteCoupons = async (rowId) => {
   try {
     const response = await axios.delete(`${BASE_URL}/api/discount/vendor/${rowId}`, {
       headers: {
@@ -244,6 +280,27 @@ export const getOrderReturns = async () => {
   }
 };
 
+export const deleteOrderReturns = async (rowId) => {
+  try {
+    const response = await axios.delete(
+      `${BASE_URL}/api/transaction/vendor/return/${rowId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      }
+    );
+    if (response.status === 200) {
+      console.log("Success! Data deleted from API.");
+      console.log("Response data:", response.data);
+    } else {
+      console.error("Failed to delete data from API. Status:", response.status);
+    }
+  } catch (error) {
+    console.error("Error deleting data:", error);
+  }
+};
+
 
 export const getProducts = async () => {
   const authToken = getAuthToken();
@@ -260,6 +317,25 @@ export const getProducts = async () => {
     throw error; 
   }
 };
+
+export const deleteProducts = async (rowId) => {
+  try {
+    const response = await axios.delete(`${BASE_URL}/api/product/${rowId}`, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
+    if (response.status === 200) {
+      console.log("Success! Data deleted from API.");
+      console.log("Response data:", response.data);
+    } else {
+      console.error("Failed to delete data from API. Status:", response.status);
+    }
+  } catch (error) {
+    console.error("Error deleting data:", error);
+  }
+};
+
 
 export const getRevenue = async () => {
   const authToken = getAuthToken();

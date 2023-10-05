@@ -21,7 +21,9 @@ import { TbFileExport, TbReload } from "react-icons/tb";
 import { FaFileCsv } from "react-icons/fa";
 import { ArrowUpward, ArrowDownward, Search } from "@mui/icons-material";
 import axios from "axios";
-import { formatDate, getProducts } from "../../../utils/ApiConfig";
+import { deleteProducts,getProducts } from "../../../utils/ApiConfig";
+import Swal from "sweetalert2";
+import { formatDate, getStatusProducts } from "../../../utils/utils";
 
 const ProductsTable = () => {
   const [orderBy, setOrderBy] = useState("id");
@@ -44,21 +46,7 @@ getProducts()
   const toggleExport = () => {
     setexportOpen(!exportOpen);
   };
-  const getStatus = (Status) => {
-    if (Status === "published")
-      return (
-        <div className="card rounded-md p-1 bg-[#36c6d3] text-center text-xs font-semibold">
-          Published
-        </div>
-      );
-    else {
-      return (
-        <div className="card rounded-md bg-red-400 text-center text-xs font-semibold">
-          Pending
-        </div>
-      );
-    }
-  };
+  
   const handleSort = (property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -238,7 +226,7 @@ getProducts()
             endAdornment: <Search />,
           }}
         />
-        <div className="action flex text-white flex-col sm:w-[100%] text-white md:flex-row space-x-0 md:space-x-3 font-semibold text-[12px] ">
+        <div className="action flex text-white flex-col sm:w-[100%] md:flex-row space-x-0 md:space-x-3 font-semibold text-[12px] ">
           <div className="relative">
             <button
               className="flex px-4 py-2 bg-[#36C6D3] rounded-lg"
@@ -432,7 +420,7 @@ getProducts()
                     <TableCell>{product?.sku}</TableCell>
                     <TableCell>{product?.order}</TableCell>
                     <TableCell>{formatDate(product?.created_at)}</TableCell>
-                    <TableCell>{getStatus(product?.status)}</TableCell>
+                    <TableCell>{getStatusProducts(product?.status)}</TableCell>
                     <TableCell>
                       <div className="flex gap-2">
                         <button

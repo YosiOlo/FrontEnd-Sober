@@ -2,7 +2,7 @@ import React from 'react'
 
 function EtalasePage() {
   return (
-    <div>EtalasePage</div>
+    <div className='text-black'>EtalasePage</div>
   )
 }
 
