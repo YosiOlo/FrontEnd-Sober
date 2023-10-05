@@ -4,7 +4,7 @@ import {HiOutlineShoppingBag} from 'react-icons/hi'
 import ProductIndex from '../../components/Vendor/products/ProductsIndex';
 function ProductsPage() {
   return (
-    <div>
+    <div className='text-black'>
       <ProductIndex/>
     </div>
   )

@@ -3,7 +3,7 @@ import WithdrawalsIndex from '../../components/Vendor/Withdrawals/WithdrawalsInd
 
 function WIthdrawalsPage() {
   return (
-    <div>
+    <div className='text-black'>
       <WithdrawalsIndex/>
     </div>
   )

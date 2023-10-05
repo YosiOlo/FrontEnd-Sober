@@ -4,7 +4,7 @@ import Settings from '../../components/Vendor/Settings/Settings';
 
 function SettingsPage() {
   return (
-    <div>
+    <div className='text-black'>
       <TopBar title="Settings"/>
       <div className="p-7 ">
       <Settings/>
