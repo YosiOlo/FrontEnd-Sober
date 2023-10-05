@@ -4,6 +4,8 @@ import MidleBar from '../components/MidleBar';
 import HeaderWrapaper from '../components/HeaderWrapaper';
 import Footer from '../components/Footer';
 import BreadCrumb from '../components/BreadCrumb';
+import WishlistTop from '../components/whislist/WishlistTop';
+import WishlistMain from '../components/whislist/WishlistMain';
 
 function PageWhislist() {
   const breadcrumbItems = [
@@ -16,6 +18,9 @@ function PageWhislist() {
     <MidleBar />
     <HeaderWrapaper />
     <BreadCrumb items={breadcrumbItems} />
+    <WishlistTop />
+    <WishlistMain />
+
     <Footer />
     </>
 
