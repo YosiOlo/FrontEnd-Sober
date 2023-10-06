@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import { AiFillCaretDown } from "react-icons/ai";
+import { putOrderReturns } from "../../../../utils/ApiConfig";
+import Swal from "sweetalert2";
+import { useParams } from "react-router-dom";
 
-function OrderStatus() {
+function OrderStatus({ orderId }) {
   const statuses = ["pending", "processing", "canceled"];
   const [selectedStatus, setSelectedStatus] = useState(statuses[0]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const { id } = useParams();
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -14,6 +18,33 @@ function OrderStatus() {
     setSelectedStatus(status);
     setIsDropdownOpen(false);
   };
+
+  const handleUpdateData = () => {
+    const updatedData = {
+      status: selectedStatus,
+    };
+
+    putOrderReturns(id, updatedData)
+      .then((response) => {
+        console.log("Order status updated successfully:", response);
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Order status has been updated",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      })
+      .catch((error) => {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Failed to update order status",
+        });
+        console.error("Error updating order status:", error);
+      });
+  };
+
   return (
     <div className="card bg-white rounded-lg w-[700px] mt-6 p-4 break-words">
       <p className="font-semibold">Change return order status</p>
@@ -45,9 +76,9 @@ function OrderStatus() {
           )}
         </div>
       </div>
-<div className="update flex justify-end mt-5">
-<button className="bg-[#4d97c1] w-[70px] h-[30px] rounded-lg">update</button>
-</div>
+      <div className="update flex justify-end mt-5">
+        <button className="bg-[#4d97c1] w-[70px] h-[30px] rounded-lg" onClick={handleUpdateData}>Update</button>
+      </div>
     </div>
   );
 }

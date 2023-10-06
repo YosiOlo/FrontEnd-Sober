@@ -162,7 +162,7 @@ export const getProductDashboard = async () => {
 export const getOrders = async () => {
   const authToken = getAuthToken();
   try {
-    const response = await axios.get(`${BASE_URL}/api/transaction/vendor/?limit=30`, {
+    const response = await axios.get(`${BASE_URL}/api/transaction/vendor/`, {
       headers: {
         Authorization: `Bearer ${authToken}`,
       },
@@ -172,6 +172,22 @@ export const getOrders = async () => {
   } catch (error) {
     console.error("Error fetching data:", error);
     throw error; 
+  }
+};
+
+export const getOrdersById = async (id) => {
+  const authToken = getAuthToken(); 
+  try {
+    const response = await axios.get(`${BASE_URL}/api/transaction/vendor/details/${id}`, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
+
+    return response.data; 
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error;
   }
 };
 
@@ -277,6 +293,40 @@ export const getOrderReturns = async () => {
   } catch (error) {
     console.error("Error fetching data:", error);
     throw error; 
+  }
+};
+
+export const putOrderReturns = async (id, updatedData, ) => {
+  const authToken = getAuthToken();
+  try {
+    const response = await axios.put(`${BASE_URL}/api/transaction/vendor/returns/details/${id}`, updatedData, {
+      headers: {
+        Authorization: `Bearer ${authToken}`, // Sesuaikan dengan cara Anda mengelola autentikasi/token
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error;
+  }
+};
+
+
+export const getOrderReturnById = async (id) => {
+  const authToken = getAuthToken();
+  try {
+    const response = await axios.get(`${BASE_URL}/api/transaction/vendor/returns/${id}`, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
+
+    // Menggunakan await, maka response.data akan mengembalikan data aktual dari API
+    return response.data.data.rows;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error;
   }
 };
 
