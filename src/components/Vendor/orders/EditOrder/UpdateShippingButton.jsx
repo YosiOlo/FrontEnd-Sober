@@ -10,7 +10,6 @@ const UpdateShipping = ({ isOpen, onClose }) => {
   };
 
   const handleSubmit = () => {
-    // Kirim data status yang diperbarui ke backend atau lakukan aksi yang diperlukan
     console.log("Status updated:", selectedStatus);
     onClose();
   };
@@ -30,32 +29,32 @@ const UpdateShipping = ({ isOpen, onClose }) => {
           </h2>
         </div>
         <div className="body bg-white p-4 rounded-b-lg">
-        <label className="block mb-2 bg-white">Select Status:</label>
-        <select
-          className="w-full p-2 border rounded"
-          value={selectedStatus}
-          onChange={handleStatusChange}
-        >
-          {statusOptions.map((option) => (
-            <option key={option} value={option}>
-              {option}
-            </option>
-          ))}
-        </select>
-        <div className="mt-4 flex justify-end">
-          <button
-            className="px-4 py-2 bg-[#0DCAF0] text-white rounded"
-            onClick={handleSubmit}
+          <label className="block mb-2 bg-white">Select Status:</label>
+          <select
+            className="w-full p-2 border rounded"
+            value={selectedStatus}
+            onChange={handleStatusChange}
           >
-            Update
-          </button>
-          <button
-            className="px-4 py-2 ml-2 bg-[#FFC107] rounded"
-            onClick={onClose}
-          >
-            Cancel
-          </button>
-        </div>
+            {statusOptions.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+          <div className="mt-4 flex justify-end">
+            <button
+              className="px-4 py-2 bg-[#0DCAF0] text-white rounded"
+              onClick={handleSubmit}
+            >
+              Update
+            </button>
+            <button
+              className="px-4 py-2 ml-2 bg-[#FFC107] rounded"
+              onClick={onClose}
+            >
+              Cancel
+            </button>
+          </div>
         </div>
       </div>
     </div>

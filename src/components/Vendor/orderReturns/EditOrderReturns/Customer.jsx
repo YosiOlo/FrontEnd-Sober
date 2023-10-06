@@ -2,35 +2,19 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { RiMessageFill } from "react-icons/ri";
 import { TbPhoneCall } from "react-icons/tb";
-import { getAuthToken, getOrderReturns } from "../../../../utils/ApiConfig";
-import axios from "axios";
-
+import {
+  getOrderReturnById,
+} from "../../../../utils/ApiConfig";
 
 function Customer() {
   const { id } = useParams();
   const [orderReturn, setOrderReturn] = useState([]);
 
   useEffect(() => {
-    const fetchOrderData = async () => {
-      const authToken = getAuthToken();
-      try {
-        const response = await axios.get(
-          `https://kuro.asrofur.me/sober/api/transaction/vendor/returns/details/${id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${authToken}`,
-            },
-          }
-        );
-        setOrderReturn([response.data.data]);
-        console.log("Order Data:", response.data.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchOrderData();
-  }, [id]);
+    getOrderReturnById(id).then((data) => {
+      setOrderReturn([data]);
+    });
+  });
 
   return (
     <div>
@@ -41,7 +25,10 @@ function Customer() {
               <h1>Customer</h1>
               <img
                 className="h-10 w-10"
-                src={"https://kuro.asrofur.me/sober/" + customer?.ec_order?.customer_order?.avatar}
+                src={
+                  "https://kuro.asrofur.me/sober/" +
+                  customer?.ec_order?.customer_order?.avatar
+                }
                 alt=""
               />
             </div>

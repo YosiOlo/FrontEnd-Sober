@@ -7,27 +7,12 @@ function OrderInformation() {
   const { id } = useParams();
   const [orderReturn, setOrderReturn] = useState([]);
 
-  useEffect(() => {
-    const fetchOrderData = async () => {
-      const authToken = getAuthToken();
-      try {
-        const response = await axios.get(
-          `https://kuro.asrofur.me/sober/api/transaction/vendor/returns/details/${id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${authToken}`,
-            },
-          }
-        );
-        setOrderReturn([response.data.data]);
-        console.log("Order Data:", response.data.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
+  useEffect(()=>{
+    getOrderReturnById(id).then((data)=>{
+      setOrderReturn([data])
+    })
+  },[id])
 
-    fetchOrderData();
-  }, [id]);
 
   return (
     <div>

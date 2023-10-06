@@ -13,6 +13,22 @@ function formatDate(datestring) {
 
 export { formatDate };
 
+function formatDate1(dateString) {
+  const options = {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit"
+  };
+
+  const formattedDate = new Date(dateString).toLocaleString("en-US", options);
+  return formattedDate.replace(/, /, '  ');
+}
+
+export { formatDate1 };
+
 export const getOrderConfirm = (confirm) => {
   if (confirm === "confirm")
     return (
