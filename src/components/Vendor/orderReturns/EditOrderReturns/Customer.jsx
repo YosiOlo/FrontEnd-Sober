@@ -17,7 +17,7 @@ function Customer() {
   });
 
   return (
-    <div>
+    <div className="rounded-md shadow-lg">
       {orderReturn.map((customer) => (
         <div key={customer.id}>
           <div className="card bg-white p-6">

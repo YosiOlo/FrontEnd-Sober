@@ -15,7 +15,7 @@ function OrderInformation() {
 
 
   return (
-    <div>
+    <div className="shadow-lg rounded-md">
       <div className="card bg-white rounded-lg w-[700px] gap-3 break-words">
         <div className="header p-4 border-b-[1px] border-black">
           <p className="font-semibold">Order information</p>
