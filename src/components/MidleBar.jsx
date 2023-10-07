@@ -9,6 +9,7 @@ import SobermartLogo from '../../public/soblogo.png';
 
 function MidleBar() {
     const { wishlist } = useWishlist();
+    console.log('from midlebar', wishlist)
 
     return (
         <div className="bg-white text-black text-sm border-b border-gray-300 ">
@@ -101,11 +102,10 @@ function MidleBar() {
                                     <div className="flex flex-col">
                                         {/* Map data wishlist yang sudah ada */}
                                         <div className="overflow-y-auto max-h-80"> {/* Menambahkan overflow-y-auto dan max-h-80 */}
-                                            {wishlist.map((item, index) => {
-                                                console.log("Item dalam map:", item); // Menampilkan item dalam log
+                                            {wishlist.map((item) => {
                                                 return (
-                                                    <div key={item.product_id} className={`text-sm flex items-center mb-4 ${index !== wishlist.length - 1 ? 'border-b border-gray-300 pb-4' : ''}`}>
-                                                        {/* Tampilkan gambar yang lebih besar di sebelah kiri */}
+                                                    console.log("cek product key",item),
+                                                    <div key={item.product.id} className="text-sm flex items-center mb-4">
                                                         <div className="w-1/3">
                                                             <img
                                                                 src={
@@ -114,12 +114,10 @@ function MidleBar() {
                                                                         : '/logo-sober-mart-color-grey-1.png'
                                                                 }
                                                                 alt={item.product.name.length > 2 ? item.product.name.slice(0, 40) + "..." : item.product.name}
-                                                                className={`w-full h-full object-cover ${item.product.stock_status === 'out_of_stock' ? 'grayscale' : ''
-                                                                    }`}
+                                                                className={`w-full h-full object-cover ${item.product.stock_status === 'out_of_stock' ? 'grayscale' : ''}`}
                                                                 style={{ imageRendering: 'pixelated' }}
                                                             />
                                                         </div>
-                                                        {/* Tampilkan nama di atas dan sale_price di bawah nama */}
                                                         <div className="w-2/3 pl-4">
                                                             <p className="mb-2">{item.product.name.length > 2 ? item.product.name.slice(0, 10) + "..." : item.product.name}</p>
                                                             <p className="text-red-500">{`Rp${item.product.sale_price}`}</p>
@@ -128,6 +126,7 @@ function MidleBar() {
                                                     </div>
                                                 );
                                             })}
+
                                         </div>
                                         <div className="flex justify-center mt-2">
                                             <Link to="/favorite" className="hover:text-blue-600 text-center">

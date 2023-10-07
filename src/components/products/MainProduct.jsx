@@ -49,7 +49,8 @@ const MainProduct = () => {
 
     }, []);
 
-    const toggleFavorite = (product) => {
+    const toggleFavorite = async (product) => {
+        const data = await product_data();
         if (isProductFavorite(product.id)) {
             if (isLoggedIn) {
                 axios.delete(`https://kuro.asrofur.me/sober/api/users/wishlist/${product.id}`, { headers })
@@ -66,18 +67,17 @@ const MainProduct = () => {
                 setFavoriteProducts(updatedFavorites);
                 localStorage.setItem('favorites', JSON.stringify(updatedFavorites));
                 console.log('Menghapus favorit', product.id);
-                
+
             }
         } else {
             if (isLoggedIn) {
                 axios.post(`https://kuro.asrofur.me/sober/api/users/wishlist/${product.id}`, {}, { headers })
                     .then((response) => {
-                        console.log('Menambahkan favorit');
-                        setFavoriteProducts([...favoriteProducts, { product_id: product.id }]);
-                        
+                        const getProductId = data.rows.find(item => item.id === product.id);
+                        setFavoriteProducts([...favoriteProducts, { product: getProductId }]);
                     })
                     .catch((error) => {
-                        console.error('Gagal menambahkan favorit:'?? error.response.data.message);
+                        console.error('Gagal menambahkan favorit:' ?? error.response.data.message);
                     });
             } else {
                 // Jika pengguna belum login, simpan perubahan di local storage
@@ -85,29 +85,14 @@ const MainProduct = () => {
                 setFavoriteProducts(updatedFavorites);
                 localStorage.setItem('favorites', JSON.stringify(updatedFavorites));
                 console.log('Menambahkan favorit', product.id);
-                
+
             }
-        } 
+        }
     };
 
     const isProductFavorite = (productId) => {
-        return favoriteProducts.some(item => item.product_id === productId);
+        return favoriteProducts.some(item => item.product.id === productId); // Memeriksa ID produk dalam objek favorit
     };
-
-
-    // const sendFavoriteDataToApi = (idProduct) => {
-    //     // Kirim data ID produk favorit ke API dengan header yang sesuai
-    //     console.log(headers)
-    //     axios.post(`https://kuro.asrofur.me/sober/api/users/wishlist/${idProduct}`, { headers })
-    //         .then((response) => {
-    //             // Tangani respons dari API jika berhasil
-    //             console.log('Favorit berhasil', response.data);
-    //         })
-    //         .catch((error) => {
-    //             // Tangani kesalahan jika permintaan gagal
-    //             console.error('Gagal mengirim data favorit ke API', error);
-    //         });
-    // };
 
     useEffect(() => setWishlist(favoriteProducts), [favoriteProducts])
 
@@ -117,8 +102,8 @@ const MainProduct = () => {
                 <div className="top-left  h-full w-1/2 text-5xl font-semibold ml-4">Toko</div>
                 <div className="top-right flex h-full w-1/2">
                     <div className="top-right-top w-1/2 flex justify-end">
-                    <p className="hidden md:block mt-4">Sort By</p>
-                        
+                        <p className="hidden md:block mt-4">Sort By</p>
+
                         <div className="sort-by">
                             <div className="dropdown">
                                 <label tabIndex={0} className="btn m-1">
@@ -132,8 +117,8 @@ const MainProduct = () => {
                         </div>
                     </div>
                     <div className="top-right-bottom w-1/2 flex justify-end">
-                    <p className="hidden md:block mt-4">View</p>
-                        
+                        <p className="hidden md:block mt-4">View</p>
+
                         <div className="view flex mr-10">
                             <div className="grid ml-6">
                                 <AiOutlineAppstore size={40} /> {/* Ikon grid */}
@@ -197,8 +182,7 @@ const MainProduct = () => {
                                                 )}
                                                 {/* Tombol ikon favorit */}
                                                 <div
-                                                    className={`favorite absolute top-2 right-2 cursor-pointer
-                                                        }`}
+                                                    className={`favorite absolute top-2 right-2 cursor-pointer`}
                                                     onClick={() => toggleFavorite(product)}
                                                 >
                                                     {isProductFavorite(product.id) ? (
