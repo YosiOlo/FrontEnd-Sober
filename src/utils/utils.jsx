@@ -1,7 +1,5 @@
-
 import { BsCheckLg } from "react-icons/bs";
-import {AiFillCloseCircle} from "react-icons/ai";
-
+import { AiFillCloseCircle } from "react-icons/ai";
 
 function formatDate(datestring) {
   return new Date(datestring).toLocaleDateString("en-US", {
@@ -13,6 +11,38 @@ function formatDate(datestring) {
 
 export { formatDate };
 
+export const getStatusDetails = (status) => {
+  if (status === "arrange_shipment")
+    return (
+      <p className="bg-yellow-400 text-yellow-800 p-1 rounded-md ">
+        {" "}
+        Arrange Shipment
+      </p>
+    );
+  else
+    return (
+      <p className="bg-yellow-400 text-yellow-800 p-1 rounded-md ">
+        {" "}
+        Delivered
+      </p>
+    );
+};
+
+function getInitials(name) {
+  if (!name) {
+    return "";
+  }
+  const names = name.split(" ");
+  return names
+    .map((word) => word.charAt(0))
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
+}
+
+
+export {getInitials};
+
 function formatDate1(dateString) {
   const options = {
     year: "numeric",
@@ -20,11 +50,11 @@ function formatDate1(dateString) {
     day: "2-digit",
     hour: "2-digit",
     minute: "2-digit",
-    second: "2-digit"
+    second: "2-digit",
   };
 
   const formattedDate = new Date(dateString).toLocaleString("en-US", options);
-  return formattedDate.replace(/, /, '  ');
+  return formattedDate.replace(/, /, "  ");
 }
 
 export { formatDate1 };
@@ -37,12 +67,13 @@ export const getOrderConfirm = (confirm) => {
         <p className="mt-1">ORDER WAS CONFIRMED</p>
       </div>
     );
-    else return (
+  else
+    return (
       <div className="orderStatus border-t-[1px] border-slate-200 p-4 flex gap-3">
         <AiFillCloseCircle className="text-white text-3xl bg-green-400 rounded-3xl p-1 " />
         <p className="mt-1">ORDER WAS UNCONFIRMED</p>
       </div>
-    )
+    );
 };
 
 export const getPaymentStatus = (PaymentStatus) => {

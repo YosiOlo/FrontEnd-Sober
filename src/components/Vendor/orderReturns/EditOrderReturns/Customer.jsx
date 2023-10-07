@@ -2,9 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { RiMessageFill } from "react-icons/ri";
 import { TbPhoneCall } from "react-icons/tb";
-import {
-  getOrderReturnById,
-} from "../../../../utils/ApiConfig";
+import { getOrderReturnById } from "../../../../utils/ApiConfig";
+import { getInitials } from "../../../../utils/utils";
 
 function Customer() {
   const { id } = useParams();
@@ -26,8 +25,12 @@ function Customer() {
               <img
                 className="h-10 w-10"
                 src={
-                  "https://kuro.asrofur.me/sober/" +
                   customer?.ec_order?.customer_order?.avatar
+                    ? "https://kuro.asrofur.me/sober/" +
+                      customer?.ec_order?.customer_order?.avatar
+                    : `https://via.placeholder.com/40?text=${getInitials(
+                        customer?.ec_order?.customer_order?.name
+                      )}`
                 }
                 alt=""
               />

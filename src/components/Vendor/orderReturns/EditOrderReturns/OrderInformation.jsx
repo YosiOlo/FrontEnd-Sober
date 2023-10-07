@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { getAuthToken, getOrderReturnById, getOrderReturns } from "../../../../utils/ApiConfig";
-import axios from "axios";
+import { getOrderReturnById } from "../../../../utils/ApiConfig";
 
 function OrderInformation() {
   const { id } = useParams();

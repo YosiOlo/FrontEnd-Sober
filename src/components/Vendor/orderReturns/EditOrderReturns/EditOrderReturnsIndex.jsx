@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import OrderInformation from "./OrderInformation";
-import OrderStatus from "./OrderStatus";
 import Customer from "./Customer";
 import TopBar from "../../TopBar/Topbar";
 import {
   getOrderReturnById,
 } from "../../../../utils/ApiConfig";
+import StatusDropdown from "./StatusDropdown";
 
 function EditOrderReturnsIndex() {
   const { id } = useParams();
@@ -24,7 +24,7 @@ function EditOrderReturnsIndex() {
       <div className="flex justify-center items-center gap-5 sm:flex-wrap md:flex-wrap lg:flex-wrap">
         <div className="dataOrder">
           <OrderInformation />
-          <OrderStatus />
+          <StatusDropdown/>
         </div>
         <Customer />
       </div>

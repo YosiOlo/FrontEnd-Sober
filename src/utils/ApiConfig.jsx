@@ -193,10 +193,12 @@ export const getOrdersById = async (id) => {
   }
 };
 
-export const putOrders = async (orderId, updatedData) => {
+
+
+export const putOrders = async (id, updatedData) => {
   try {
     const response = await axios.put(
-      `${BASE_URL}transaction/vendor/${orderId}`,
+      `${BASE_URL}transaction/vendor/${id}`,
       updatedData,
       {
         headers: {
@@ -308,7 +310,7 @@ export const putOrderReturns = async (id, updatedData) => {
   const authToken = getAuthToken();
   try {
     const response = await axios.put(
-      `${BASE_URL}/api/transaction/vendor/returns/details/${id}`,
+      `${BASE_URL}/api/transaction/vendor/return/${id}`,
       updatedData,
       {
         headers: {

@@ -35,6 +35,7 @@ function OrderInformation() {
   const closeModal = () => {
     setIsModalOpen(false);
   };
+  
   return (
     <div className="shadow-lg">
       {orders.length > 0 &&

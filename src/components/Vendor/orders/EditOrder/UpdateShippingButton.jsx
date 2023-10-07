@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { RxUpdate } from "react-icons/rx";
 
 const UpdateShipping = ({ isOpen, onClose }) => {
-  const [selectedStatus, setSelectedStatus] = useState("Delivered");
+  const [selectedStatus, setSelectedStatus] = useState("");
   const statusOptions = ["Delivered", "Arrange Shipment"];
 
   const handleStatusChange = (event) => {
