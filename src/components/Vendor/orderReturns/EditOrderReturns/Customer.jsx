@@ -52,7 +52,12 @@ function Customer() {
                 <TbPhoneCall className="mt-[0.3em]" />
                 <p>{customer?.ec_order?.customer_order?.phone}</p>
               </div>
-              <p>Jl Ahmad Yani, Wonocolo Surabaya Jawa Timur Indonesia</p>
+              <p>
+                {customer.ec_order.order_addresses.address},
+                {customer.ec_order.order_addresses.city}{" "}
+                {customer.ec_order.order_addresses.state}
+              </p>
+              <p>{customer.ec_order.order_addresses.zip_code}</p>
               <a className="text-blue-500" href="">
                 See On Map
               </a>

@@ -35,7 +35,7 @@ function OrderInformation() {
   const closeModal = () => {
     setIsModalOpen(false);
   };
-  
+
   return (
     <div className="shadow-lg">
       {orders.length > 0 &&
@@ -145,9 +145,6 @@ function OrderInformation() {
               </div>
             </div>
             <div className="history mt-5 bg-white">
-              <div className="header p-4 border-b-[1px] border-slate-200 ">
-                <h1>History</h1>
-              </div>
               <HistoryShipment historyData={historyData} />
             </div>
           </div>

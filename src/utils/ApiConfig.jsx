@@ -193,12 +193,10 @@ export const getOrdersById = async (id) => {
   }
 };
 
-
-
 export const putOrders = async (id, updatedData) => {
   try {
     const response = await axios.put(
-      `${BASE_URL}transaction/vendor/${id}`,
+      `${BASE_URL}/api/shipment/vendor/${id}`,
       updatedData,
       {
         headers: {

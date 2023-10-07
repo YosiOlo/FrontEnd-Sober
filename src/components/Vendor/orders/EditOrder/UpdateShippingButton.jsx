@@ -1,17 +1,42 @@
 import React, { useState } from "react";
 import { RxUpdate } from "react-icons/rx";
+import { useParams } from "react-router-dom";
+import { putOrders } from "../../../../utils/ApiConfig";
+import Swal from "sweetalert2";
 
 const UpdateShipping = ({ isOpen, onClose }) => {
-  const [selectedStatus, setSelectedStatus] = useState("");
-  const statusOptions = ["Delivered", "Arrange Shipment"];
+  const [status, setStatus] = useState("");
+  const { id } = useParams();
 
-  const handleStatusChange = (event) => {
-    setSelectedStatus(event.target.value);
+  const handleStatusChange = (selectedStatus) => {
+    setStatus(selectedStatus);
   };
 
-  const handleSubmit = () => {
-    console.log("Status updated:", selectedStatus);
-    onClose();
+  const handleSave = () => {
+    const updatedData = {
+      status: status,
+    };
+    putOrders(id, updatedData)
+      .then((response) => {
+        console.log("Order Return updated successfully:", response);
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Your work has been saved",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        console.log("Data saved successfully", response);
+      })
+      .catch((error) => {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Something went wrong!",
+          error,
+        });
+        console.error("Data save failed", error);
+      });
   };
 
   if (!isOpen) {
@@ -31,20 +56,17 @@ const UpdateShipping = ({ isOpen, onClose }) => {
         <div className="body bg-white p-4 rounded-b-lg">
           <label className="block mb-2 bg-white">Select Status:</label>
           <select
-            className="w-full p-2 border rounded"
-            value={selectedStatus}
-            onChange={handleStatusChange}
+            className="border rounded px-3 py-2 w-full bg-white"
+            value={status}
+            onChange={(e) => handleStatusChange(e.target.value)}
           >
-            {statusOptions.map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
+            <option value="pending">Arrange Shipment</option>
+            <option value="delivered">Delivered</option>
           </select>
           <div className="mt-4 flex justify-end">
             <button
               className="px-4 py-2 bg-[#0DCAF0] text-white rounded"
-              onClick={handleSubmit}
+              onClick={handleSave}
             >
               Update
             </button>
