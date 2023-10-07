@@ -19,7 +19,7 @@ export const authToken = getAuthToken();
 export const memberShip = async () => {
   try {
     const response = await axios.get(`${BASE_URL}/api/membership`);
-    console.log('Respon API:', response.data); // Pindahkan ini ke atas return
+    
     return response.data.datas;
   } catch (error) {
     console.error('Kesalahan Permintaan API:', error.response.data.message);

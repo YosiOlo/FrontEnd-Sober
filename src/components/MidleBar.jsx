@@ -9,7 +9,7 @@ import SobermartLogo from '../../public/soblogo.png';
 
 function MidleBar() {
     const { wishlist } = useWishlist();
-    console.log('from midlebar', wishlist)
+   
 
     return (
         <div className="bg-white text-black text-sm border-b border-gray-300 ">
@@ -104,7 +104,7 @@ function MidleBar() {
                                         <div className="overflow-y-auto max-h-80"> {/* Menambahkan overflow-y-auto dan max-h-80 */}
                                             {wishlist.map((item) => {
                                                 return (
-                                                    console.log("cek product key",item),
+                                                   
                                                     <div key={item.product.id} className="text-sm flex items-center mb-4">
                                                         <div className="w-1/3">
                                                             <img

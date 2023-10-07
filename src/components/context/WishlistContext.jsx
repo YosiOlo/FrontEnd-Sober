@@ -48,7 +48,7 @@ export const WishlistProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    console.log('from context', wishlist.length)
+    
   }, [wishlist])
 
   return (

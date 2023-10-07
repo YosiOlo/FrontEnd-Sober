@@ -98,7 +98,7 @@ const MainProduct = () => {
 
     return (
         <div className="main-product flex flex-col">
-            <div className="top flex h-1/4">
+            <div className="top flex h-1/4 my-8">
                 <div className="top-left  h-full w-1/2 text-5xl font-semibold ml-4">Toko</div>
                 <div className="top-right flex h-full w-1/2">
                     <div className="top-right-top w-1/2 flex justify-end">
