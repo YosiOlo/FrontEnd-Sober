@@ -118,6 +118,20 @@ export const fetchUserData = async (authToken) => {
   }
 };
 
+export const getWishlist = async () => {
+  const authToken = getAuthToken();
+  try {
+    const response = await axios.get(`${BASE_URL}/api/users/wishlist`, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
+    return response.data.data;
+  } catch (error) {
+    console.log("Kesalahan Permintan API:", error.response.data.message);
+  }
+};
+
 // ===================================Vendor================================
 
 export const getOrderDashboard = async () => {
@@ -196,7 +210,7 @@ export const getOrdersById = async (id) => {
 export const putOrders = async (id, updatedData) => {
   try {
     const response = await axios.put(
-      `${BASE_URL}/api/shipment/vendor/${id}`,
+      `${BASE_URL}/api/shipment/vendor/update/${id}`,
       updatedData,
       {
         headers: {
@@ -208,6 +222,24 @@ export const putOrders = async (id, updatedData) => {
     return response?.data;
   } catch (error) {
     console.error("Error updating transaction:", error);
+    throw error;
+  }
+};
+export const putCustomerOrders = async (id, updatedData) => {
+  try {
+    const response = await axios.put(
+      `${BASE_URL}/api/transaction/vendor/address/${id}`,
+      updatedData,
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      }
+    );
+    console.log("Customer updated successfully:", response.data);
+    return response?.data;
+  } catch (error) {
+    console.error("Error updating customer:", error);
     throw error;
   }
 };
@@ -368,7 +400,7 @@ export const getProducts = async () => {
   const authToken = getAuthToken();
   try {
     const response = await axios.get(
-      `${BASE_URL}/api/product/vendor/list?name&limit=5&search`,
+      `${BASE_URL}/api/product/vendor/list?name&limit=1000&search`,
       {
         headers: {
           Authorization: `Bearer ${authToken}`,
@@ -613,17 +645,20 @@ export const checkToken = async () => {
   }
 };
 
-//https://kuro.asrofur.me/sober/api/users/wishlist
-export const getWishlist = async () => {
+export const getDataEtalase = async () => {
   const authToken = getAuthToken();
   try {
-    const response = await axios.get(`${BASE_URL}/api/users/wishlist`, {
-      headers: {
-        Authorization: `Bearer ${authToken}`,
-      },
-    });
-    return response.data.data;
+    const response = await axios.get(
+      `${BASE_URL}/api/product/vendor/list?name&limit=500&search=&orderby=etalase`,
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      }
+    );
+    return response.data.data.rows;
   } catch (error) {
-    console.log("Kesalahan Permintan API:", error.response.data.message);
+    console.error("Error fetching data:", error);
+    throw error;
   }
 };

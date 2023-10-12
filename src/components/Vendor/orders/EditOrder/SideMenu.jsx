@@ -3,15 +3,38 @@ import { RiMessageFill } from "react-icons/ri";
 import { BsPencil } from "react-icons/bs";
 import { MdCall } from "react-icons/md";
 import { useParams } from "react-router-dom";
-import { getOrdersById } from "../../../../utils/ApiConfig";
+import { getOrdersById, putCustomerOrders } from "../../../../utils/ApiConfig";
+import Swal from "sweetalert2";
+import { getInitials } from "../../../../utils/utils";
 
 function SideMenu() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const { id } = useParams();
   const [orders, setOrders] = useState([]);
+  const [shippingInfo, setShippingInfo] = useState({
+    name: "",
+    phoneNumber: "",
+    email: "",
+    address: "",
+    city: "",
+    state: "",
+    zipCode: "",
+  });
 
   useEffect(() => {
     getOrdersById(id).then((data) => {
+      const { name, phone, email, address, city, state, zip_code } =
+  data.order_addresses || {};
+
+      setShippingInfo({
+        name,
+        phoneNumber: phone,
+        email,
+        address,
+        city,
+        state,
+        zipCode: zip_code,
+      });
       setOrders([data]);
     });
   }, [id]);
@@ -33,6 +56,28 @@ function SideMenu() {
   };
 
   const handleSubmit = () => {
+    // Lakukan permintaan PUT ke server
+    putCustomerOrders(id, shippingInfo)
+      .then((response) => {
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Your work has been saved",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        console.log("Data saved successfully", response);
+      })
+      .catch((error) => {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Something went wrong!",
+          error,
+        });
+        console.error("Data save failed", error);
+      });
+
     closeEditModal();
   };
 
@@ -41,14 +86,18 @@ function SideMenu() {
       {orders.map((customer) => (
         <div key={customer.id}>
           <div className="customer border-b-[1px] border-slate-200 mb-7">
-            <div className="header flex justify-between mb-3">
-              <h1>Customer</h1>
-              <img
+          <img
                 className="h-10 w-10"
-                src="https://res.cloudinary.com/dap6ohre8/image/upload/v1692042539/roady/download_uqwfbi.png"
+                src={
+                  customer?.customer_order?.avatar
+                    ? "https://kuro.asrofur.me/sober/" +
+                      customer?.customer_order?.avatar
+                    : `https://via.placeholder.com/40?text=${getInitials(
+                        customer?.order_addresses?.name
+                      )}`
+                }
                 alt=""
               />
-            </div>
             <p className="font-bold">{customer.order_addresses.name}</p>
             <div className="detailOrders flex gap-3">
               <RiMessageFill className="mt-1" />

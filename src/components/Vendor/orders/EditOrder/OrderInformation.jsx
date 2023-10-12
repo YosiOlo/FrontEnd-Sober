@@ -6,8 +6,13 @@ import { useParams } from "react-router-dom";
 import { BsCheckLg } from "react-icons/bs";
 import { AiFillCloseCircle } from "react-icons/ai";
 import { getOrdersById } from "../../../../utils/ApiConfig";
-import { formatDate1, getOrderConfirm } from "../../../../utils/utils";
+import {
+  formatDate1,
+  getOrderConfirm,
+  getStatusDetails,
+} from "../../../../utils/utils";
 import HistoryShipment from "./HistoryShipment";
+import HistoryShipping from "./HistoryShipment";
 
 function OrderInformation() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -26,7 +31,7 @@ function OrderInformation() {
     getOrdersById(id).then((data) => {
       setOrders([data]);
     });
-  }, [id]);
+  }, []);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -120,9 +125,7 @@ function OrderInformation() {
                 <p className="mt-1">DELIVERY</p>
                 <div className="id flex gap-4">
                   <h1>#10000312</h1>
-                  <p className="bg-yellow-400 text-yellow-800 p-1 rounded-md ">
-                    delivered
-                  </p>
+                  <div>{getStatusDetails(order.order_shipments.status)}</div>
                 </div>
               </div>
               <div className="desc p-4">
@@ -144,8 +147,8 @@ function OrderInformation() {
                 <UpdateShipping isOpen={isModalOpen} onClose={closeModal} />
               </div>
             </div>
-            <div className="history mt-5 bg-white">
-              <HistoryShipment historyData={historyData} />
+            <div className="history mt-5 bg-[#f9f9f9]">
+              <HistoryShipping />
             </div>
           </div>
         ))}

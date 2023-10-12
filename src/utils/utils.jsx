@@ -12,14 +12,14 @@ function formatDate(datestring) {
 export { formatDate };
 
 export const getStatusDetails = (status) => {
-  if (status === "arrange_shipment")
+  if (status === "pending")
     return (
-      <p className="bg-yellow-400 text-yellow-800 p-1 rounded-md ">
+      <p className="bg-red-400 text-yellow-800 p-1 rounded-md ">
         {" "}
         Arrange Shipment
       </p>
     );
-  else
+  if (status === "delivered")
     return (
       <p className="bg-yellow-400 text-yellow-800 p-1 rounded-md ">
         {" "}

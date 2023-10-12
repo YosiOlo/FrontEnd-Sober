@@ -44,9 +44,9 @@ const UpdateShipping = ({ isOpen, onClose }) => {
   }
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-10">
-      <div className="absolute inset-0" />
-      <div className=" w-[500px] rounded-lg shadow-md z-10">
+    <div className="fixed inset-0 flex items-center justify-center z-10 ">
+      <div className="absolute inset-0 " />
+      <div className=" w-[500px] rounded-lg shadow-md z-10 bg-[#f9f9f9]">
         <div className="header bg-[#0DCAF0] p-2 flex gap-3 rounded-t-lg">
           <RxUpdate className="text-white mt-2 font-bold" />
           <h2 className=" text-white font-semibold mb-4">
@@ -60,8 +60,8 @@ const UpdateShipping = ({ isOpen, onClose }) => {
             value={status}
             onChange={(e) => handleStatusChange(e.target.value)}
           >
-            <option value="pending">Arrange Shipment</option>
             <option value="delivered">Delivered</option>
+            <option value="pending">Arrange Shipment</option>
           </select>
           <div className="mt-4 flex justify-end">
             <button

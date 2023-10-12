@@ -1,32 +1,42 @@
-import React from "react";
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { formatDate1 } from '../../../../utils/utils';
+import { getOrdersById } from '../../../../utils/ApiConfig';
 
-function HistoryShipment({ historyData }) {
+const HistoryShipping = () => {
+  const [order, setOrders] = useState([]); 
+  const { id } = useParams();
+
+  useEffect(() => {
+    const fetchOrderById = async () => {
+      try {
+        const data = await getOrdersById(id);
+        setOrders(data.order_histories); 
+      } catch (error) {
+        console.error('Error fetching order:', error);
+      }
+    };
+
+    fetchOrderById(); 
+  }, [id]);
+
   return (
-    <div className="history mt-5 bg-white">
-      <div className="header p-4 border-b-[1px] border-slate-200">
-        <h1>History</h1>
-      </div>
-      <div className="steps">
-        <ul className="steps steps-vertical">
-          {historyData.map((step, index) => (
-            <li
-              className={`step ${index % 2 === 0 ? "step-accent" : ""}`}
-              key={index}
-            >
-              {step}
-            </li>
-          ))}
-        </ul>
-        <div className="date flex flex-col gap-16">
-          <ul>
-            {historyData.map((_, index) => (
-              <li key={index}>2023-08-07 11:45:06</li>
-            ))}
-          </ul>
-        </div>
+    <div className="history-shipping bg-white p-4 rounded-lg shadow-md">
+      <div className="timeline space-y-4">
+        {order.map((step, index) => (
+          <div key={index} className="flex items-center">
+            <div className="w-10 h-10 flex items-center justify-center bg-blue-500 text-white rounded-full font-bold">
+              {index + 1}
+            </div>
+            <div className="ml-4">
+              <div className="font-bold">{step.description}</div>
+              <div className="text-gray-500">{formatDate1(step.created_at)}</div>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
-}
+};
 
-export default HistoryShipment;
+export default HistoryShipping;
