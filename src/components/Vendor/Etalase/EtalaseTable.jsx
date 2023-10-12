@@ -2,13 +2,17 @@ import React, { useEffect, useState } from "react";
 import { MdEdit, MdDelete } from "react-icons/md";
 import { getDataEtalase } from "../../../utils/ApiConfig";
 import { Link } from "react-router-dom";
+import { TablePagination, TextField } from "@mui/material";
+import { Search } from "@mui/icons-material";
 
 const EtalaseTable = () => {
   const [data, setData] = useState([]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     getDataEtalase().then((data) => {
-      // Kelompokkan data berdasarkan etalase
       const groupedData = data.reduce((acc, item) => {
         const key = item.etalase;
         if (!acc[key]) {
@@ -18,7 +22,6 @@ const EtalaseTable = () => {
         return acc;
       }, {});
 
-      // Ubah objek menjadi array
       const formattedData = Object.keys(groupedData).map((key) => {
         return {
           etalase: key,
@@ -31,17 +34,39 @@ const EtalaseTable = () => {
   }, []);
 
   const handleEdit = (data) => {
-    // Logika untuk handleEdit
     console.log("Edit clicked for", data);
   };
 
   const handleDeleteClick = (data, product) => {
-    // Logika untuk handleDeleteClick
     console.log("Delete clicked for", data, product);
   };
+  const startIndex = page * rowsPerPage;
+  const endIndex = startIndex + rowsPerPage;
+  const displayedData = data.slice(startIndex, endIndex);
+  const filteredData = displayedData.filter((etalase) => {
+    return (
+      etalase.etalase.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      etalase.products.some((product) =>
+        product.name.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    );
+  });
 
   return (
-    <div className="">
+    <div className="p-4 rounded-md shadow-lg">
+      <div className="mb-4">
+      <TextField
+        label="Search"
+        variant="outlined"
+        size="small"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        style={{ marginLeft: "auto", marginRight: "16px" }}
+        InputProps={{
+          endAdornment: <Search />,
+        }}
+      />
+      </div>
       <table className="table">
         <thead>
           <tr>
@@ -56,21 +81,25 @@ const EtalaseTable = () => {
         </thead>
         <tbody>
           {data.length > 0 ? (
-            data.map((etalase, index) => (
+            filteredData.map((etalase, index) => (
               <tr key={index}>
-                <td className="border-b border-gray-300 mt-[-30px]">{index + 1}</td>
+                <td className="border-b border-gray-300 mt-[-30px]">
+                  {index + 1}
+                </td>
                 <td className="border-b border-gray-300">
                   <div key={index} className="mb-4">
                     <div className="flex justify-between mb-4">
                       <h2 className="text-blue-500">{etalase.etalase}</h2>
                       <div className="flex gap-2">
-                        <button className="bg-blue-500 text-white px-2 py-1 rounded-md">
-                          <MdEdit />
-                        </button>
+                        <Link to={`/VenEtalase/edit/${etalase.id}`}>
+                          <button className="bg-blue-500 text-white px-2 py-1 rounded-md">
+                            <MdEdit />
+                          </button>
+                        </Link>
 
                         <button
                           className="bg-red-500 text-white px-2 py-1 rounded-md"
-                          onClick={() => confirmDelete(orderReturn.id)}
+                          onClick={() => confirmDelete(etalase.id)}
                         >
                           <MdDelete />
                         </button>
@@ -96,7 +125,7 @@ const EtalaseTable = () => {
                             <td className="border-b border-gray-300 py-2 px-3">
                               <img
                                 className="h-14 w-14"
-                                src={`https://kuro.asrofur.me/sober/${product.images}`}
+                                src={`https://kuro.asrofur.me/sober/${product.images[0]}`}
                                 alt=""
                               />
                             </td>
@@ -122,11 +151,23 @@ const EtalaseTable = () => {
             ))
           ) : (
             <tr>
-              <td colSpan="2">No data available</td>
+              <td colSpan="2">Loading ...</td>
             </tr>
           )}
         </tbody>
       </table>
+      <TablePagination
+        rowsPerPageOptions={[5, 10, 25]}
+        component="div"
+        count={data.length} // Use data.length as the total count
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={(event, newPage) => setPage(newPage)}
+        onRowsPerPageChange={(event) => {
+          setRowsPerPage(parseInt(event.target.value, 10));
+          setPage(0);
+        }}
+      />
     </div>
   );
 };
