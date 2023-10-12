@@ -1,22 +1,35 @@
-import React from 'react'
-import OrderInformation from './OrderInformation';
-import OrderStatus from './OrderStatus';
-import Customer from './Customer';
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import OrderInformation from "./OrderInformation";
+import Customer from "./Customer";
+import TopBar from "../../TopBar/Topbar";
+import {
+  getOrderReturnById,
+} from "../../../../utils/ApiConfig";
+import StatusDropdown from "./StatusDropdown";
 
+function EditOrderReturnsIndex() {
+  const { id } = useParams();
+  const [title, SetTitle] = useState(null);
 
-function Index() {
-    
+  useEffect(() => {
+    getOrderReturnById(id).then((data) => {
+      SetTitle([data.ec_order?.code]);
+    });
+  });
+
   return (
-    <div>
+    <div className="text-black">
+      <TopBar title={"edit Order " + title} />
       <div className="flex justify-center items-center gap-5 sm:flex-wrap md:flex-wrap lg:flex-wrap">
         <div className="dataOrder">
-      <OrderInformation />
-      <OrderStatus/>
+          <OrderInformation />
+          <StatusDropdown/>
         </div>
-        <Customer/>
+        <Customer />
       </div>
     </div>
-  )
+  );
 }
 
-export default Index
+export default EditOrderReturnsIndex;

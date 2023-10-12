@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { getVendorInfo, putTax } from "../../../utils/ApiConfig";
 import Swal from "sweetalert2";
 
-function Tax() {
+function TaxInfo() {
   const [businessName, setBusinessName] = useState("");
   const [taxId, setTaxId] = useState("");
   const [address, setAddress] = useState("");
@@ -31,22 +31,23 @@ function Tax() {
       .then((response) => {
         console.log("Tax info updated successfully:", response);
         Swal.fire({
-            position: 'center',
-            icon: 'success',
-            title: 'Your work has been saved',
-            showConfirmButton: false,
-            timer: 1500,
-          })
-          console.log("Data saved successfully", response);
-          setDataSaved(true);
-        })
+          position: "center",
+          icon: "success",
+          title: "Your work has been saved",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        console.log("Data saved successfully", response);
+        setDataSaved(true);
+      })
       .catch((error) => {
         Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'Something went wrong!',error,
-          })
-          console.error("Data save failed", error);
+          icon: "error",
+          title: "Oops...",
+          text: "Something went wrong!",
+          error,
+        });
+        console.error("Data save failed", error);
       });
   };
   return (
@@ -94,4 +95,4 @@ function Tax() {
   );
 }
 
-export default Tax;
+export default TaxInfo;
