@@ -37,21 +37,21 @@ function ChartTwo() {
   const [fee, setFee] = useState("");
   const [withdrawal, setWithdrawal] = useState("");
 
-  useEffect(()=>{
-    getVendorInfo().then((data)=>{
-      const vendorInfo = (data.vendor_info)
-      setRevenue(vendorInfo.total_revenue)
-      setFee(vendorInfo.total_fee)
-      setWithdrawal(vendorInfo.balance)
+  useEffect(() => {
+    getVendorInfo().then((data) => {
+      const vendorInfo = data.vendor_info;
+      setRevenue(parseInt(vendorInfo.total_revenue, 10));
+      setFee(parseInt(vendorInfo.total_fee, 10));
+      setWithdrawal(parseInt(vendorInfo.balance, 10));
     });
-  },[])
+  }, []);
 
   const data = [
-    { name: "Pendapatan", value: `Rp. ${parseInt(revenue)}` },
-    { name: "Biaya", value: `Rp. ${parseInt(fee)}` },
-    { name: "Penarikan", value: `Rp. ${parseInt(withdrawal)}` },
+    { name: "Pendapatan", value: revenue },
+    { name: "Biaya", value: fee },
+    { name: "Penarikan", value: withdrawal },
   ];
-  
+
   const COLORS = ["#00C49F", "#FFBB28", "#FF8042"];
   
   return (

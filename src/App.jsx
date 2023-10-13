@@ -25,6 +25,7 @@
   import ChatsPage from "./pages/Vendor/ChatsPage";
   import EditOrderReturnsIndex from "./components/Vendor/orderReturns/EditOrderReturns/EditOrderReturnsIndex";
 import EditOrderIndex from "./components/Vendor/orders/EditOrder/EditOrderIndex";
+import EditEtalase from "./components/Vendor/Etalase/EditEtalase/EditEtalase";
 
   function App() {
     return (
@@ -54,6 +55,7 @@ import EditOrderIndex from "./components/Vendor/orders/EditOrder/EditOrderIndex"
           <Route path="/venChats" element={<ChatsPage/>}/>
           <Route path="/VenOrderReturns/edit/:id" Component={EditOrderReturnsIndex} />
           <Route path="/VenOrder/edit/:id" Component={EditOrderIndex} />
+          <Route path="/VenEtalase/edit/:id" Component={EditEtalase} />
           </Route>
           </Routes>
       </div>

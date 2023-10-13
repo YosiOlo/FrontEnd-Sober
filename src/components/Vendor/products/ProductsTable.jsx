@@ -21,13 +21,11 @@ import { TbFileExport, TbReload } from "react-icons/tb";
 import { FaFileCsv } from "react-icons/fa";
 import { ArrowUpward, ArrowDownward, Search } from "@mui/icons-material";
 import axios from "axios";
-import { deleteProducts,getProducts } from "../../../utils/ApiConfig";
+import { deleteProducts, getProducts } from "../../../utils/ApiConfig";
 import Swal from "sweetalert2";
 import { formatDate, getStatusProducts } from "../../../utils/utils";
 
 const ProductsTable = () => {
-  const [orderBy, setOrderBy] = useState("id");
-  const [order, setOrder] = useState("asc");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
@@ -35,69 +33,40 @@ const ProductsTable = () => {
   const [rowToDelete, setRowToDelete] = useState(null); // Store the ID of the row to delete
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [orderBy, setOrderBy] = useState("id");
+  const [order, setOrder] = useState("asc");
 
-useEffect(()=>{
-getProducts()
-.then((data) => {
-  setProducts(data);
-})
-},[])
+  useEffect(() => {
+    getProducts().then((data) => {
+      setProducts(data);
+    });
+  }, []);
 
   const toggleExport = () => {
     setexportOpen(!exportOpen);
   };
-  
+
   const handleSort = (property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
 
-  const sortedData = [...products].sort((a, b) => {
-    const valueA = a[orderBy];
-    const valueB = b[orderBy];
-
-    if (typeof valueA === "number" && typeof valueB === "number") {
-      return order === "asc" ? valueA - valueB : valueB - valueA;
-    } else if (typeof valueA === "string" && typeof valueB === "string") {
-      return order === "asc"
-        ? valueA.localeCompare(valueB)
-        : valueB.localeCompare(valueA);
-    } else {
-      return 0; // Handle other data types or return 0 if no data type matches
-    }
+  const startIndex = page * rowsPerPage;
+  const endIndex = startIndex + rowsPerPage;
+  const displayedData = products.slice(startIndex, endIndex);
+  const filteredData = displayedData.filter((product) => {
+    const productName = product.name.toLowerCase(); // Pastikan product.name tidak null atau undefined
+    const etalaseName = product.etalase ? product.etalase.toLowerCase() : ""; // Jika etalase tidak null, gunakan toLowerCase(), jika null, beri nilai string kosong
+    return etalaseName.includes(searchTerm) || productName.includes(searchTerm);
   });
 
-  const handleSearch = (event) => {
-    const value = event.target.value;
-    setSearchTerm(value);
-    setPage(0); // Reset the page to the first page when searching
-  };
-
-  const filteredData = sortedData.filter((row) => {
-    const valuesToSearch = [
-      row.id.toString(),
-      row.name,
-      row?.price,
-      row?.quantity,
-      row?.sku,
-      row?.order,
-      formatDate(row.created_at), // Assuming formatDate returns a string
-    ];
-
-    // Check if any value contains the search term
-    return valuesToSearch.some(
-      (value) => value && value.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  });
-
-  const paginatedData = filteredData.slice(
-    page * rowsPerPage,
-    page * rowsPerPage + rowsPerPage
-  );
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
+  const handleReloadClick = () => {
+    setLoading(true);
+    getProducts().then((data) => {
+      setProducts(data);
+      setLoading(false);
+    });
   };
 
   const confirmDelete = async () => {
@@ -186,7 +155,7 @@ getProducts()
 
   const DataSet = [
     {
-      data: paginatedData.map((data) => ({
+      data: filteredData.map((data) => ({
         id: data?.id,
         thumbnail: "https://kuro.asrofur.me/sober/" + data.images,
         name: data?.name,
@@ -220,7 +189,7 @@ getProducts()
           variant="outlined"
           size="small"
           value={searchTerm}
-          onChange={handleSearch}
+          onChange={(e) => setSearchTerm(e.target.value)}
           style={{ marginLeft: "auto", marginRight: "16px" }}
           InputProps={{
             endAdornment: <Search />,
@@ -253,10 +222,14 @@ getProducts()
               </div>
             )}
           </div>
-          <button className="bg-[#36C6D3] flex justify-between p-2 h-[2.5rem] w-full md:w-[6rem] rounded-md mt-2 md:mt-0">
-            <TbReload className="  text-lg" />
+          <button
+            className="bg-[#36C6D3] flex justify-between p-2 h-[2.5rem] w-full md:w-[6rem] rounded-md mt-2 md:mt-0"
+            onClick={handleReloadClick}
+          >
+            <TbReload className="text-lg mt-1" />
             Reload
           </button>
+
           <Link to="/VenCreateProduct">
             <button className="bg-[#36C6D3] flex justify-between p-2 h-[2.5rem] w-full md:w-[6rem] rounded-lg mt-2 md:mt-0">
               <TbReload className="text-lg mt-1" />
@@ -402,7 +375,7 @@ getProducts()
                 </TableRow>
               </TableHead>
               <TableBody>
-                {paginatedData.map((product) => (
+                {filteredData.map((product) => (
                   <TableRow key={product?.id}>
                     <TableCell className="whitespace-nowrap">
                       {product?.id}
@@ -445,10 +418,10 @@ getProducts()
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={filteredData.length}
+            count={products.length} // Use data.length as the total count
             rowsPerPage={rowsPerPage}
             page={page}
-            onPageChange={handleChangePage}
+            onPageChange={(event, newPage) => setPage(newPage)}
             onRowsPerPageChange={(event) => {
               setRowsPerPage(parseInt(event.target.value, 10));
               setPage(0);
