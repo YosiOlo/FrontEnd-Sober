@@ -212,27 +212,27 @@ const OrdersTable = () => {
       startY: 20, // Start the table 20 units from the top
     });
 
-    // Save the PDF with a specific filename
+
     doc.save("Orders.pdf");
+
   };
 
   const handleDelete = (rowId) => {
     deleteOrders(rowId)
       .then(() => {
-        getOrders()
-          .then((data) => {
-            setOrder(data);
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-          });
+        // Perbarui daftar transaksi setelah penghapusan berhasil
+        setTransactions((prevTransactions) =>
+          prevTransactions.filter((transaction) => transaction.id !== rowId)
+        );
+        Swal.fire("Success", "Transaction deleted successfully", "success");
       })
       .catch((error) => {
         console.error("Error:", error);
+        Swal.fire("Error", "Failed to delete transaction", "error");
       });
   };
 
-  const confirmDelete = () => {
+  const confirmDelete = (rowId) => {
     Swal.fire({
       title: "Are You sure, want to delete?",
       text: "Row will be deleted",
@@ -244,7 +244,7 @@ const OrdersTable = () => {
       confirmButtonColor: "#0DCAF0",
     }).then((result) => {
       if (result.isConfirmed) {
-        handleDelete();
+        handleDelete(rowId); // 
       }
     });
   };
