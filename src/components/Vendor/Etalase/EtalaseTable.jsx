@@ -5,11 +5,14 @@ import { Link } from "react-router-dom";
 import { TablePagination, TextField } from "@mui/material";
 import { Search } from "@mui/icons-material";
 
+import ClipLoader from "react-spinners/ClipLoader";
+
 const EtalaseTable = () => {
   const [data, setData] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     getDataEtalase().then((data) => {
@@ -33,13 +36,13 @@ const EtalaseTable = () => {
     });
   }, []);
 
-  const handleEdit = (data) => {
-    console.log("Edit clicked for", data);
-  };
+  useEffect(() => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+  }, []);
 
-  const handleDeleteClick = (data, product) => {
-    console.log("Delete clicked for", data, product);
-  };
   const startIndex = page * rowsPerPage;
   const endIndex = startIndex + rowsPerPage;
   const displayedData = data.slice(startIndex, endIndex);
@@ -52,20 +55,28 @@ const EtalaseTable = () => {
     );
   });
 
+  const handleEdit = (data) => {
+    console.log("Edit clicked for", data);
+  };
+
+  const handleDeleteClick = (data, product) => {
+    console.log("Delete clicked for", data, product);
+  };
+
   return (
     <div className="p-4 rounded-md shadow-lg">
       <div className="mb-4">
-      <TextField
-        label="Search"
-        variant="outlined"
-        size="small"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        style={{ marginLeft: "auto", marginRight: "16px" }}
-        InputProps={{
-          endAdornment: <Search />,
-        }}
-      />
+        <TextField
+          label="Search"
+          variant="outlined"
+          size="small"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          style={{ marginLeft: "auto", marginRight: "16px" }}
+          InputProps={{
+            endAdornment: <Search />,
+          }}
+        />
       </div>
       <table className="table">
         <thead>
@@ -151,7 +162,15 @@ const EtalaseTable = () => {
             ))
           ) : (
             <tr>
-              <td colSpan="2">Loading ...</td>
+              <td colSpan="2">
+                <ClipLoader
+                  color={"#0DCAF0"}
+                  loading={loading}
+                  size={50}
+                  aria-label="Loading Spinner"
+                  data-testid="loader"
+                />
+              </td>
             </tr>
           )}
         </tbody>
