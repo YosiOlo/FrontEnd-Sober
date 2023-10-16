@@ -43,11 +43,8 @@ const OrdersTable = () => {
   const [transactions, setTransactions] = useState([]);
 
   useEffect(() => {
-    // Panggil getOrders untuk mengambil data dari API saat komponen dimuat
     getOrders()
       .then((data) => {
-        // Gunakan data yang dikembalikan dari getOrders di sini
-        console.log(data);
         setExportData(data);
         setTransactions(data);
       })
