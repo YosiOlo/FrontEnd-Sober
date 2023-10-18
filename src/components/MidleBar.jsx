@@ -9,7 +9,6 @@ import SobermartLogo from '../../public/soblogo.png';
 
 function MidleBar() {
     const { wishlist } = useWishlist();
-   
 
     return (
         <div className="bg-white text-black text-sm border-b border-gray-300 ">
@@ -90,42 +89,40 @@ function MidleBar() {
                                 <Link to="/wishlist"><button className="hover:text-blue-600 relative" >
 
                                     <FiHeart className='w-7 h-7 mx-2' />
-                                    {/* Tampilkan jumlah wishlist */}
-                                    {wishlist.length > 0 && (
-                                        <span className="ml-auto bg-blue-600 text-white px-2 py-0.5 rounded-sm absolute -top-2 -right-2">
-                                            {wishlist.length}
-                                        </span>
-                                    )}
+                                    <span className="ml-auto bg-blue-600 text-white px-2 py-0.5 rounded-sm absolute -top-2 -right-2">
+                                        {wishlist.length > 0 ? wishlist.length : '0'}
+                                    </span>
                                 </button></Link>
 
                                 <div className="hidden group-hover:block absolute right-0 mt-1.5 bg-white border border-gray-300 rounded p-2 w-72 shadow-md z-10">
                                     <div className="flex flex-col">
-                                        {/* Map data wishlist yang sudah ada */}
-                                        <div className="overflow-y-auto max-h-80"> {/* Menambahkan overflow-y-auto dan max-h-80 */}
-                                            {wishlist.map((item) => {
-                                                return (
-                                                   
-                                                    <div key={item.product.id} className="text-sm flex items-center mb-4">
-                                                        <div className="w-1/3">
-                                                            <img
-                                                                src={
-                                                                    item.product.images[0] !== ''
-                                                                        ? "https://kuro.asrofur.me/sober/" + item.product.images[0]
-                                                                        : '/logo-sober-mart-color-grey-1.png'
-                                                                }
-                                                                alt={item.product.name.length > 2 ? item.product.name.slice(0, 40) + "..." : item.product.name}
-                                                                className={`w-full h-full object-cover ${item.product.stock_status === 'out_of_stock' ? 'grayscale' : ''}`}
-                                                                style={{ imageRendering: 'pixelated' }}
-                                                            />
+                                        <div className="overflow-y-auto max-h-80">
+                                            {wishlist.length > 0 ? (
+                                                wishlist.map((item, index) => {
+                                                    return (
+
+                                                        <div key={index} className="text-sm flex items-center mb-4">
+                                                            <div className="w-1/3">
+                                                                <img
+                                                                    src={
+                                                                        item.product.images[0] !== ''
+                                                                            ? "https://kuro.asrofur.me/sober/" + item.product.images[0]
+                                                                            : '/logo-sober-mart-color-grey-1.png'
+                                                                    }
+                                                                    alt={item.product.name.length > 2 ? item.product.name.slice(0, 40) + "..." : item.product.name}
+                                                                    className={`w-full h-full object-cover ${item.product.stock_status === 'out_of_stock' ? 'grayscale' : ''}`}
+                                                                    style={{ imageRendering: 'pixelated' }}
+                                                                />
+                                                            </div>
+                                                            <div className="w-2/3 pl-4">
+                                                                <p className="mb-2">{item.product.name.length > 2 ? item.product.name.slice(0, 10) + "..." : item.product.name}</p>
+                                                                <p className="text-red-500">{`Rp${item.product.sale_price}`}</p>
+                                                                {/* Anda dapat menambahkan lebih banyak informasi item di sini */}
+                                                            </div>
                                                         </div>
-                                                        <div className="w-2/3 pl-4">
-                                                            <p className="mb-2">{item.product.name.length > 2 ? item.product.name.slice(0, 10) + "..." : item.product.name}</p>
-                                                            <p className="text-red-500">{`Rp${item.product.sale_price}`}</p>
-                                                            {/* Anda dapat menambahkan lebih banyak informasi item di sini */}
-                                                        </div>
-                                                    </div>
-                                                );
-                                            })}
+                                                    );
+                                                })
+                                            ) : ('')}
 
                                         </div>
                                         <div className="flex justify-center mt-2">

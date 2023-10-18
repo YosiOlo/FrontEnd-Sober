@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { fetchUserData, logoutUser, memberShip } from '../utils/ApiConfig'; // Mengimpor fetchUserData dan logoutUser dari ApiConfig.jsx
+import { fetchUserData, logoutUser } from '../utils/ApiConfig'; // Mengimpor fetchUserData dan logoutUser dari ApiConfig.jsx
 import Swal from 'sweetalert2';
 
 
@@ -8,7 +8,8 @@ function TopAppBar() {
   const authToken = localStorage.getItem('authToken');
   const [name, setName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-
+  
+  
   useEffect(() => {
     // console.log('token',authToken)
     if (authToken) {
@@ -28,13 +29,9 @@ function TopAppBar() {
     }
   }, [authToken]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = await memberShip();
-      // ... kode lain untuk mengolah data ...
-    };
-    fetchData();
-  }, []);
+  
+
+
 
 
 

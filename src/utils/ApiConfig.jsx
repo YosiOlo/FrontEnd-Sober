@@ -18,9 +18,9 @@ export const getAuthToken = () => {
 export const authToken = getAuthToken();
 export const memberShip = async () => {
   try {
-    const response = await axios.get(`${BASE_URL}/api/membership`);
-    
-    return response.data.datas;
+    const response = await axios.get(`https://kuro.asrofur.me/sober/api/membership`);
+    return response.data.data;
+
   } catch (error) {
     console.error('Kesalahan Permintaan API:', error.response.data.message);
     return null;
@@ -124,6 +124,77 @@ export const fetchUserData = async (authToken) => {
     return null;
   }
 };
+
+
+export const getProductBumbu = async () => {
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/api/product?page=&limit=&search=Bumbu&orderby=`
+    );
+    
+    return response.data.data;
+  } catch (error) {
+    console.error("Kesalahan Permintaan API:", error.response.data.message);
+    return null;
+  }
+};
+
+
+
+//https://kuro.asrofur.me/sober/api/product?page&limit=&search=&orderby=&kategori=24&kategori_2=348
+export const getProductSoap = async () => {
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/api/product?page&limit=&search=&orderby=&kategori=24&kategori_2=348`
+    );
+    
+    return response.data.data;
+  } catch (error) {
+    console.error("Kesalahan Permintaan API:", error.response.data.message);
+    return null;
+  }
+}
+
+//https://kuro.asrofur.me/sober/api/product?page&limit=&search=&orderby=&kategori=19&kategori_2=261
+export const getProductMinyak = async () => {
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/api/product?page&limit=&search=&orderby=&kategori=19&kategori_2=261`
+    );
+
+    return response.data.data;
+  } catch (error) {
+    console.error("Kesalahan Permintaan API:", error.response.data.message);
+    return null;
+  }
+}
+//https://kuro.asrofur.me/sober/api/product?page&limit=&search=garnier&orderby=&kategori=&kategori_2=
+export const getProductGarnier = async () => {
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/api/product?page&limit=&search=garnier&orderby=&kategori=&kategori_2=`
+    );
+
+    return response.data.data;
+  } catch (error) {
+    console.error("Kesalahan Permintaan API:", error.response.data.message);
+    return null;
+  }
+}
+
+//https://kuro.asrofur.me/sober/api/product?page&limit=&search=Bumbu&orderby=&kategori=&kategori_2=
+export const getProductNodles = async () => {
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/api/product?page&limit=&search=Mie&orderby=&kategori=&kategori_2=`
+    );
+
+    return response.data.data;
+  } catch (error) {
+    console.error("Kesalahan Permintaan API:", error.response.data.message);
+    return null;
+  }
+}
 
 // ===================================Vendor================================
 
