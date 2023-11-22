@@ -13,8 +13,9 @@ import {
   TablePagination,
   TextField,
 } from "@mui/material";
-import { formatDate, getOrders } from "../../../utils/ApiConfig";
+import { getOrders } from "../../../utils/ApiConfig";
 import { Link } from "react-router-dom";
+import { formatDate, getPaymentStatus, getStatus } from "../../../utils/utils";
 
 const NewOrders = () => {
   const [orderBy, setOrderBy] = useState("id");
@@ -50,51 +51,6 @@ useEffect(()=>{
       return 0;
     }
   });
-
-  const getPaymentStatus = (PaymentStatus) => {
-    if (PaymentStatus === "completed")
-      return (
-        <div className="card rounded-md bg-green-400 text-center text-xs font-semibold">
-          Completed
-        </div>
-      );
-    if (PaymentStatus === "pending")
-      return (
-        <div className="card rounded-md bg-yellow-400 text-center text-xs font-semibold">
-          Pending
-        </div>
-      );
-    else return <div className="badge badge-ghost">{PaymentStatus}</div>;
-  };
-
-  const getStatus = (Status) => {
-    if (Status === "completed")
-      return (
-        <div className="card rounded-md bg-green-400 text-center text-xs font-semibold">
-          {Status}
-        </div>
-      );
-    if (Status === "processing")
-      return (
-        <div className="card rounded-md bg-blue-400 text-center text-xs font-semibold">
-          {Status}
-        </div>
-      );
-    if (Status === "pending")
-      return (
-        <div className="card rounded-md bg-yellow-400 text-center text-xs font-semibold">
-          {Status}
-        </div>
-      );
-  };
-
-  const getPaymentMethod = (method) => {
-    if (method === "bank_transfer")
-      return <p className="text-[12px]">Bank Transfer</p>;
-    if (method === "virtual_account")
-      return <p className="text-[12px]">Virtual Account</p>;
-    else return <p className="text-[12px]">{method}</p>;
-  };
 
   return (
     <div>

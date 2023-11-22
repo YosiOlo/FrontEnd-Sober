@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import { Link } from "react-router-dom";
 import {
   Card,
   CardContent,
@@ -20,7 +20,9 @@ import { MdOutlineArrowDropDown, MdEdit, MdDelete } from "react-icons/md";
 import { TbFileExport, TbReload } from "react-icons/tb";
 import { FaFileCsv } from "react-icons/fa";
 import { ArrowUpward, ArrowDownward, Search } from "@mui/icons-material";
-import { formatDate, getOrderReturns } from "../../../utils/ApiConfig";
+import { deleteOrderReturns, getOrderReturns } from "../../../utils/ApiConfig";
+import Swal from "sweetalert2";
+import { formatDate, getStatus } from "../../../utils/utils";
 
 const OrderReturnsTable = (props) => {
   const [orderReturns, setOrderReturns] = useState([]);
@@ -33,13 +35,9 @@ const OrderReturnsTable = (props) => {
   const [rowToDelete, setRowToDelete] = useState(null); // Store the ID of the row to delete
 
   useEffect(() => {
-    // Panggil getOrders untuk mengambil data dari API saat komponen dimuat
     getOrderReturns()
       .then((data) => {
-        
-        // Gunakan data yang dikembalikan dari getOrders di sini
-        console.log(data);
-        setOrderReturns(data)
+        setOrderReturns(data);
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -48,28 +46,6 @@ const OrderReturnsTable = (props) => {
 
   const toggleExport = () => {
     setexportOpen(!exportOpen);
-  };
-
-  const getStatus = (Status) => {
-    if (Status === "completed")
-      return (
-        <div className="card rounded-md bg-green-400 text-center text-xs font-semibold">
-          Completed
-        </div>
-      );
-    if (Status === "processing")
-      return (
-        <div className="card rounded-md bg-blue-400 text-center text-xs font-semibold">
-          Processing
-        </div>
-      );
-    if (Status === "pending")
-      return (
-        <div className="card rounded-md bg-yellow-400 text-center text-xs font-semibold">
-          Pending
-        </div>
-      );
-    else return <div className="badge badge-ghost">{Status}</div>;
   };
 
   const handleSort = (property) => {
@@ -123,50 +99,40 @@ const OrderReturnsTable = (props) => {
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
-  const confirmDelete = async () => {
-    if (rowToDelete !== null) {
-      await deleteData(rowToDelete);
-    }
-    setRowToDelete(null); // Clear the rowToDelete
-  };
 
-  const deleteData = async (rowId) => {
-    try {
-      const apiUrl = `https://kuro.asrofur.me/sober/api/transaction/vendor/return/${rowId}`;
-      const bearerToken =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJlbWFpbCI6InNvYmVyb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjk1Mjc4MDQ0LCJleHAiOjE2OTUzNjQ0NDR9.gTdleJdGE7IVNxnBzOvBGZGWg50yAB1pTbfOsLXF_7s";
-
-      const response = await axios.delete(apiUrl, {
-        headers: {
-          Authorization: `Bearer ${bearerToken}`,
-        },
+  const handleDelete = (rowId) => {
+    deleteOrderReturns(rowId)
+      .then(() => {
+        getOrderReturns()
+          .then((data) => {
+            setOrder(data);
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      })
+      .catch((error) => {
+        console.error("Error:", error);
       });
-
-      if (response.status === 200) {
-        console.log("Success! Data deleted from API.");
-        console.log("Response data:", response.data); // Cetak respons data
-        // Data berhasil dihapus dari API, sekarang update state
-        const updatedData = orderReturns.filter((row) => row.id !== rowId);
-        setTransactions(updatedData);
-        setRowToDelete(null); // Reset rowToDelete setelah berhasil dihapus
-      } else {
-        console.error(
-          "Failed to delete data from API. Status:",
-          response.status
-        );
-      }
-    } catch (error) {
-      console.error("Error deleting data:", error);
-
-      if (error.response) {
-        console.error("Response data:", error.response.data);
-      }
-    }
   };
 
-  const handleDeleteClick = (rowId) => {
-    setRowToDelete(rowId); // Set ID baris yang akan dihapus saat tombol "Delete" pada baris diklik
+  const confirmDelete = () => {
+    Swal.fire({
+      title: "Are You sure, want to delete?",
+      text: "Row will be deleted",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+      cancelButtonText: "No",
+      cancelButtonColor: "#FFC107",
+      confirmButtonColor: "#0DCAF0",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        handleDelete();
+      }
+    });
   };
+
   const headers = [
     {
       label: "id",
@@ -381,13 +347,16 @@ const OrderReturnsTable = (props) => {
                     <TableCell>{formatDate(orderReturn?.created_at)}</TableCell>
                     <TableCell>
                       <div className="flex gap-2">
-                        <button className="bg-blue-500 text-white px-2 py-1 rounded-md">
+                        
+                        <Link to={`/VenOrderReturns/edit/${orderReturn.id}`}>
+                          <button className="bg-blue-500 text-white px-2 py-1 rounded-md">
                           <MdEdit />
-                        </button>
+                          </button>
+                        </Link>
 
                         <button
                           className="bg-red-500 text-white px-2 py-1 rounded-md"
-                          onClick={() => handleDeleteClick(orderReturn.id)}
+                          onClick={() => confirmDelete(orderReturn.id)}
                         >
                           <MdDelete />
                         </button>

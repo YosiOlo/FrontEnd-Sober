@@ -1,14 +1,12 @@
 import React, { useState } from "react";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import Generalinformation from "./Generalinformation";
 import PayoutInfo from "./PayoutInfo";
-import Tax from "./tax";
 import ExtendedInfo from "./ExtendedInfo";
+import TaxInfo from "./TaxInfo";
 
 function Settings() {
   const [activeTab, setActiveTab] = useState("general");
- 
+
   return (
     <div className="text-black">
       <div className="flex space-x-4">
@@ -46,20 +44,12 @@ function Settings() {
         </button>
       </div>
 
-      {activeTab === "general" && (
-        <Generalinformation/>
-      )}
+      {activeTab === "general" && <Generalinformation />}
 
-      {activeTab === "tax" && (
-        <Tax/>
-      )}
+      {activeTab === "tax" && <TaxInfo />}
 
-      {activeTab === "payout" && (
-        <PayoutInfo/>
-      )}
-      {activeTab === "extended" && (
-        <ExtendedInfo/>
-      )}
+      {activeTab === "payout" && <PayoutInfo />}
+      {activeTab === "extended" && <ExtendedInfo />}
     </div>
   );
 }

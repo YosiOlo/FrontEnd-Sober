@@ -1,28 +1,28 @@
 // ApiConfig.jsx
-import { Try } from '@mui/icons-material';
-import axios from 'axios';
+import { Try } from "@mui/icons-material";
+import axios from "axios";
 
 export const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL_API;
 // https://kuro.asrofur.me/sober/api/membership
 
 // Fungsi untuk menyimpan token ke localStorage
 export const setAuthToken = (token) => {
-  localStorage.setItem('authToken', token);
+  localStorage.setItem("authToken", token);
 };
 
 // Fungsi untuk mendapatkan token dari localStorage
 export const getAuthToken = () => {
-  return localStorage.getItem('authToken');
+  return localStorage.getItem("authToken");
 };
 
 export const authToken = getAuthToken();
 export const memberShip = async () => {
   try {
-    const response = await axios.get(`https://kuro.asrofur.me/sober/api/membership`);
-    return response.data.data;
-
+    const response = await axios.get(`${BASE_URL}/api/membership`);
+    console.log("Respon API:", response.data); // Pindahkan ini ke atas return
+    return response.data.datas;
   } catch (error) {
-    console.error('Kesalahan Permintaan API:', error.response.data.message);
+    console.error("Kesalahan Permintaan API:", error.response.data.message);
     return null;
   }
 };
@@ -39,23 +39,16 @@ export const memberShip = async () => {
 // };
 export const product_data = async () => {
   try {
-    const response = await axios.get(`${BASE_URL}/api/product?page=1&limit=72&search=&orderby=`);
-
+    const response = await axios.get(
+      `${BASE_URL}/api/product?page=1&limit=72&search=&orderby=`
+    );
+    console.log("Respon API Product:", response.data); // Pindahkan ini ke atas return
     return response.data.data;
   } catch (error) {
-    console.error('Kesalahan Permintaan API:', error.response.data.message);
+    console.error("Kesalahan Permintaan API:", error.response.data.message);
     return null;
   }
 };
-function formatDate(datestring) {
-  return new Date(datestring).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-}
-export { formatDate };
-
 
 export const loginUser = async (username, password, rememberMe) => {
   const data = {
@@ -70,11 +63,11 @@ export const loginUser = async (username, password, rememberMe) => {
     // localStorage.setItem('authToken', token);
     setAuthToken(token);
     const result = response.data.identity ? response.data.identity : 'user';
-    console.log('Respon API:', result);
+    console.log("Respon API:", result);
     return result;
     
   } catch (error) {
-    console.error('Kesalahan Permintaan API:', error);
+    console.error("Kesalahan Permintaan API:", error);
     return false; // Gagal login
   }
 };
@@ -124,6 +117,20 @@ export const fetchUserData = async (authToken) => {
   } catch (error) {
     console.error("Kesalahan Permintaan API:", error.response.data.message);
     return null;
+  }
+};
+
+export const getWishlist = async () => {
+  const authToken = getAuthToken();
+  try {
+    const response = await axios.get(`${BASE_URL}/api/users/wishlist`, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
+    return response.data.data;
+  } catch (error) {
+    console.log("Kesalahan Permintan API:", error.response.data.message);
   }
 };
 
@@ -371,7 +378,7 @@ export const getProductDashboard = async () => {
 export const getOrders = async () => {
   const authToken = getAuthToken();
   try {
-    const response = await axios.get(`${BASE_URL}/api/transaction/vendor/?limit=30`, {
+    const response = await axios.get(`${BASE_URL}/api/transaction/vendor/`, {
       headers: {
         Authorization: `Bearer ${authToken}`,
       },
@@ -381,6 +388,83 @@ export const getOrders = async () => {
   } catch (error) {
     console.error("Error fetching data:", error);
     throw error;
+  }
+};
+
+export const getOrdersById = async (id) => {
+  const authToken = getAuthToken();
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/api/transaction/vendor/details/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      }
+    );
+
+    return response.data.data;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error;
+  }
+};
+
+export const putOrders = async (id, updatedData) => {
+  try {
+    const response = await axios.put(
+      `${BASE_URL}/api/shipment/vendor/update/${id}`,
+      updatedData,
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      }
+    );
+    console.log("Transaction updated successfully:", response.data);
+    return response?.data;
+  } catch (error) {
+    console.error("Error updating transaction:", error);
+    throw error;
+  }
+};
+export const putCustomerOrders = async (id, updatedData) => {
+  try {
+    const response = await axios.put(
+      `${BASE_URL}/api/transaction/vendor/address/${id}`,
+      updatedData,
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      }
+    );
+    console.log("Customer updated successfully:", response.data);
+    return response?.data;
+  } catch (error) {
+    console.error("Error updating customer:", error);
+    throw error;
+  }
+};
+
+export const deleteOrders = async (rowId) => {
+  try {
+    const response = await axios.delete(
+      `${BASE_URL}/api/transaction/vendor/${rowId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      }
+    );
+    if (response.status === 200) {
+      console.log("Success! Data deleted from API.");
+      console.log("Response data:", response.data);
+    } else {
+      console.error("Failed to delete data from API. Status:", response.status);
+    }
+  } catch (error) {
+    console.error("Error deleting data:", error);
   }
 };
 
@@ -400,14 +484,16 @@ export const getCoupons = async () => {
   }
 };
 
-
-export const deletCoupons = async (rowId) => {
+export const deleteCoupons = async (rowId) => {
   try {
-    const response = await axios.delete(`${BASE_URL}/api/discount/vendor/${rowId}`, {
-      headers: {
-        Authorization: `Bearer ${authToken}`,
-      },
-    });
+    const response = await axios.delete(
+      `${BASE_URL}/api/discount/vendor/${rowId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      }
+    );
     if (response.status === 200) {
       console.log("Response Data: ", response.data);
     }
@@ -418,11 +504,14 @@ export const deletCoupons = async (rowId) => {
 
 export const deletOrders = async (rowId) => {
   try {
-    const response = await axios.delete(`${BASE_URL}/api/transaction/vendor/${rowId}`, {
-      headers: {
-        Authorization: `Bearer ${authToken}`,
-      },
-    });
+    const response = await axios.delete(
+      `${BASE_URL}/api/transaction/vendor/${rowId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      }
+    );
     if (response.status === 200) {
       console.log("Response Data: ", response.data);
     }
@@ -434,11 +523,14 @@ export const deletOrders = async (rowId) => {
 export const getOrderReturns = async () => {
   const authToken = getAuthToken();
   try {
-    const response = await axios.get(`${BASE_URL}/api/transaction/vendor/returns?page&limit`, {
-      headers: {
-        Authorization: `Bearer ${authToken}`,
-      },
-    });
+    const response = await axios.get(
+      `${BASE_URL}/api/transaction/vendor/returns?page&limit`,
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      }
+    );
 
     return response?.data.data.rows;
   } catch (error) {
@@ -447,31 +539,114 @@ export const getOrderReturns = async () => {
   }
 };
 
+export const putOrderReturns = async (id, updatedData) => {
+  const authToken = getAuthToken();
+  try {
+    const response = await axios.put(
+      `${BASE_URL}/api/transaction/vendor/return/${id}`,
+      updatedData,
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error;
+  }
+};
+
+export const getOrderReturnById = async (id) => {
+  const authToken = getAuthToken();
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/api/transaction/vendor/returns/details/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      }
+    );
+
+    return response.data.data;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error;
+  }
+};
+
+export const deleteOrderReturns = async (rowId) => {
+  try {
+    const response = await axios.delete(
+      `${BASE_URL}/api/transaction/vendor/return/${rowId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      }
+    );
+    if (response.status === 200) {
+      console.log("Success! Data deleted from API.");
+      console.log("Response data:", response.data);
+    } else {
+      console.error("Failed to delete data from API. Status:", response.status);
+    }
+  } catch (error) {
+    console.error("Error deleting data:", error);
+  }
+};
 
 export const getProducts = async () => {
   const authToken = getAuthToken();
   try {
-    const response = await axios.get(`${BASE_URL}/api/product/vendor/list?name&limit=5&search`, {
-      headers: {
-        Authorization: `Bearer ${authToken}`,
-      },
-    });
+    const response = await axios.get(
+      `${BASE_URL}/api/product/vendor/list?name&limit=1000&search`,
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      }
+    );
 
     return response?.data.data.rows;
   } catch (error) {
     console.error("Error fetching data:", error);
     throw error;
+  }
+};
+
+export const deleteProducts = async (rowId) => {
+  try {
+    const response = await axios.delete(`${BASE_URL}/api/product/${rowId}`, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
+    if (response.status === 200) {
+      console.log("Success! Data deleted from API.");
+      console.log("Response data:", response.data);
+    } else {
+      console.error("Failed to delete data from API. Status:", response.status);
+    }
+  } catch (error) {
+    console.error("Error deleting data:", error);
   }
 };
 
 export const getRevenue = async () => {
   const authToken = getAuthToken();
   try {
-    const response = await axios.get(`${BASE_URL}/api/transaction/vendor/revenue`, {
-      headers: {
-        Authorization: `Bearer ${authToken}`,
-      },
-    });
+    const response = await axios.get(
+      `${BASE_URL}/api/transaction/vendor/revenue`,
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      }
+    );
 
     return response?.data.data.rows;
   } catch (error) {
@@ -496,15 +671,17 @@ export const getReview = async () => {
   }
 };
 
-
 export const getWithdrawals = async () => {
   const authToken = getAuthToken();
   try {
-    const response = await axios.get(`${BASE_URL}/api/transaction/vendor/withdrawal`, {
-      headers: {
-        Authorization: `Bearer ${authToken}`,
-      },
-    });
+    const response = await axios.get(
+      `${BASE_URL}/api/transaction/vendor/withdrawal`,
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      }
+    );
 
     return response?.data.data.rows;
   } catch (error) {
@@ -563,7 +740,7 @@ export const getVendorHistory = async () => {
 
 export const putTax = async (updatedData) => {
   const authToken = getAuthToken();
-  console.log('hi', updatedData)
+  console.log('hi',updatedData)
   try {
     const response = await axios.put(
       `${BASE_URL}/api/users/vendor/tax`,
@@ -585,7 +762,7 @@ export const putTax = async (updatedData) => {
 
 export const putPayout = async (updatedData) => {
   const authToken = getAuthToken();
-  console.log('hi', updatedData)
+  console.log('hi',updatedData)
   try {
     const response = await axios.put(
       `${BASE_URL}/api/users/vendor/payment`,
@@ -652,7 +829,39 @@ export const putGeneralInformation = async (body) => {
         },
       }
     );
-  } catch (error) { }
+  } catch (error) {}
+};
+
+export const createProducts = async (body) => {
+  const authToken = getAuthToken();
+  for (const [key, value] of Object.entries(body)) {
+    console.log(`${key}: ${typeof value}`, value);
+  }
+  try {
+    await axios
+      .post(`${BASE_URL}/api/product/vendor/add`, body, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((response) => console.log("success", response))
+      .catch((error) => console.log("res error", error));
+  } catch (error) {
+    console.log("cek", error);
+  }
+};
+
+export const getCategories = async () => {
+  const authToken = getAuthToken();
+  try {
+    const response = await axios.get(`${BASE_URL}/api/product/categories/`);
+
+    return response?.data.data;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error;
+  }
 };
 
 export const checkToken = async () => {
@@ -671,23 +880,44 @@ export const checkToken = async () => {
   }
 };
 
-
-
-
-
-
-//https://kuro.asrofur.me/sober/api/users/wishlist
-export const getWishlist = async () => {
+export const addcoupons = async (couponData) => {
   const authToken = getAuthToken();
   try {
-    const response = await axios.get(`${BASE_URL}/api/users/wishlist`, {
-      headers: {
-        Authorization: `Bearer ${authToken}`,
+    const response = await axios.post(
+      `${BASE_URL}/api/discount/vendor/add`,
+      couponData,
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          "Content-Type": "application/json",
+        },
       }
-    });
-    return response.data.data;
-  } catch (error) {
-    console.log('Kesalahan Permintan API:', error.response.data.message);
+    );
 
+    if (response.status === 200) {
+      console.log("Coupon added successfully:", response.data);
+    } else {
+      console.error("Failed to add coupon:", response.data);
+    }
+  } catch (error) {
+    console.error("Error adding coupon:", error);
+  }
+};
+
+export const getDataEtalase = async () => {
+  const authToken = getAuthToken();
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/api/product/vendor/list?name&limit=500&search=&orderby=etalase`,
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      }
+    );
+    return response.data.data.rows;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error;
   }
 };
