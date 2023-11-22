@@ -1,3 +1,5 @@
+export const createDataOptions = [{ name: "RAM", type: "RadioButton", is_required: true, order: 0, values: [{ label: "4GB", price: "0", price_type: 0, order: 0}, { label: "8GB", price: "10", price_type: 0, order: 1}, { label: "16GB", price: "20", price_type: 0, order: 2 }]}]
+
 export const datas = [
     {
         id: 1,

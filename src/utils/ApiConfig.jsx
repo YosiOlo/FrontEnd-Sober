@@ -629,6 +629,38 @@ export const putGeneralInformation = async (body) => {
   } catch (error) {}
 };
 
+export const createProducts = async (body) => {
+  const authToken = getAuthToken();
+  for (const [key, value] of Object.entries(body)) {
+    console.log(`${key}: ${typeof value}`, value);
+  }
+  try {
+    await axios
+      .post(`${BASE_URL}/api/product/vendor/add`, body, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((response) => console.log("success", response))
+      .catch((error) => console.log("res error", error));
+  } catch (error) {
+    console.log("cek", error);
+  }
+};
+
+export const getCategories = async () => {
+  const authToken = getAuthToken();
+  try {
+    const response = await axios.get(`${BASE_URL}/api/product/categories/`);
+
+    return response?.data.data;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error;
+  }
+};
+
 export const checkToken = async () => {
   const authToken = getAuthToken();
   try {
@@ -642,6 +674,30 @@ export const checkToken = async () => {
   } catch (error) {
     console.error("Error fetching data:", error);
     throw error;
+  }
+};
+
+export const addcoupons = async (couponData) => {
+  const authToken = getAuthToken();
+  try {
+    const response = await axios.post(
+      `${BASE_URL}/api/discount/vendor/add`,
+      couponData,
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (response.status === 200) {
+      console.log("Coupon added successfully:", response.data);
+    } else {
+      console.error("Failed to add coupon:", response.data);
+    }
+  } catch (error) {
+    console.error("Error adding coupon:", error);
   }
 };
 

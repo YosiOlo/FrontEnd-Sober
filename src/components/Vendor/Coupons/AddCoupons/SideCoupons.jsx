@@ -2,9 +2,7 @@ import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
-function SideCoupons() {
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+function SideCoupons({startDate, setStartDate, endDate, setEndDate, onSave}) {
   return (
     <div>
       <div className="card bg-white rounded-md p-5 text-black">
@@ -37,7 +35,7 @@ function SideCoupons() {
       </div>
       <div className="mt-3 card bg-white rounded-md grid grid-cols-2 p-4 gap-6">
         <button className="bg-white border-2 rounded-md w-[]">Cancel</button>
-        <button className="bg-[#0DCAF0] rounded-md text-white">Save</button>
+        <button className="bg-[#0DCAF0] rounded-md text-white"onClick={onSave}>Save</button>
       </div>
     </div>
   );
