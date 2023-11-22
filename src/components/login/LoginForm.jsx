@@ -25,11 +25,18 @@ const LoginForm = () => {
   };
 
   const handleLogin = async () => {
-    const isSuccess = await loginUser(username, password, rememberMe);
-
-    if (isSuccess) {
-      // navigate('/');
-      window.location.href = '/';
+    try {
+      const isSuccess = await loginUser(username, password, rememberMe);
+  
+      if (isSuccess) {
+        console.log('Login success!', isSuccess);
+        if (isSuccess === 'admin') window.location.href = '/admin'
+        if (isSuccess === 'user') window.location.href = '/'
+      } else {
+        console.error('Login failed. Please check your credentials.');
+      }
+    } catch (error) {
+      console.error('An error occurred during login:', error);
     }
   };
 

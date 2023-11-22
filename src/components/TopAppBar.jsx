@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { fetchUserData, logoutUser, memberShip } from '../utils/ApiConfig'; // Mengimpor fetchUserData dan logoutUser dari ApiConfig.jsx
+import { fetchUserData, logoutUser } from '../utils/ApiConfig'; // Mengimpor fetchUserData dan logoutUser dari ApiConfig.jsx
 import Swal from 'sweetalert2';
 
 
@@ -8,7 +8,8 @@ function TopAppBar() {
   const authToken = localStorage.getItem('authToken');
   const [name, setName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-
+  
+  
   useEffect(() => {
     // console.log('token',authToken)
     if (authToken) {
@@ -27,19 +28,7 @@ function TopAppBar() {
         .finally(() => setIsLoading(false));
     }
   }, [authToken]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = await memberShip();
-      // ... kode lain untuk mengolah data ...
-    };
-    fetchData();
-  }, []);
-
-
-
-
-
+  
   const confirmLogout = () => {
     Swal.fire({
       title: 'Anda yakin ingin keluar?',
@@ -68,7 +57,7 @@ function TopAppBar() {
         <div className="space-x-4 flex items-center">
           <Link to="/about" className="hover:text-blue-600">Tentang Kami</Link>
           <span className="border-l border-gray-400 h-3 my-1 mx-2"></span>
-          <Link to="/favorite-list" className="hover:text-blue-600">Daftar Favorit</Link>
+          <Link to="/wishlist" className="hover:text-blue-600">Daftar Favorit</Link>
         </div>
         <div className="space-x-4 flex items-center">
           <select className="bg-transparent text-black hover:text-blue-600">

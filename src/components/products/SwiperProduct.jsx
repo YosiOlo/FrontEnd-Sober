@@ -14,17 +14,17 @@ import 'tailwindcss/tailwind.css';
 import { AiOutlineArrowLeft, AiOutlineArrowRight } from "react-icons/ai";
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import CardProduct from '../../products/CardProduct';
-import { getProductBumbu } from '../../../utils/ApiConfig';
-import { authToken } from '../../../utils/ApiConfig';
-import { useWishlist } from '../../context/WishlistContext';
+import CardProduct from '../products/CardProduct';
+import { relatedProducts, BASE_URL } from '../../utils/ApiConfig';
+import { authToken } from '../../utils/ApiConfig';
+import { useWishlist } from '../context/WishlistContext';
 
 SwiperCore.use([Autoplay, Pagination, Navigation]);
 
-function SwiperIngredients() {
+function SwiperProduct({ related }) {
+    const [relatedProductData, setRelatedProductData] = useState([]);
     const token = `Bearer ${authToken}`;
     const isLoggedIn = !!authToken;
-    const [spices, setSpice] = React.useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [favoritespices, setFavoritespices] = useState([]);
     const { wishlist, setWishlist } = useWishlist();
@@ -33,8 +33,6 @@ function SwiperIngredients() {
         'Authorization': token,
         'Content-Type': 'application/json',
     };
-
-    // Fungsi untuk memuat ulang daftar Wishlist/Favorit
     const refreshFavoriteSpices = () => {
         if (isLoggedIn) {
             axios.get('https://kuro.asrofur.me/sober/api/users/wishlist/', { headers })
@@ -47,59 +45,66 @@ function SwiperIngredients() {
     };
 
     useEffect(() => {
-        // Memanggil fungsi refreshFavoriteSpices saat komponen dimuat untuk pertama kali
         refreshFavoriteSpices();
-
-        getProductBumbu().then((res) => {
-            setSpice(res.rows);
-            setTimeout(() => {
-                setIsLoading(false);
-            }, 2000);
+        const relatedProductsData = [];
+        const promises = related.map(async product => {
+            const id = product.to_product_id;
+            try {
+                const productData = await relatedProducts(id);
+                if (productData) {
+                    relatedProductsData.push(productData);
+                }
+            } catch (error) {
+                console.error("Kesalahan Permintaan Produk Terkait:", error);
+            }
         });
-    }, []);
+        Promise.all(promises)
+            .then(() => {
+                setRelatedProductData(relatedProductsData);
+                setIsLoading(false);
+            })
+            .catch(error => {
+                console.error("Kesalahan Permintaan Produk Terkait:", error);
+            });
 
+    }, [related]);
     const toggleFavorite = async (spice) => {
-        const data = await getProductBumbu();
-
-        if (isspiceFavorite(spice.id)) {
-            if (isLoggedIn) {
+        if (isLoggedIn) {
+            if (isspiceFavorite(spice.id)) {
                 axios.delete(`https://kuro.asrofur.me/sober/api/users/wishlist/${spice.id}`, { headers })
                     .then((response) => {
-                        setFavoritespices(favoritespices.filter(item => item.product_id !== spice.id));
+                        setFavoritespices(favoritespices.filter(item => item.product.id !== spice.id)); // Ganti product_id dengan product.id
                         console.log('Menghapus favorit');
                     })
                     .catch((error) => {
                         console.error('Gagal menghapus favorit:', error.response.data.message);
                     });
             } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Login Diperlukan',
-                    text: 'Anda harus login untuk menambahkan produk ke daftar favorit.',
-                });
-                return;
+                const productData = relatedProductData.find(product => product.id === spice.id);
+
+                if (productData) {
+                    axios.post(`https://kuro.asrofur.me/sober/api/users/wishlist/${spice.id}`, {}, { headers })
+                        .then((response) => {
+                            setFavoritespices([...favoritespices, { product: productData }]);
+                            refreshFavoriteSpices(); // Memuat ulang daftar Wishlist/Favorit
+                        })
+                        .catch((error) => {
+                            console.error('Gagal menambahkan favorit:', error.response.data.message);
+                        });
+                } else {
+                    console.error('Data produk tidak ditemukan.');
+                }
             }
         } else {
-            if (isLoggedIn) {
-                axios.post(`https://kuro.asrofur.me/sober/api/users/wishlist/${spice.id}`, {}, { headers })
-                    .then((response) => {
-                        const getspiceId = data.rows.find(item => item.id === spice.id);
-                        setFavoritespices([...favoritespices, { product: getspiceId }]);
-                        refreshFavoriteSpices(); // Memuat ulang daftar Wishlist/Favorit
-                    })
-                    .catch((error) => {
-                        console.error('Gagal menambahkan favorit:', error.response.data.message);
-                    });
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Login Diperlukan',
-                    text: 'Anda harus login untuk menambahkan produk ke daftar favorit.',
-                });
-                return;
-            }
+            Swal.fire({
+                icon: 'error',
+                title: 'Login Diperlukan',
+                text: 'Anda harus login untuk menambahkan produk ke daftar favorit.',
+            });
+            return;
         }
     };
+
 
     const isspiceFavorite = (spiceId) => {
         return favoritespices.some(item => item.product.id === spiceId);
@@ -114,7 +119,7 @@ function SwiperIngredients() {
         <div className="main-content relative p-4">
             <div className="top flex justify-between mb-5">
                 <div className="content_left flex">
-                    <h3 className='text-4xl font-semibold'>Bumbu dan Masakan</h3>
+                    <h3 className='text-4xl font-semibold'>Produk Terkait</h3>
                     <span className='text-xl text-green-600 mt-2 ml-10'><Link>View All</Link></span>
                 </div>
                 <div className="contentright flex">
@@ -135,7 +140,7 @@ function SwiperIngredients() {
                     spaceBetween={30}
                     slidesPerView={5}
                     autoplay={{
-                        delay: 50000,
+                        delay: 5000,
                         disableOnInteraction: false,
                     }}
                     pagination={{
@@ -192,22 +197,26 @@ function SwiperIngredients() {
                                 </div>
                             </SwiperSlide>
                         ))
-                    ) : (
-                        spices.map((spice, index) => (
-                            <SwiperSlide key={index}>
+                    ) : relatedProductData.length > 0 ? (
+                        relatedProductData.map((spice, index) => (
+                            <SwiperSlide key={spice.id}>
                                 <CardProduct
-                                    key={index}
                                     product={spice}
                                     isProductFavorite={isspiceFavorite}
                                     toggleFavorite={toggleFavorite}
+                                    key={spice.id}
                                 />
                             </SwiperSlide>
                         ))
+                    ) : (
+                        <div className="text-center">Produk Terkait Tidak Ada</div>
                     )}
                 </Swiper>
             </div>
+
         </div>
     );
 }
 
-export default SwiperIngredients;
+export default SwiperProduct;
+
