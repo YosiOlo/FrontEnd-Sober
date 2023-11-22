@@ -32,12 +32,7 @@ function HeaderWrapaper() {
                         <div className="header-items-middle flex">
                             <Link to="/specialprice" className="hover:text-blue-600 mx-4 font-semibold text-base lg:text-base xl:text-xl">Spesial Harga</Link>
                             <div className="inline-flex mx-4" onMouseLeave={closeDropdown}>
-                                <a
-                                    href="product"
-                                    className="font-semibold hover:text-blue-500 hover:bg-gray-50 rounded-l-md text-base lg:text-base xl:text-xl"
-                                >
-                                    Product
-                                </a>
+                                <Link to="/product" className="hover:text-blue-600 mx-4 font-semibold text-base lg:text-base xl:text-xl">Product</Link>
 
                                 <div className="relative" onMouseEnter={toggleDropdown}>
                                     <button

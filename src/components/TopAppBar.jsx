@@ -28,15 +28,7 @@ function TopAppBar() {
         .finally(() => setIsLoading(false));
     }
   }, [authToken]);
-
   
-
-
-
-
-
-
-
   const confirmLogout = () => {
     Swal.fire({
       title: 'Anda yakin ingin keluar?',

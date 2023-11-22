@@ -2,18 +2,14 @@ import React from 'react';
 import TopAppBar from '../components/TopAppBar';
 import MidleBar from '../components/MidleBar';
 import HeaderWrapaper from '../components/HeaderWrapaper';
-import BreadCrumb from '../components/BreadCrumb';
-import TopMembership from '../components/membership/TopMembership';
-import SearchMembership from '../components/membership/SearchMembership';
-import CardMembership from '../components/membership/CardMembership';
 import Footer from '../components/Footer';
+import CheckOut from '../components/checkout/checkOut';
+import BreadCrumb from '../components/BreadCrumb';
 
-
-
-function PageMemberShip() {
+function PageProductCheckout() {
   const breadcrumbItems = [
     { label: 'Home', url: '/' },
-    { label: 'Member Paket', url: '/members' },
+    { label: 'Checkout', url: '/checkout' },
   ];
   return (
     <>
@@ -21,14 +17,11 @@ function PageMemberShip() {
     <MidleBar />
     <HeaderWrapaper />
     <BreadCrumb items={breadcrumbItems} />
-    <TopMembership />
-    <SearchMembership />
-    <CardMembership />
-
+    <CheckOut />
     <Footer />
     </>
 
   );
 }
 
-export default PageMemberShip;
+export default PageProductCheckout;

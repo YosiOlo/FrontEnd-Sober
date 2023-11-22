@@ -1,22 +1,30 @@
 import React from 'react';
 import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
 import { FiMapPin } from 'react-icons/fi';
+import { Link } from 'react-router-dom';
 
-const CardProduct = ({ product, isProductFavorite, toggleFavorite, viewType }) => {
+
+const CardProduct = ({ product, isProductFavorite, toggleFavorite, viewType, index }) => {
+    const productName = product.name;
+    const formattedName = productName.toLowerCase().replace(/ /g, '-');
     return (
         <div className={`card-product transition duration-300 ease-in-out p-4 
         ${viewType === 'list' && 'flex gap-4'}`}>
             <div className="overflow-hidden relative group-hover:opacity-70 transition-opacity">
                 {/* Gambar produk */}
-                <img
-                    src={
-                        product.images[0] !== ''
-                            ? "https://kuro.asrofur.me/sober/" + product.images[0]
-                            : '/logo-sober-mart-color-grey-1.png'
-                    }
-                    alt={product.name}
-                    className={`w-full ${viewType === 'grid' ? 'h-full object-cover' : 'h-32 object-contain '} ${product.stock_status === 'out_of_stock' ? 'grayscale' : ''}`}
-                />
+                <Link to={`/product/${formattedName}`} key={index}>
+                    <img
+                        src={
+                            product.images[0] !== ''
+                                ? "https://kuro.asrofur.me/sober/" + product.images[0]
+                                : '/logo-sober-mart-color-grey-1.png'
+                        }
+                        alt={product.name}
+                        className={`w-full ${viewType === 'grid' ? 'h-full object-cover' : 'h-32 object-contain '} ${product.stock_status === 'out_of_stock' ? 'grayscale' : ''}`}
+                    />
+
+                </Link>
+
                 {/* Diskon jika ada */}
                 {product.fee && (
                     <div className="discount absolute top-1 left-1 bg-red-500 text-white rounded">
@@ -44,9 +52,16 @@ const CardProduct = ({ product, isProductFavorite, toggleFavorite, viewType }) =
                 <h2 className={`${viewType === 'list' ? 'text-xl' : 'text-lg'} font-semibold text-gray-800`}>
                     {product.store ? product.store.name : ''}
                 </h2>
-                <h3 className={`${viewType === 'list' ? 'text-lg' : 'text-md'} text-blue-500`}>
-                    {product.name}
-                </h3>
+                
+                <Link to={`/product/${formattedName}`} key={index} className="hover:text-blue-500">
+                    <h3 className={`${viewType === 'list' ? 'text-lg' : 'text-md'}`}>
+                        {product.name}
+                    </h3>
+                </Link>
+                {/* <RatingProduct star={product.reviews.star} /> */}
+                {product.hpp}
+
+
                 <div className="sale_price flex justify-between">
                     <p className="text-base font-semibold text-red-500">Rp{product.sale_price}</p>
                     <p className="text-base font-bold text-gray-400 line-through">Rp{product.price}</p>

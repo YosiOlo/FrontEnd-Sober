@@ -40,7 +40,7 @@ export const memberShip = async () => {
 export const product_data = async () => {
   try {
     const response = await axios.get(`${BASE_URL}/api/product?page=1&limit=72&search=&orderby=`);
-    console.log('Respon API Product:', response.data); // Pindahkan ini ke atas return
+
     return response.data.data;
   } catch (error) {
     console.error('Kesalahan Permintaan API:', error.response.data.message);
@@ -69,8 +69,10 @@ export const loginUser = async (username, password, rememberMe) => {
     const { token } = response.data;
     // localStorage.setItem('authToken', token);
     setAuthToken(token);
-    console.log('Respon API:', response.data);
-    return true; // Berhasil login
+    const result = response.data.identity ? response.data.identity : 'user';
+    console.log('Respon API:', result);
+    return result;
+    
   } catch (error) {
     console.error('Kesalahan Permintaan API:', error);
     return false; // Gagal login
@@ -131,7 +133,7 @@ export const getProductBumbu = async () => {
     const response = await axios.get(
       `${BASE_URL}/api/product?page=&limit=&search=Bumbu&orderby=`
     );
-    
+
     return response.data.data;
   } catch (error) {
     console.error("Kesalahan Permintaan API:", error.response.data.message);
@@ -141,13 +143,13 @@ export const getProductBumbu = async () => {
 
 
 
-//https://kuro.asrofur.me/sober/api/product?page&limit=&search=&orderby=&kategori=24&kategori_2=348
+
 export const getProductSoap = async () => {
   try {
     const response = await axios.get(
       `${BASE_URL}/api/product?page&limit=&search=&orderby=&kategori=24&kategori_2=348`
     );
-    
+
     return response.data.data;
   } catch (error) {
     console.error("Kesalahan Permintaan API:", error.response.data.message);
@@ -155,7 +157,6 @@ export const getProductSoap = async () => {
   }
 }
 
-//https://kuro.asrofur.me/sober/api/product?page&limit=&search=&orderby=&kategori=19&kategori_2=261
 export const getProductMinyak = async () => {
   try {
     const response = await axios.get(
@@ -168,7 +169,7 @@ export const getProductMinyak = async () => {
     return null;
   }
 }
-//https://kuro.asrofur.me/sober/api/product?page&limit=&search=garnier&orderby=&kategori=&kategori_2=
+
 export const getProductGarnier = async () => {
   try {
     const response = await axios.get(
@@ -182,7 +183,7 @@ export const getProductGarnier = async () => {
   }
 }
 
-//https://kuro.asrofur.me/sober/api/product?page&limit=&search=Bumbu&orderby=&kategori=&kategori_2=
+
 export const getProductNodles = async () => {
   try {
     const response = await axios.get(
@@ -196,7 +197,138 @@ export const getProductNodles = async () => {
   }
 }
 
-// ===================================Vendor================================
+
+export const getProductCategories = async () => {
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/api/product/categories`
+    );
+    return response.data.data;
+  } catch (error) {
+    console.error("Kesalahan Permintaan API:", error.response.data.message);
+    return null;
+  }
+}
+//https://kuro.asrofur.me/sober/api/product/
+export const relatedProducts = async (id) => {
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/api/product/${id}`
+    );
+    return response.data.data;
+  } catch (error) {
+    console.error("Kesalahan Permintaan API:", error.response.data.message);
+    return null;
+  }
+}
+// ==User-Settings==//
+
+export const getStore = async () => {
+  try {
+    const response = await axios.get(`${BASE_URL}/api/users/list-toko`);
+    return response.data.data;
+  } catch (error) {
+    console.error("Kesalahan Permintaan API:", error.response.data.message);
+  }
+};
+
+
+// ==Keranjang==//
+//post
+export const postCart = async (productId, quantity, attributes) => {
+  const authToken = getAuthToken();
+
+  try {
+    if (attributes) {
+      const response = await axios.post(
+        `${BASE_URL}/api/transaction/cart/${productId}`,
+        {
+          qty: quantity,
+          attributes: attributes,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
+      return response.data.data;
+    };
+
+    const response = await axios.post(
+      `${BASE_URL}/api/transaction/cart/${productId}`,
+      {
+        qty: quantity,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      }
+    );
+    return response.data.data;
+  } catch (error) {
+    console.error("Kesalahan Permintaan API:", error.response.data.message);
+  }
+};
+
+//delete
+//get
+//https://kuro.asrofur.me/sober/api/transaction/cart
+export const getCart = async () => {
+  const authToken = getAuthToken();
+  try {
+    const response = await axios.get(`${BASE_URL}/api/transaction/cart`, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
+    return response.data.data;
+  } catch (error) {
+    console.error("Kesalahan Permintaan API:", error.response.data.message);
+  }
+};
+
+//Transaksi
+//https://kuro.asrofur.me/sober/api/kurir/city
+export const getCity = async () => {
+  try {
+    const response = await axios.get(`${BASE_URL}/api/kurir/city`,
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+    return response.data.data;
+  } catch (error) {
+    console.error("Kesalahan Permintaan API:", error.response.data.message);
+  }
+};
+//https://kuro.asrofur.me/sober/api/kurir/ongkir
+export const postOngkir = async (origin, destination, weight) => {
+  try {
+    const response = await axios.post(
+      `${BASE_URL}/api/kurir/ongkir`,
+      {
+        origin: origin,
+        destination: destination,
+        weight: weight,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    return response.data.data;
+  } catch (error) {
+    console.error("Kesalahan Permintaan API:", error.response.data.message);
+    throw error; // Melempar kembali kesalahan untuk penanganan lebih lanjut jika perlu
+  }
+};
+
+
 
 export const getOrderDashboard = async () => {
   const authToken = getAuthToken();
@@ -213,7 +345,7 @@ export const getOrderDashboard = async () => {
     return response?.data.data.count;
   } catch (error) {
     console.error("Error fetching data:", error);
-    throw error; 
+    throw error;
   }
 };
 
@@ -232,7 +364,7 @@ export const getProductDashboard = async () => {
     return response?.data.data.count;
   } catch (error) {
     console.error("Error fetching data:", error);
-    throw error; 
+    throw error;
   }
 };
 
@@ -248,7 +380,7 @@ export const getOrders = async () => {
     return response?.data.data.rows;
   } catch (error) {
     console.error("Error fetching data:", error);
-    throw error; 
+    throw error;
   }
 };
 
@@ -264,7 +396,7 @@ export const getCoupons = async () => {
     return response?.data.data;
   } catch (error) {
     console.error("Error fetching data:", error);
-    throw error; 
+    throw error;
   }
 };
 
@@ -311,7 +443,7 @@ export const getOrderReturns = async () => {
     return response?.data.data.rows;
   } catch (error) {
     console.error("Error fetching data:", error);
-    throw error; 
+    throw error;
   }
 };
 
@@ -328,7 +460,7 @@ export const getProducts = async () => {
     return response?.data.data.rows;
   } catch (error) {
     console.error("Error fetching data:", error);
-    throw error; 
+    throw error;
   }
 };
 
@@ -344,7 +476,7 @@ export const getRevenue = async () => {
     return response?.data.data.rows;
   } catch (error) {
     console.error("Error fetching data:", error);
-    throw error; 
+    throw error;
   }
 };
 
@@ -377,7 +509,7 @@ export const getWithdrawals = async () => {
     return response?.data.data.rows;
   } catch (error) {
     console.error("Error fetching data:", error);
-    throw error; 
+    throw error;
   }
 };
 
@@ -411,7 +543,7 @@ export const getVendorInfo = async () => {
       },
     });
     return response.data.data;
-  } catch (error) {}
+  } catch (error) { }
 };
 
 export const getVendorHistory = async () => {
@@ -426,12 +558,12 @@ export const getVendorHistory = async () => {
       }
     );
     return response.data.data.rows;
-  } catch (error) {}
+  } catch (error) { }
 };
 
 export const putTax = async (updatedData) => {
   const authToken = getAuthToken();
-  console.log('hi',updatedData)
+  console.log('hi', updatedData)
   try {
     const response = await axios.put(
       `${BASE_URL}/api/users/vendor/tax`,
@@ -453,7 +585,7 @@ export const putTax = async (updatedData) => {
 
 export const putPayout = async (updatedData) => {
   const authToken = getAuthToken();
-  console.log('hi',updatedData)
+  console.log('hi', updatedData)
   try {
     const response = await axios.put(
       `${BASE_URL}/api/users/vendor/payment`,
@@ -466,10 +598,10 @@ export const putPayout = async (updatedData) => {
       }
     );
 
-    return response.data; 
+    return response.data;
   } catch (error) {
     console.error("Error during API request:", error);
-    throw error; 
+    throw error;
   }
 };
 // shopName,
@@ -520,7 +652,7 @@ export const putGeneralInformation = async (body) => {
         },
       }
     );
-  } catch (error) {}
+  } catch (error) { }
 };
 
 export const checkToken = async () => {
@@ -535,7 +667,7 @@ export const checkToken = async () => {
     return response?.data.datas;
   } catch (error) {
     console.error("Error fetching data:", error);
-    throw error; 
+    throw error;
   }
 };
 
