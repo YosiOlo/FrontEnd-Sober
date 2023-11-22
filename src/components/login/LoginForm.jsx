@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { BsFillEyeFill, BsFillEyeSlashFill } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 
@@ -11,6 +11,22 @@ const LoginForm = () => {
   const [rememberMe, setRememberMe] = useState(false);
 
   const navigate = useNavigate();
+  const formRef = useRef();
+
+  useEffect(() => {
+    const handleKeyPress = (event) => {
+      if (event.key === 'Enter') {
+        handleLogin();
+      }
+    };
+
+    const formElement = formRef.current;
+    formElement.addEventListener('keypress', handleKeyPress);
+
+    return () => {
+      formElement.removeEventListener('keypress', handleKeyPress);
+    };
+  }, []);
 
   const handleUsernameChange = (event) => {
     setUsername(event.target.value);
@@ -27,7 +43,7 @@ const LoginForm = () => {
   const handleLogin = async () => {
     try {
       const isSuccess = await loginUser(username, password, rememberMe);
-  
+
       if (isSuccess) {
         console.log('Login success!', isSuccess);
         if (isSuccess === 'admin') window.location.href = '/admin'
@@ -43,10 +59,10 @@ const LoginForm = () => {
   return (
     <div className="h-screen flex justify-center items-center bg-gray-100">
       <div className="bg-white p-8 rounded shadow-md w-96">
-        <div className="text-2xl font-semibold mb-8 justify-center text-center border-b-2">
-          <h6 className='text-xl font-semibold mb-1'>Log In Your Account</h6>
-        </div>
-        <div>
+        <form ref={formRef} onSubmit={(e) => e.preventDefault()}>
+          <div className="text-2xl font-semibold mb-8 justify-center text-center border-b-2">
+            <h6 className='text-xl font-semibold mb-1'>Log In Your Account</h6>
+          </div>
           <div className="mb-4 mt-10">
             <label className="block text-sm font-medium text-gray-700">Nama Pengguna</label>
             <input
@@ -71,8 +87,6 @@ const LoginForm = () => {
                 placeholder='Masukkan Kata Sandi'
                 required={true}
                 aria-errormessage='password harus diisi'
-                pattern='[A-Za-z0-9]{8,}'
-                title='Password harus terdiri dari 8 karakter huruf dan angka'
               />
               <button
                 className="absolute top-1/2 right-2 transform -translate-y-1/2 text-gray-500"
@@ -111,7 +125,7 @@ const LoginForm = () => {
           >
             Masuk
           </button>
-        </div>
+        </form>
       </div>
     </div>
   );
