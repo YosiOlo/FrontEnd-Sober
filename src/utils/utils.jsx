@@ -11,6 +11,20 @@ function formatDate(datestring) {
 
 export { formatDate };
 
+export const getIconsDetails = (status) => {
+  if (status === "pending")
+    return (
+      <div className="icon">
+        <AiFillCloseCircle className="text-white text-3xl bg-red-500 rounded-3xl p-1 " />
+      </div>
+    );
+  if (status === "delivered")
+    return (
+      <BsCheckLg className="text-white text-3xl bg-green-400 rounded-3xl p-1 " />
+       
+    );
+};
+
 export const getStatusDetails = (status) => {
   if (status === "pending")
     return (

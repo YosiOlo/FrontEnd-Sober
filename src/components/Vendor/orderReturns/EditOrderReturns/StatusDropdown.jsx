@@ -49,6 +49,8 @@ const StatusDropdown = () => {
         value={paymentMethod}
         onChange={(e) => handleStatusChange(e.target.value)}
       >
+
+        <option value="" disabled>Pilih Status</option>
         <option value="canceled">Canceled</option>
         <option value="processing">Processing</option>
         <option value="pending">Pending</option>

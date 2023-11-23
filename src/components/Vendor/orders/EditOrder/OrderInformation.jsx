@@ -3,15 +3,13 @@ import { GrCompliance } from "react-icons/gr";
 import UpdateShipping from "./UpdateShippingButton";
 import { FaShippingFast } from "react-icons/fa";
 import { useParams } from "react-router-dom";
-import { BsCheckLg } from "react-icons/bs";
-import { AiFillCloseCircle } from "react-icons/ai";
 import { getOrdersById } from "../../../../utils/ApiConfig";
 import {
   formatDate1,
   getOrderConfirm,
   getStatusDetails,
+  getIconsDetails
 } from "../../../../utils/utils";
-import HistoryShipment from "./HistoryShipment";
 import HistoryShipping from "./HistoryShipment";
 
 function OrderInformation() {
@@ -121,7 +119,9 @@ function OrderInformation() {
                 {getOrderConfirm(order?.payment_order?.payment_type)}
               </div>
               <div className="deliveryStatus border-t-[1px] border-slate-200 p-4 flex gap-3">
-                <AiFillCloseCircle className="text-white text-3xl bg-red-500 rounded-3xl p-1 " />
+                <div className="icon">
+                  {getIconsDetails(order.order_shipments.status)}
+                </div>
                 <p className="mt-1">DELIVERY</p>
                 <div className="id flex gap-4">
                   <h1>#10000312</h1>

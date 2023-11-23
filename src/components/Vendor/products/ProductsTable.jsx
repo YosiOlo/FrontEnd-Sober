@@ -34,40 +34,133 @@ const ProductsTable = () => {
   const [loading, setLoading] = useState(true);
   const [orderBy, setOrderBy] = useState("id");
   const [order, setOrder] = useState("asc");
+  const [limit, setLimit] = useState(1000); // State untuk menyimpan nilai limit produk yang ditampilkan
+  const [orderByOptions, setOrderByOptions] = useState([
+    "termurah",
+    "termahal",
+    "terbaru",
+    "terlaris",
+    "etalase",
+  ]);
 
-  useEffect(() => {
-    getProducts().then((data) => {
-      setProducts(data);
-    });
-  }, []);
+  const [selectedOrderBy, setSelectedOrderBy] = useState("termurah"); // Nilai orderby default
+
+  // useEffect(() => {
+  //   getProducts().then((data) => {
+  //     setProducts(data);
+  //   });
+  // }, []);
 
   const toggleExport = () => {
     setexportOpen(!exportOpen);
   };
 
+  const handleChangeLimit = (event) => {
+    setLimit(event.target.value);
+  };
+
   const handleSort = (property) => {
+    let orderByValue = property;
+
+    // Jika properti yang di-pass sama dengan orderBy yang sedang digunakan, ubah urutan (asc/desc)
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
-    setOrderBy(property);
+
+    // Atur orderByValue sesuai dengan nama kolom yang diperlukan untuk API request
+    switch (property) {
+      case "no":
+        orderByValue = "id";
+        break;
+      case "thumbnail":
+        orderByValue = "thumbnail";
+        break;
+      case "name":
+        orderByValue = "name";
+        break;
+      case "price":
+        orderByValue = "price";
+        break;
+      case "quantity":
+        orderByValue = "quantity";
+        break;
+      case "sku":
+        orderByValue = "sku";
+        break;
+      case "order":
+        orderByValue = "order";
+        break;
+      case "CreatedAt":
+        orderByValue = "created_at";
+        break;
+      case "status":
+        orderByValue = "status";
+        break;
+      default:
+        break;
+    }
+
+    setOrderBy(orderByValue);
+    setLoading(true); // Set loading ke true saat proses fetching data baru
+    getProductsData(); // Ambil produk berdasarkan orderBy yang baru
   };
 
-  const startIndex = page * rowsPerPage;
-  const endIndex = startIndex + rowsPerPage;
-  const displayedData = products.slice(startIndex, endIndex);
-  const filteredData = displayedData.filter((product) => {
-    const productName = product.name.toLowerCase(); // Pastikan product.name tidak null atau undefined
-    const etalaseName = product.etalase ? product.etalase.toLowerCase() : ""; // Jika etalase tidak null, gunakan toLowerCase(), jika null, beri nilai string kosong
-    return etalaseName.includes(searchTerm) || productName.includes(searchTerm);
-  });
-
-  const handleReloadClick = () => {
+  useEffect(() => {
     setLoading(true);
-    getProducts().then((data) => {
-      setProducts(data);
-      setLoading(false);
-    });
+    getProductsData(); // Fetch products on initial load
+  }, []);
+
+  const getProductsData = () => {
+    let orderBy = "id"; // Orderby default jika tidak ada yang dipilih
+
+    switch (selectedOrderBy) {
+      case "termurah":
+        orderBy = "termurah";
+        break;
+      case "termahal":
+        orderBy = "termahal";
+        break;
+      case "terbaru":
+        orderBy = "terbaru";
+        break;
+      case "terlaris":
+        orderBy = "terlaris";
+        break;
+      case "etalase":
+        orderBy = "etalase";
+        break;
+      default:
+        orderBy = "id";
+        break;
+    }
+
+    getProducts(limit, searchTerm, orderBy)
+      .then((data) => {
+        setProducts(data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+        setLoading(false);
+      });
   };
 
+  const handleOrderByChange = (event) => {
+    setSelectedOrderBy(event.target.value);
+    setLoading(true); // Set loading to true while fetching new data
+    getProductsData(); // Fetch products based on the selected orderby
+  };
+  const handleReloadClick = () => {
+    getProductsData(); // Fetch products based on
+  };
+
+  const filteredData = products.filter((product) => {
+    const productName = product.name.toLowerCase();
+    const etalaseName = product.etalase ? product.etalase.toLowerCase() : "";
+    return (
+      etalaseName.includes(searchTerm.toLowerCase()) ||
+      productName.includes(searchTerm.toLowerCase())
+    );
+  });
 
   const headers = [
     {
@@ -136,6 +229,16 @@ const ProductsTable = () => {
     XLSX.writeFile(wb, "Products.xlsx");
   };
 
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  // Fungsi untuk mengubah jumlah baris per halaman
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
   const handleDelete = (rowId) => {
     deleteProducts(rowId)
       .then(() => {
@@ -163,7 +266,7 @@ const ProductsTable = () => {
       confirmButtonColor: "#0DCAF0",
     }).then((result) => {
       if (result.isConfirmed) {
-        handleDelete(rowId); // 
+        handleDelete(rowId); //
       }
     });
   };
@@ -171,6 +274,19 @@ const ProductsTable = () => {
   return (
     <Card className="mt-5 w-full">
       <div className="p-2 flex flex-col md:flex-row justify-between">
+        <div className="relative">
+          <select
+            value={selectedOrderBy}
+            onChange={handleOrderByChange}
+            className="px-4 py-2 bg-white rounded-lg border border-gray-300"
+          >
+            {orderByOptions.map((option, index) => (
+              <option key={index} value={option}>
+                {option.charAt(0).toUpperCase() + option.slice(1)}
+              </option>
+            ))}
+          </select>
+        </div>
         <TextField
           label="Search"
           variant="outlined"
@@ -362,57 +478,59 @@ const ProductsTable = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {filteredData.map((product) => (
-                  <TableRow key={product?.id}>
-                    <TableCell className="whitespace-nowrap">
-                      {product?.id}
-                    </TableCell>
-                    <TableCell>
-                      <img
-                        className="h-14 w-14"
-                        src={"https://kuro.asrofur.me/sober/" + product.images}
-                        alt=""
-                      />
-                    </TableCell>
-                    <TableCell>{product?.name}</TableCell>
-                    <TableCell>{product?.price}</TableCell>
-                    <TableCell>{product?.quantity}</TableCell>
-                    <TableCell>{product?.sku}</TableCell>
-                    <TableCell>{product?.order}</TableCell>
-                    <TableCell>{formatDate(product?.created_at)}</TableCell>
-                    <TableCell>{getStatusProducts(product?.status)}</TableCell>
-                    <TableCell>
-                      <div className="flex gap-2">
-                        <button
-                          className="bg-blue-500 text-white px-2 py-1 rounded-md"
-                          onClick={() => handleEdit(row.id)} // Implement the handleEdit function
-                        >
-                          <MdEdit />
-                        </button>
-                        <button
-                          className="bg-red-500 text-white px-2 py-1 rounded-md"
-                          onClick={() => confirmDelete(product.id)} // Implement the handleDelete function
-                        >
-                          <MdDelete />
-                        </button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                {filteredData
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((product) => (
+                    <TableRow key={product?.id}>
+                      <TableCell className="whitespace-nowrap">
+                        {product?.id}
+                      </TableCell>
+                      <TableCell>
+                        <img
+                          className="h-14 w-14"
+                          src={
+                            "https://kuro.asrofur.me/sober/" + product.images
+                          }
+                          alt=""
+                        />
+                      </TableCell>
+                      <TableCell>{product?.name}</TableCell>
+                      <TableCell>{product?.price}</TableCell>
+                      <TableCell>{product?.quantity}</TableCell>
+                      <TableCell>{product?.sku}</TableCell>
+                      <TableCell>{product?.order}</TableCell>
+                      <TableCell>{formatDate(product?.created_at)}</TableCell>
+                      <TableCell>
+                        {getStatusProducts(product?.status)}
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex gap-2">
+                          <Link to={`/VenProducts/edit/${product.id}`}>
+                            <button className="bg-blue-500 text-white px-2 py-1 rounded-md">
+                              <MdEdit />
+                            </button>
+                          </Link>
+                          <button
+                            className="bg-red-500 text-white px-2 py-1 rounded-md"
+                            onClick={() => confirmDelete(product.id)} // Implement the handleDelete function
+                          >
+                            <MdDelete />
+                          </button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
               </TableBody>
             </Table>
           </TableContainer>
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={products.length} // Use data.length as the total count
+            count={products.length} // Sementara ini menggunakan panjang data lokal, akan diperbarui
             rowsPerPage={rowsPerPage}
             page={page}
-            onPageChange={(event, newPage) => setPage(newPage)}
-            onRowsPerPageChange={(event) => {
-              setRowsPerPage(parseInt(event.target.value, 10));
-              setPage(0);
-            }}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </div>
       </CardContent>

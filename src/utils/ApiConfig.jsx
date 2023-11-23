@@ -415,6 +415,19 @@ export const getProducts = async () => {
   }
 };
 
+export const getProductsById = async (id) => {
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/api/product/${id}`,
+      
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error;
+  }
+};
+
 export const deleteProducts = async (rowId) => {
   try {
     const response = await axios.delete(`${BASE_URL}/api/product/${rowId}`, {

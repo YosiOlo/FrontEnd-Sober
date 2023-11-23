@@ -60,6 +60,9 @@ const UpdateShipping = ({ isOpen, onClose }) => {
             value={status}
             onChange={(e) => handleStatusChange(e.target.value)}
           >
+            <option value="" disabled>
+              Pilih status
+            </option>
             <option value="delivered">Delivered</option>
             <option value="pending">Arrange Shipment</option>
           </select>
